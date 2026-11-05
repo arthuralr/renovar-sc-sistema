@@ -153,8 +153,8 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
         </button>
       </div>
 
-      {/* Fiscal Totals Bar */}
-      <div className="bg-[#0f2744] border border-slate-700 rounded-2xl p-3.5 shadow-lg space-y-3">
+      {/* Fiscal Totals Bar — 2 cols on mobile, 4 cols on desktop */}
+      <div className="bg-[#0f2744] border border-slate-700 rounded-2xl p-3.5 lg:p-4 shadow-lg space-y-3">
         <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
           <span className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1.5">
             <FileCheck className="w-3.5 h-3.5 text-amber-400" />
@@ -163,32 +163,29 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
           <span className="text-[10px] text-slate-400">SC • Simples / Lucro Presumido</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-[#0a192f] p-2.5 rounded-xl border border-slate-800">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+          <div className="bg-[#0a192f] p-2.5 lg:p-3 rounded-xl border border-slate-800">
             <span className="text-[10px] text-slate-400">Faturamento Bruto</span>
-            <p className="text-base font-black text-white">{formatCurrency(totalGross)}</p>
+            <p className="text-base lg:text-lg font-black text-white">{formatCurrency(totalGross)}</p>
           </div>
-          <div className="bg-[#0a192f] p-2.5 rounded-xl border border-slate-800">
+          <div className="bg-[#0a192f] p-2.5 lg:p-3 rounded-xl border border-slate-800">
             <span className="text-[10px] text-slate-400">Total Líquido a Receber</span>
-            <p className="text-base font-black text-emerald-400">{formatCurrency(totalNet)}</p>
+            <p className="text-base lg:text-lg font-black text-emerald-400">{formatCurrency(totalNet)}</p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400 pt-1">
-          <div className="flex justify-between bg-[#0a192f]/60 px-2 py-1 rounded">
-            <span>Retenção INSS (11%):</span>
-            <span className="text-amber-400 font-semibold">{formatCurrency(totalInss)}</span>
+          <div className="bg-[#0a192f] p-2.5 lg:p-3 rounded-xl border border-slate-800">
+            <span className="text-[10px] text-slate-400">Retenção INSS (11%)</span>
+            <p className="text-sm lg:text-base font-bold text-amber-400">{formatCurrency(totalInss)}</p>
           </div>
-          <div className="flex justify-between bg-[#0a192f]/60 px-2 py-1 rounded">
-            <span>ISS Retido (2%~3%):</span>
-            <span className="text-amber-400 font-semibold">{formatCurrency(totalIss)}</span>
+          <div className="bg-[#0a192f] p-2.5 lg:p-3 rounded-xl border border-slate-800">
+            <span className="text-[10px] text-slate-400">ISS Retido (2%~3%)</span>
+            <p className="text-sm lg:text-base font-bold text-amber-400">{formatCurrency(totalIss)}</p>
           </div>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="space-y-2">
-        <div className="relative">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
@@ -199,7 +196,7 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 text-xs">
           {[
             { key: 'todos', label: 'Todas' },
             { key: 'emitida', label: 'Emitidas' },
@@ -209,7 +206,7 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
             <button
               key={tab.key}
               onClick={() => setStatusFilter(tab.key as any)}
-              className={`flex-shrink-0 px-2.5 py-1 rounded-lg border text-xs font-semibold transition ${
+              className={`flex-shrink-0 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer ${
                 statusFilter === tab.key
                   ? 'bg-amber-400 text-slate-950 border-amber-400'
                   : 'bg-[#0f2744] text-slate-400 border-slate-700 hover:text-white'
@@ -221,8 +218,8 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
         </div>
       </div>
 
-      {/* Invoices List */}
-      <div className="space-y-2.5">
+      {/* Invoices List — 1 col on mobile, 2 cols on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
         {filteredInvoices.map((inv) => (
           <div
             key={inv.id}

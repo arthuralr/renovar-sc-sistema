@@ -50,6 +50,12 @@
   padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px));
 }
 
+@media (min-width: 1024px) {
+  .pb-nav {
+    padding-bottom: 28px;
+  }
+}
+
 /* Subtle glow utilities */
 .glow-gold {
   box-shadow: 0 0 25px -4px rgba(251, 191, 36, 0.35);
@@ -68,7 +74,7 @@
     margin: 0 !important;
   }
 
-  header, nav, .print\:hidden, [role="navigation"] {
+  header, nav, aside, .print\:hidden, [role="navigation"] {
     display: none !important;
   }
 

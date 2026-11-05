@@ -153,75 +153,83 @@ export const CronogramaView: React.FC<CronogramaViewProps> = ({
         </div>
       )}
 
-      {/* Obra Selector Dropdown */}
-      <div className="bg-[#0f2744] border border-amber-500/25 rounded-2xl p-3.5 shadow-lg space-y-2">
-        <label className="block text-xs font-semibold text-slate-300">
-          Canteiro de Obras Selecionado
-        </label>
-        <div className="relative">
-          <select
-            value={selectedObraId}
-            onChange={(e) => {
-              setSelectedObraId(e.target.value);
-              setSelectedWeekFilter(null);
-            }}
-            className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm font-bold text-white focus:outline-none focus:border-amber-400 appearance-none cursor-pointer"
-          >
-            {cronogramas.map((c) => (
-              <option key={c.obraId} value={c.obraId}>
-                {c.obraName}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
-      </div>
-
-      {/* Financial & Time Summary Cards */}
-      <div className="grid grid-cols-2 gap-2.5 text-xs">
-        {/* Physical Time Progress */}
-        <div className="bg-[#0f2744] border border-slate-700/80 rounded-xl p-3 space-y-1.5 shadow">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[10px] uppercase font-bold tracking-wider">Tempo Decorrido</span>
-            <Clock className="w-3.5 h-3.5 text-amber-400" />
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-xl font-black text-white">Semana {activeCronograma.currentWeek}</span>
-            <span className="text-xs text-slate-400">/ 12</span>
-          </div>
-          <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full"
-              style={{ width: `${(activeCronograma.currentWeek / 12) * 100}%` }}
-            />
-          </div>
-          <span className="text-[10px] text-amber-300 font-semibold block pt-0.5">
-            {Math.round((activeCronograma.currentWeek / 12) * 100)}% da janela de execução
-          </span>
-        </div>
-
-        {/* Financial Execution */}
-        <div className="bg-[#0f2744] border border-emerald-500/30 rounded-xl p-3 space-y-1.5 shadow">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[10px] uppercase font-bold tracking-wider">Avanço Financeiro</span>
-            <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
-          </div>
-          <div className="text-lg font-black text-emerald-400 tracking-tight">
-            {formatCurrency(activeCronograma.executedFinancial)}
-          </div>
-          <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
-              style={{
-                width: `${Math.round(
-                  (activeCronograma.executedFinancial / activeCronograma.totalBudget) * 100
-                )}%`,
+      {/* Top Control & Summary Grid: Stacked on Mobile, 12-Col Grid on Desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-stretch">
+        {/* Obra Selector Dropdown */}
+        <div className="lg:col-span-5 bg-[#0f2744] border border-amber-500/25 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between space-y-2">
+          <label className="block text-xs font-semibold text-slate-300">
+            Canteiro de Obras Selecionado
+          </label>
+          <div className="relative">
+            <select
+              value={selectedObraId}
+              onChange={(e) => {
+                setSelectedObraId(e.target.value);
+                setSelectedWeekFilter(null);
               }}
-            />
+              className="w-full pl-3 pr-8 py-2.5 bg-[#0a192f] border border-slate-700 rounded-xl text-sm font-bold text-white focus:outline-none focus:border-amber-400 appearance-none cursor-pointer"
+            >
+              {cronogramas.map((c) => (
+                <option key={c.obraId} value={c.obraId}>
+                  {c.obraName}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
-          <span className="text-[10px] text-slate-300 flex justify-between pt-0.5">
-            <span>Orçamento: {formatCurrency(activeCronograma.totalBudget)}</span>
+          <span className="text-[10px] text-slate-400 hidden lg:block">
+            Cronograma contratual homologado com o Contratante / Cliente
           </span>
+        </div>
+
+        {/* Financial & Time Summary Cards */}
+        <div className="lg:col-span-7 grid grid-cols-2 gap-2.5 lg:gap-3.5 text-xs">
+          {/* Physical Time Progress */}
+          <div className="bg-[#0f2744] border border-slate-700/80 rounded-xl p-3 lg:p-4 space-y-1.5 shadow flex flex-col justify-between">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[10px] uppercase font-bold tracking-wider">Tempo Decorrido</span>
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl lg:text-2xl font-black text-white">
+                Semana {activeCronograma.currentWeek}
+              </span>
+              <span className="text-xs text-slate-400">/ 12</span>
+            </div>
+            <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-amber-500 to-amber-300 rounded-full"
+                style={{ width: `${(activeCronograma.currentWeek / 12) * 100}%` }}
+              />
+            </div>
+            <span className="text-[10px] text-amber-300 font-semibold block pt-0.5">
+              {Math.round((activeCronograma.currentWeek / 12) * 100)}% da janela de execução
+            </span>
+          </div>
+
+          {/* Financial Execution */}
+          <div className="bg-[#0f2744] border border-emerald-500/30 rounded-xl p-3 lg:p-4 space-y-1.5 shadow flex flex-col justify-between">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[10px] uppercase font-bold tracking-wider">Avanço Financeiro</span>
+              <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+            </div>
+            <div className="text-lg lg:text-2xl font-black text-emerald-400 tracking-tight">
+              {formatCurrency(activeCronograma.executedFinancial)}
+            </div>
+            <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
+                style={{
+                  width: `${Math.round(
+                    (activeCronograma.executedFinancial / activeCronograma.totalBudget) * 100
+                  )}%`,
+                }}
+              />
+            </div>
+            <span className="text-[10px] text-slate-300 flex justify-between pt-0.5">
+              <span>Orçamento: {formatCurrency(activeCronograma.totalBudget)}</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -338,8 +346,8 @@ export const CronogramaView: React.FC<CronogramaViewProps> = ({
         ))}
       </div>
 
-      {/* Service Fronts List (Semana 1 a 12) */}
-      <div className="space-y-3">
+      {/* Service Fronts List (Semana 1 a 12) — 2 columns on Desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
         {filteredStages.map((stage) => (
           <div
             key={stage.id}

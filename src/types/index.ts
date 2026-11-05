@@ -46,6 +46,22 @@ export interface BudgetServiceItem {
   total: number;
 }
 
+export interface PathologyDiagnosisItem {
+  code: string;
+  pathology: string;
+  severityLabel: string;
+  technicalOrigin: string;
+  riskImpact: string;
+  normativeTherapy: string;
+}
+
+export interface WarrantyClauseItem {
+  category: string;
+  period: string;
+  coverageDescription: string;
+  normReference: string;
+}
+
 export interface ContractAcceptance {
   signed: boolean;
   clientName: string;
@@ -66,15 +82,24 @@ export interface BudgetProposal {
   estimatedArea: number;
   pathologies: string[];
   urgency: string;
+  notes?: string;
   title: string;
   executiveSummary: string;
+  scopeDeclaration?: string;
+  environmentalClassification?: string;
+  pathologyDiagnostics?: PathologyDiagnosisItem[];
   norms: string[];
   services: BudgetServiceItem[];
   methodologyHighlights: {
     step: number;
+    phaseCode?: string;
     title: string;
     detail: string;
+    technicalStandard?: string;
   }[];
+  materialSpecifications?: string[];
+  warrantyClauses?: WarrantyClauseItem[];
+  contractualTerms?: string[];
   timelineWeeks: number;
   warrantyYears: number;
   paymentConditions: string;

@@ -301,8 +301,12 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
         </div>
       </div>
 
-      {/* Collaborator & Obra Selectors */}
-      <div className="bg-[#0f2744] border border-amber-500/25 rounded-2xl p-3.5 shadow-lg space-y-3">
+      {/* Desktop 12-Col Layout & Mobile Single-Col Flow */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+        {/* LEFT COLUMN ON DESKTOP: Terminal + Selectors + Overtime Summary */}
+        <div className="lg:col-span-5 space-y-4">
+          {/* Collaborator & Obra Selectors */}
+          <div className="bg-[#0f2744] border border-amber-500/25 rounded-2xl p-3.5 shadow-lg space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {/* Obra Canteiro Dropdown */}
           <div>
@@ -540,135 +544,139 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 50% (H)</label>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              max="6"
-              value={overtime50}
-              onChange={(e) => setOvertime50(parseFloat(e.target.value) || 0)}
-              className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
-            />
-          </div>
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 100% (H)</label>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              max="8"
-              value={overtime100}
-              onChange={(e) => setOvertime100(parseFloat(e.target.value) || 0)}
-              className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
-            />
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 50% (H)</label>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                max="6"
+                value={overtime50}
+                onChange={(e) => setOvertime50(parseFloat(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 100% (H)</label>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                max="8"
+                value={overtime100}
+                onChange={(e) => setOvertime100(parseFloat(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
+              />
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Historical Records Table / List with GPS Badges */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Histórico de Jornadas com Rastreamento GPS ({activeEmployee.name})
-          </h3>
-          <span className="text-[10px] text-amber-400 font-semibold">
-            {employeeTimesheets.length} registros
-          </span>
         </div>
 
-        <div className="space-y-2.5">
-          {employeeTimesheets.map((ts) => {
-            const entGps = ts.punchesGps?.entrada || ts.gpsLocation;
-            const saiGps = ts.punchesGps?.saida || ts.gpsLocation;
+        {/* RIGHT COLUMN ON DESKTOP: Historical Records Table / List with GPS Badges */}
+        <div className="lg:col-span-7">
+          <div className="flex items-center justify-between mb-2.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Histórico de Jornadas com Rastreamento GPS ({activeEmployee.name})
+            </h3>
+            <span className="text-[10px] text-amber-400 font-semibold">
+              {employeeTimesheets.length} registros auditados
+            </span>
+          </div>
 
-            return (
-              <div
-                key={ts.id}
-                className="bg-[#0f2744] border border-slate-700 hover:border-amber-400/40 rounded-xl p-3.5 text-xs space-y-2.5 transition shadow"
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="font-bold text-white">{ts.date}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      • {ts.obraName}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
-                    APROVADO
-                  </span>
-                </div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            {employeeTimesheets.map((ts) => {
+              const entGps = ts.punchesGps?.entrada || ts.gpsLocation;
+              const saiGps = ts.punchesGps?.saida || ts.gpsLocation;
 
-                {/* 4 Times */}
-                <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-300 bg-[#0a192f] p-1.5 rounded-lg text-center font-mono">
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">Entrada</span>
-                    <span className="font-bold text-white">{ts.entryTime}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">Almoço</span>
-                    <span className="text-slate-300">{ts.lunchStartTime}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">Retorno</span>
-                    <span className="text-slate-300">{ts.lunchEndTime}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">Saída</span>
-                    <span className="font-bold text-amber-400">{ts.exitTime}</span>
-                  </div>
-                </div>
-
-                {/* Exact GPS Coordinates Section */}
-                <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800 space-y-1.5 text-[11px]">
-                  <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                    <span className="font-semibold text-slate-300 flex items-center gap-1">
-                      <Satellite className="w-3 h-3 text-amber-400" />
-                      Coordenadas Registradas via GPS
-                    </span>
-                    <span className="text-emerald-400 font-medium">
-                      ✓ Cerca Digital OK
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] font-mono">
-                    {entGps && (
-                      <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
-                        <span className="text-slate-400">Entrada:</span>
-                        <span className="text-amber-300 font-bold">
-                          {entGps.latitude.toFixed(6)}, {entGps.longitude.toFixed(6)}
-                        </span>
-                      </div>
-                    )}
-                    {saiGps && (
-                      <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
-                        <span className="text-slate-400">Saída:</span>
-                        <span className="text-amber-300 font-bold">
-                          {saiGps.latitude.toFixed(6)}, {saiGps.longitude.toFixed(6)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Action button to open full GPS Proof and Map */}
-                <button
-                  type="button"
-                  onClick={() => setSelectedProofTimesheet(ts)}
-                  className="w-full py-1.5 px-3 rounded-lg bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+              return (
+                <div
+                  key={ts.id}
+                  className="bg-[#0f2744] border border-slate-700 hover:border-amber-400/40 rounded-xl p-3.5 text-xs space-y-2.5 transition shadow flex flex-col justify-between"
                 >
-                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Ver Comprovante GPS & Mapa Interativo</span>
-                  <ExternalLink className="w-3 h-3 ml-0.5" />
-                </button>
-              </div>
-            );
-          })}
+                  <div className="space-y-2.5">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="font-bold text-white">{ts.date}</span>
+                        <span className="text-[10px] text-slate-400 font-mono truncate max-w-[140px]">
+                          • {ts.obraName}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                        APROVADO
+                      </span>
+                    </div>
+
+                    {/* 4 Times */}
+                    <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-300 bg-[#0a192f] p-1.5 rounded-lg text-center font-mono">
+                      <div>
+                        <span className="text-slate-500 block text-[9px]">Entrada</span>
+                        <span className="font-bold text-white">{ts.entryTime}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block text-[9px]">Almoço</span>
+                        <span className="text-slate-300">{ts.lunchStartTime}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block text-[9px]">Retorno</span>
+                        <span className="text-slate-300">{ts.lunchEndTime}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block text-[9px]">Saída</span>
+                        <span className="font-bold text-amber-400">{ts.exitTime}</span>
+                      </div>
+                    </div>
+
+                    {/* Exact GPS Coordinates Section */}
+                    <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800 space-y-1.5 text-[11px]">
+                      <div className="flex items-center justify-between text-slate-400 text-[10px]">
+                        <span className="font-semibold text-slate-300 flex items-center gap-1">
+                          <Satellite className="w-3 h-3 text-amber-400" />
+                          Coordenadas Registradas via GPS
+                        </span>
+                        <span className="text-emerald-400 font-medium">
+                          ✓ Cerca Digital OK
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-1 text-[10px] font-mono">
+                        {entGps && (
+                          <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
+                            <span className="text-slate-400">Entrada:</span>
+                            <span className="text-amber-300 font-bold">
+                              {entGps.latitude.toFixed(6)}, {entGps.longitude.toFixed(6)}
+                            </span>
+                          </div>
+                        )}
+                        {saiGps && (
+                          <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
+                            <span className="text-slate-400">Saída:</span>
+                            <span className="text-amber-300 font-bold">
+                              {saiGps.latitude.toFixed(6)}, {saiGps.longitude.toFixed(6)}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action button to open full GPS Proof and Map */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProofTimesheet(ts)}
+                    className="w-full py-1.5 px-3 rounded-lg bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Ver Comprovante GPS & Mapa Interativo</span>
+                    <ExternalLink className="w-3 h-3 ml-0.5" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
