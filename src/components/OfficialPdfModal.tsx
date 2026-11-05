@@ -1,12 +1,11 @@
 import React from 'react';
 import { BudgetProposal } from '../types';
-import { ensureOfficialTemplateStructure } from '../utils/engineeringEngine';
+import { ensureOfficialTemplateStructure, RENOVAR_COMPANY_CNPJ } from '../utils/engineeringEngine';
 import {
   Printer,
   Download,
   X,
   CheckCircle2,
-  ShieldCheck,
   FileText,
 } from 'lucide-react';
 
@@ -38,7 +37,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
   <meta charset="UTF-8">
   <title>Memorial Descritivo e Orçamento Oficial - ${proposal.protocol} - ${proposal.condoName}</title>
   <style>
-    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #0f172a; padding: 36px; max-width: 920px; margin: 0 auto; line-height: 1.55; font-size: 12px; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #0f172a; padding: 36px; max-width: 960px; margin: 0 auto; line-height: 1.55; font-size: 12px; }
     h1, h2, h3, h4 { margin: 0 0 6px 0; color: #0a192f; }
     table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11px; }
     th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }
@@ -61,10 +60,10 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 overflow-y-auto animate-in fade-in">
-      <div className="w-full max-w-4xl bg-white text-slate-900 rounded-2xl shadow-2xl flex flex-col max-h-[94vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
+      <div className="w-full max-w-5xl bg-white text-slate-900 rounded-xl shadow-xl flex flex-col max-h-[94vh] overflow-hidden border border-slate-800">
         {/* Floating Controls Bar (Not Printed) */}
-        <div className="p-3 sm:px-5 bg-[#0a192f] text-white flex flex-wrap items-center justify-between gap-2 border-b border-amber-500/30 print:hidden">
+        <div className="p-3.5 sm:px-5 bg-[#0a192f] text-white flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 print:hidden">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-amber-400" />
             <span className="text-xs sm:text-sm font-bold text-white">
@@ -78,7 +77,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow active:scale-95 transition cursor-pointer hover:brightness-105"
+              className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
               title="Abrir diálogo de impressão e salvar como PDF"
             >
               <Printer className="w-3.5 h-3.5" />
@@ -86,7 +85,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </button>
             <button
               onClick={handleDownloadHtml}
-              className="px-3 py-1.5 rounded-lg bg-[#0f2744] border border-slate-700 hover:border-amber-400 text-slate-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-[#0f2744] border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
               title="Baixar cópia HTML/Offline do Memorial Descritivo"
             >
               <Download className="w-3.5 h-3.5 text-amber-400" />
@@ -94,7 +93,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white cursor-pointer ml-1"
+              className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-300 hover:text-white cursor-pointer ml-1"
             >
               <X className="w-4 h-4" />
             </button>
@@ -106,10 +105,10 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
           id="printable-official-proposal"
           className="p-6 sm:p-10 overflow-y-auto space-y-6 text-slate-800 text-xs font-sans bg-white print:p-0 print:overflow-visible"
         >
-          {/* Header with Official Logo & Company Credentials */}
+          {/* Header with Official Logo & Company Credentials (CNPJ 57.293.244/0001-27) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-[#0a192f] pb-4 gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 border border-slate-200 rounded-xl p-1 bg-white shadow-xs">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 border border-slate-200 rounded-xl p-1 bg-white">
                 <img
                   src="/assets/aistudio/Logotipo_Renovar_51718f31.jpg"
                   alt="Renovar SC - Soluções Prediais"
@@ -123,10 +122,10 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                 <p className="text-[10px] text-amber-700 font-bold uppercase tracking-wider">
                   Engenharia de Recuperação de Fachadas • Patologia das Construções • Restauração Predial
                 </p>
-                <div className="text-[10px] text-slate-500 font-mono mt-1 space-y-0.5">
-                  <p>CNPJ: 34.819.520/0001-90 | Inscrição Municipal: 149.201-8 | Registro CREA-SC</p>
-                  <p>Rua 1500, nº 420 - Centro, Balneário Camboriú - SC | CEP: 88330-000</p>
-                  <p>Atendimento Corporativo: (47) 99842-1920 | engenharia@renovarsc.com.br</p>
+                <div className="text-[10px] text-slate-600 font-mono mt-1 space-y-0.5">
+                  <p><strong>CNPJ: {RENOVAR_COMPANY_CNPJ}</strong> | Registro CREA-SC Ativo | NR-35 & NR-18</p>
+                  <p>Atuação Corporativa: Balneário Camboriú • Itapema • Itajaí • Florianópolis - SC</p>
+                  <p>Departamento de Engenharia & Orçamentos | engenharia@renovarsc.com.br</p>
                 </div>
               </div>
             </div>
@@ -141,7 +140,9 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
               <p className="text-[10px] text-slate-500">
                 Emissão: {new Date(proposal.createdAt).toLocaleDateString('pt-BR')}
               </p>
-              <p className="text-[10px] text-slate-500">Validade da Proposta: 30 dias</p>
+              <p className="text-[10px] text-slate-700 font-semibold">
+                Garantia Contratual: 0{proposal.warrantyYears} Anos
+              </p>
             </div>
           </div>
 
@@ -181,10 +182,10 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </div>
           </div>
 
-          {/* 1. Objeto e Escopo Detalhado */}
+          {/* 1. Escopo Técnico Detalhado */}
           <div className="space-y-1.5">
             <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-              1. OBJETO, FINALIDADE E ESCOPO TÉCNICO DO MEMORIAL DESCRITIVO
+              1. OBJETO, FINALIDADE E ESCOPO TÉCNICO DETALHADO
             </h2>
             <p className="text-slate-700 leading-relaxed text-justify">
               {proposal.scopeDeclaration}
@@ -195,11 +196,11 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </p>
           </div>
 
-          {/* 2. Diagnóstico Exato das Patologias Informadas */}
+          {/* 2. Diagnóstico Pericial de Patologias */}
           {proposal.pathologyDiagnostics && proposal.pathologyDiagnostics.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-                2. DIAGNÓSTICO PERICIAL EXATO DAS PATOLOGIAS IDENTIFICADAS ({proposal.condoName.toUpperCase()})
+                2. DIAGNÓSTICO PERICIAL DE PATOLOGIAS ({proposal.condoName.toUpperCase()})
               </h2>
               <div className="space-y-2.5 pt-1">
                 {proposal.pathologyDiagnostics.map((diag, idx) => (
@@ -235,11 +236,11 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </div>
           )}
 
-          {/* 3. Metodologia Executiva por Etapas */}
+          {/* 3. Metodologia Executiva por Fases */}
           {proposal.methodologyHighlights && (
             <div className="space-y-2">
               <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-                3. METODOLOGIA EXECUTIVA POR ETAPAS (PROCEDIMENTO OPERACIONAL PADRÃO)
+                3. METODOLOGIA EXECUTIVA POR FASES (PROCEDIMENTO OPERACIONAL PADRÃO)
               </h2>
               <div className="space-y-2 pt-1">
                 {proposal.methodologyHighlights.map((m, idx) => (
@@ -264,37 +265,10 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </div>
           )}
 
-          {/* 4. Normas Técnicas e Especificação de Materiais */}
+          {/* 4. Planilha de Serviços com Quantitativos e Insumos */}
           <div className="space-y-2">
             <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-              4. ENQUADRAMENTO NORMATIVO ABNT / NR E ESPECIFICAÇÃO DE MATERIAIS HOMOLOGADOS
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-700">
-              {proposal.norms.map((norm, idx) => (
-                <div key={idx} className="flex items-start gap-1.5 bg-slate-50 p-2 rounded border border-slate-200">
-                  <span className="text-amber-600 font-bold">✓</span>
-                  <span>{norm}</span>
-                </div>
-              ))}
-            </div>
-            {proposal.materialSpecifications && proposal.materialSpecifications.length > 0 && (
-              <div className="mt-2 p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-[11px] text-slate-700">
-                <span className="font-bold text-slate-900 block uppercase text-[10px] tracking-wider">
-                  Insumos Industriais e Controle Tecnológico Especificados:
-                </span>
-                {proposal.materialSpecifications.map((mat, idx) => (
-                  <p key={idx} className="leading-snug">
-                    • {mat}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* 5. Planilha Orçamentária Discriminada */}
-          <div className="space-y-2">
-            <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-              5. PLANILHA ORÇAMENTÁRIA ANALÍTICA E DISCRIMINADA ({proposal.condoName.toUpperCase()})
+              4. PLANILHA DE SERVIÇOS COM QUANTITATIVOS, INSUMOS E PREÇOS ({proposal.condoName.toUpperCase()})
             </h2>
 
             <div className="border border-slate-300 rounded-lg overflow-hidden">
@@ -302,7 +276,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                 <thead>
                   <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
                     <th className="py-2 px-2.5">Item</th>
-                    <th className="py-2 px-2.5">Discriminação Técnica dos Serviços e Procedimento Executivo</th>
+                    <th className="py-2 px-2.5">Discriminação dos Serviços, Metodologia e Insumos Aplicados</th>
                     <th className="py-2 px-2 text-center">Un.</th>
                     <th className="py-2 px-2 text-center">Quant.</th>
                     <th className="py-2 px-2.5 text-right">Preço Unit.</th>
@@ -313,9 +287,16 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                   {proposal.services.map((item, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'}>
                       <td className="py-2 px-2.5 font-bold text-slate-900 align-top font-mono">{item.code}</td>
-                      <td className="py-2 px-2.5 align-top">
+                      <td className="py-2 px-2.5 align-top space-y-1">
                         <span className="font-bold text-slate-900 block">{item.description}</span>
-                        <span className="text-[10px] text-slate-600 block leading-snug mt-0.5">{item.methodology}</span>
+                        <span className="text-[10px] text-slate-600 block leading-snug">
+                          <strong>Procedimento:</strong> {item.methodology}
+                        </span>
+                        {item.inputsAndMaterials && (
+                          <span className="text-[10px] text-slate-700 block leading-snug bg-slate-100/80 px-2 py-1 rounded border border-slate-200">
+                            <strong>Insumos & Materiais:</strong> {item.inputsAndMaterials}
+                          </span>
+                        )}
                       </td>
                       <td className="py-2 px-2 text-center align-top font-mono">{item.unit}</td>
                       <td className="py-2 px-2 text-center align-top font-mono">{item.quantity.toLocaleString('pt-BR')}</td>
@@ -346,10 +327,87 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </div>
           </div>
 
-          {/* 6. Garantias Contratuais e Condições Comerciais */}
+          {/* 5. Tabela de Equipe Técnica e Operacional Alocada */}
+          {proposal.teamAllocation && proposal.teamAllocation.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
+                5. TABELA DE EQUIPE TÉCNICA E OPERACIONAL ALOCADA NA OBRA
+              </h2>
+              <div className="border border-slate-300 rounded-lg overflow-hidden">
+                <table className="w-full text-left text-[11px] border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                      <th className="py-2 px-2.5">Função / Cargo na Obra</th>
+                      <th className="py-2 px-2 text-center">Efetivo</th>
+                      <th className="py-2 px-2.5">Habilitação & Certificações</th>
+                      <th className="py-2 px-2.5">Atribuição Técnica no Canteiro</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 text-slate-700">
+                    {proposal.teamAllocation.map((member, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'}>
+                        <td className="py-2 px-2.5 font-bold text-slate-900 align-top">{member.role}</td>
+                        <td className="py-2 px-2 text-center font-mono font-bold text-slate-900 align-top">
+                          {String(member.quantity).padStart(2, '0')} prof.
+                        </td>
+                        <td className="py-2 px-2.5 align-top">{member.qualification}</td>
+                        <td className="py-2 px-2.5 align-top text-slate-600">{member.assignment}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* 6. Cronograma Físico-Financeiro por Semanas */}
+          {proposal.weeklySchedule && proposal.weeklySchedule.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
+                6. CRONOGRAMA FÍSICO-FINANCEIRO POR SEMANAS ({proposal.timelineWeeks} SEMANAS)
+              </h2>
+              <div className="border border-slate-300 rounded-lg overflow-hidden">
+                <table className="w-full text-left text-[11px] border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                      <th className="py-2 px-2.5">Fase</th>
+                      <th className="py-2 px-2.5">Período</th>
+                      <th className="py-2 px-2.5">Etapa Executiva & Entrega</th>
+                      <th className="py-2 px-2 text-center">Peso (%)</th>
+                      <th className="py-2 px-2.5 text-right">Medição Prevista (R$)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 text-slate-700">
+                    {proposal.weeklySchedule.map((sch, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'}>
+                        <td className="py-2 px-2.5 font-mono font-bold text-slate-900 align-top whitespace-nowrap">
+                          {sch.phase}
+                        </td>
+                        <td className="py-2 px-2.5 font-mono font-semibold text-slate-800 align-top whitespace-nowrap">
+                          {sch.weeksLabel}
+                        </td>
+                        <td className="py-2 px-2.5 align-top">
+                          <span className="font-bold text-slate-900 block">{sch.stageTitle}</span>
+                          <span className="text-[10px] text-slate-600 block">Entrega: {sch.deliverable}</span>
+                        </td>
+                        <td className="py-2 px-2 text-center font-mono font-bold text-slate-900 align-top">
+                          {sch.physicalWeightPercent}%
+                        </td>
+                        <td className="py-2 px-2.5 text-right font-mono font-bold text-slate-900 align-top whitespace-nowrap">
+                          {formatCurrency(sch.financialAmount)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* 7. Termo de Garantia Contratual de 05 Anos */}
           <div className="space-y-2.5">
             <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-              6. TERMO DE GARANTIAS CONTRATUAIS, RESPONSABILIDADE TÉCNICA E CONDIÇÕES COMERCIAIS
+              7. TERMO DE GARANTIA CONTRATUAL DE 05 (CINCO) ANOS (ART. 618 CC / ABNT NBR 15575)
             </h2>
 
             {proposal.warrantyClauses && proposal.warrantyClauses.length > 0 && (
@@ -359,7 +417,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                     <div className="flex items-center justify-between gap-1">
                       <span className="font-bold text-[#0a192f] text-[11px]">{wc.category}</span>
                     </div>
-                    <span className="inline-block text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                    <span className="inline-block text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
                       {wc.period} • {wc.normReference}
                     </span>
                     <p className="text-[10px] text-slate-600 leading-relaxed pt-0.5">
@@ -369,21 +427,45 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                 ))}
               </div>
             )}
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-300">
+          {/* 8. Condições Comerciais, Faturamento e Responsabilidade Técnica */}
+          <div className="space-y-2.5">
+            <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
+              8. CONDIÇÕES COMERCIAIS, DADOS DE FATURAMENTO (CNPJ {RENOVAR_COMPANY_CNPJ}) E CLÁUSULAS GERAIS
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-300">
+              <div>
+                <span className="text-[10px] text-slate-500 block">Razão Social & CNPJ:</span>
+                <span className="font-bold text-slate-900">Renovar SC Ltda • {RENOVAR_COMPANY_CNPJ}</span>
+              </div>
               <div>
                 <span className="text-[10px] text-slate-500 block">Prazo Estimado de Execução:</span>
-                <span className="font-bold text-slate-900">{proposal.timelineWeeks} semanas de cronograma físico-financeiro</span>
+                <span className="font-bold text-slate-900">{proposal.timelineWeeks} semanas</span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-500 block">Garantia Contratual Global:</span>
-                <span className="font-bold text-slate-900">{proposal.warrantyYears} anos (Conforme Art. 618 do Código Civil e NBR 15575)</span>
+                <span className="font-bold text-slate-900">0{proposal.warrantyYears} anos (Integral)</span>
               </div>
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3 pt-1.5 border-t border-slate-200">
                 <span className="text-[10px] text-slate-500 block">Condições de Medição e Pagamento:</span>
                 <span className="font-semibold text-slate-800">{proposal.paymentConditions}</span>
               </div>
             </div>
+
+            {proposal.commercialTermsList && proposal.commercialTermsList.length > 0 && (
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-[10px] text-slate-700">
+                <span className="font-bold text-slate-900 block uppercase tracking-wider">
+                  Diretrizes Comerciais e Fiscais:
+                </span>
+                {proposal.commercialTermsList.map((term, idx) => (
+                  <p key={idx} className="leading-relaxed">
+                    • {term}
+                  </p>
+                ))}
+              </div>
+            )}
 
             {proposal.contractualTerms && proposal.contractualTerms.length > 0 && (
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1 text-[10px] text-slate-600">
@@ -399,20 +481,20 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             )}
           </div>
 
-          {/* 7. Termo de Aceite & Assinatura Digital do Contratante */}
+          {/* 9. Termo de Aceite & Assinatura Digital do Contratante */}
           <div className="border-t-2 border-[#0a192f] pt-4">
             <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] mb-2">
-              7. TERMO DE ACEITE, HOMOLOGAÇÃO TÉCNICA & ASSINATURA DIGITAL DO CONTRATANTE / CLIENTE
+              9. TERMO DE ACEITE, HOMOLOGAÇÃO TÉCNICA & ASSINATURA DO CONTRATANTE / CLIENTE
             </h2>
 
             {proposal.contractAcceptance?.signed ? (
-              <div className="bg-emerald-50 border-2 border-emerald-500 rounded-xl p-4 text-xs space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-emerald-200">
-                  <div className="flex items-center gap-2 text-emerald-800 font-bold">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              <div className="bg-slate-50 border-2 border-[#0a192f] rounded-xl p-4 text-xs space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-300">
+                  <div className="flex items-center gap-2 text-[#0a192f] font-bold">
+                    <CheckCircle2 className="w-5 h-5 text-amber-600" />
                     <span>MEMORIAL E PROPOSTA HOMOLOGADOS DIGITALMENTE PELO CONTRATANTE</span>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                  <span className="text-[10px] font-mono text-slate-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">
                     Hash: {proposal.contractAcceptance.protocolHash}
                   </span>
                 </div>
@@ -420,7 +502,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                   <div>
                     <p className="text-slate-700 text-[11px] leading-relaxed">
-                      O Contratante / Cliente declara ter conferido integralmente o diagnóstico das patologias, a metodologia executiva por etapas, a planilha orçamentária e os termos de garantia, autorizando a mobilização técnica.
+                      O Contratante / Cliente declara ter conferido integralmente o diagnóstico das patologias, a metodologia executiva por fases, a planilha de serviços e insumos, a tabela de equipe, o cronograma físico-financeiro e a garantia de 05 anos, autorizando a mobilização técnica.
                     </p>
                     <div className="mt-2 text-[11px] text-slate-800 space-y-0.5">
                       <p><strong>Signatário (Contratante/Cliente):</strong> {proposal.contractAcceptance.clientName}</p>
@@ -431,7 +513,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                   </div>
 
                   {/* Signature graphic */}
-                  <div className="flex flex-col items-center justify-center p-2 bg-white rounded-lg border border-emerald-200">
+                  <div className="flex flex-col items-center justify-center p-2 bg-white rounded-lg border border-slate-300">
                     <span className="text-[9px] uppercase tracking-wider text-slate-400 mb-1">
                       Assinatura Grafométrica Registrada
                     </span>
@@ -459,7 +541,7 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                 <div className="grid grid-cols-2 gap-8 mt-8 pt-4 max-w-lg mx-auto text-[10px] text-slate-600">
                   <div className="border-t border-slate-400 pt-1">
                     <strong>RENOVAR SC SOLUÇÕES PREDIAIS LTDA</strong>
-                    <span className="block">Engenharia e Diretoria Técnica</span>
+                    <span className="block">CNPJ: {RENOVAR_COMPANY_CNPJ} • Diretoria Técnica</span>
                   </div>
                   <div className="border-t border-slate-400 pt-1">
                     <strong>{proposal.condoName.toUpperCase()}</strong>
@@ -473,7 +555,9 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
           {/* Footer Signature of Renovar SC */}
           <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between sm:items-end gap-2 text-[11px] text-slate-600">
             <div>
-              <p className="font-bold text-slate-900">RENOVAR SC — SOLUÇÕES PREDIAIS LTDA</p>
+              <p className="font-bold text-slate-900">
+                RENOVAR SC — SOLUÇÕES PREDIAIS LTDA (CNPJ {RENOVAR_COMPANY_CNPJ})
+              </p>
               <p className="text-[10px] text-slate-500">{proposal.technicalResponsible}</p>
             </div>
             <div className="sm:text-right text-[10px] text-slate-400 font-mono">

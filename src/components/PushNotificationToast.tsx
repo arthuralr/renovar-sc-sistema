@@ -53,16 +53,16 @@ export const PushNotificationToast: React.FC<PushNotificationToastProps> = ({
 
   return (
     <div className="fixed top-3 left-3 right-3 sm:left-auto sm:right-4 sm:w-96 z-50 animate-in slide-in-from-top-4 duration-300">
-      <div className="bg-[#0f2744] border-2 border-amber-400/80 rounded-2xl p-3.5 shadow-2xl shadow-black/60 flex items-start gap-3 backdrop-blur-md">
+      <div className="bg-[#0f2744] border border-slate-700 rounded-xl p-3.5 shadow-xl flex items-start gap-3 backdrop-blur-md">
         {/* Leading icon */}
-        <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <div className="w-10 h-10 rounded-xl bg-[#0a192f] border border-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5">
           {getIcon()}
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0 cursor-pointer" onClick={handleClick}>
           <div className="flex items-center justify-between gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.2 rounded">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-[#0a192f] border border-slate-800 px-1.5 py-0.5 rounded">
               Notificação Push
             </span>
             <span className="text-[9px] text-slate-400">Agora</span>
@@ -77,7 +77,7 @@ export const PushNotificationToast: React.FC<PushNotificationToastProps> = ({
           </p>
 
           {activeToast.actionTab && (
-            <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-amber-300 hover:text-amber-200">
+            <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-amber-400 hover:text-amber-300">
               <span>Toque para abrir no sistema</span>
               <ChevronRight className="w-3 h-3" />
             </div>
@@ -90,7 +90,7 @@ export const PushNotificationToast: React.FC<PushNotificationToastProps> = ({
             e.stopPropagation();
             setActiveToast(null);
           }}
-          className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+          className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#0a192f] transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

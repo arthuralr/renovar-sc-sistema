@@ -89,18 +89,18 @@ Localizador Google Maps: ${googleMapsUrl}
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-[#0a192f] border border-amber-500/40 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-[#0f2744] border border-slate-800 w-full max-w-lg rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#0f2744] to-[#122e54] p-3.5 border-b border-amber-500/30 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-400">
+        <div className="bg-[#0a192f] p-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#0f2744] border border-slate-800 flex items-center justify-center text-amber-400">
               <Satellite className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 Rastreamento GPS de Ponto
-                <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+                <span className="text-[10px] font-mono bg-[#0f2744] text-amber-400 border border-slate-800 px-2 py-0.5 rounded">
                   Portaria 671 MTE
                 </span>
               </h3>
@@ -111,22 +111,22 @@ Localizador Google Maps: ${googleMapsUrl}
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Scrollable Body */}
         <div className="p-4 overflow-y-auto space-y-3.5 text-xs">
           {/* Worker & Job Summary */}
-          <div className="bg-[#0f2744] p-3 rounded-xl border border-slate-700/80 space-y-2">
+          <div className="bg-[#0a192f] p-3.5 rounded-xl border border-slate-800 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HardHat className="w-4 h-4 text-amber-400" />
                 <div>
                   <h4 className="font-bold text-white text-sm">{timesheet.employeeName}</h4>
-                  <p className="text-[11px] text-amber-300">
+                  <p className="text-[11px] text-amber-400">
                     {employee?.role || 'Operador Especialista em Fachadas'}
                   </p>
                 </div>
@@ -149,13 +149,13 @@ Localizador Google Maps: ${googleMapsUrl}
           </div>
 
           {/* Punch Selector Tabs (Entrada vs Saída) */}
-          <div className="flex items-center bg-[#0f2744] p-1 rounded-xl border border-slate-700">
+          <div className="flex items-center bg-[#0a192f] p-1 rounded-xl border border-slate-800">
             <button
               type="button"
               onClick={() => setActiveTab('entrada')}
               className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'entrada'
-                  ? 'bg-amber-400 text-slate-950 shadow'
+                  ? 'bg-amber-400 text-slate-950'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -167,7 +167,7 @@ Localizador Google Maps: ${googleMapsUrl}
               onClick={() => setActiveTab('saida')}
               className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'saida'
-                  ? 'bg-amber-400 text-slate-950 shadow'
+                  ? 'bg-amber-400 text-slate-950'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -177,27 +177,27 @@ Localizador Google Maps: ${googleMapsUrl}
           </div>
 
           {/* Active GPS Punch Card */}
-          <div className="bg-[#0f2744] border-2 border-amber-400/40 rounded-xl p-3.5 space-y-3">
+          <div className="bg-[#0a192f] border border-slate-800 rounded-xl p-3.5 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Compass className="w-3.5 h-3.5 text-amber-400" />
                 Coordenadas Georreferenciadas no Instante Exato
               </span>
-              <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+              <span className="text-[10px] font-mono text-white bg-[#0f2744] border border-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-amber-400" />
                 Sinal GPS Travado
               </span>
             </div>
 
             {/* Coordinates Grid */}
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800">
+              <div className="bg-[#0f2744] p-2.5 rounded-lg border border-slate-800">
                 <span className="text-[10px] text-slate-400 block">Latitude</span>
                 <span className="font-mono font-bold text-amber-400 text-sm">
                   {lat.toFixed(6)}°
                 </span>
               </div>
-              <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800">
+              <div className="bg-[#0f2744] p-2.5 rounded-lg border border-slate-800">
                 <span className="text-[10px] text-slate-400 block">Longitude</span>
                 <span className="font-mono font-bold text-amber-400 text-sm">
                   {lng.toFixed(6)}°
@@ -207,26 +207,26 @@ Localizador Google Maps: ${googleMapsUrl}
 
             {/* Precision & Geofence Details */}
             <div className="grid grid-cols-2 gap-2 text-[11px]">
-              <div className="bg-[#0a192f] p-2 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div className="bg-[#0f2744] p-2 rounded-lg border border-slate-800 flex items-center justify-between">
                 <span className="text-slate-400">Precisão do Sensor:</span>
                 <span className="text-white font-mono font-semibold">± {accuracy.toFixed(1)} m</span>
               </div>
-              <div className="bg-[#0a192f] p-2 rounded-lg border border-slate-800 flex items-center justify-between">
+              <div className="bg-[#0f2744] p-2 rounded-lg border border-slate-800 flex items-center justify-between">
                 <span className="text-slate-400">Distância da Obra:</span>
-                <span className="text-emerald-400 font-mono font-semibold">{distance} m</span>
+                <span className="text-amber-400 font-mono font-semibold">{distance} m</span>
               </div>
             </div>
 
             {/* Geofence Validation Badge */}
-            <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-start gap-2 text-[11px]">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+            <div className="p-2.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-200 flex items-start gap-2 text-[11px]">
+              <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold">
+                <p className="font-bold text-white">
                   {isWithin
                     ? 'Validação de Cerca Digital (Geofence): APROVADA'
                     : 'Atenção: Registro fora do raio nominal do canteiro'}
                 </p>
-                <p className="text-[10px] text-emerald-200/80 mt-0.5">
+                <p className="text-[10px] text-slate-400 mt-0.5">
                   Colaborador presente dentro do perímetro de segurança de 150m da obra no momento da batida.
                 </p>
               </div>
@@ -237,7 +237,7 @@ Localizador Google Maps: ${googleMapsUrl}
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2 px-3 rounded-lg bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+              className="w-full py-2 px-3 rounded-lg bg-[#0f2744] hover:bg-slate-800 border border-slate-700 text-amber-400 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
               <Navigation className="w-3.5 h-3.5" />
               <span>Abrir Localização no Google Maps</span>
@@ -246,7 +246,7 @@ Localizador Google Maps: ${googleMapsUrl}
           </div>
 
           {/* Embedded Map Visualization */}
-          <div className="bg-[#0f2744] rounded-xl border border-slate-700 overflow-hidden space-y-1.5">
+          <div className="bg-[#0a192f] rounded-xl border border-slate-800 overflow-hidden space-y-1.5">
             <div className="p-2.5 pb-0 flex items-center justify-between text-[11px]">
               <span className="font-semibold text-slate-300 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-amber-400" />
@@ -267,10 +267,10 @@ Localizador Google Maps: ${googleMapsUrl}
                 marginHeight={0}
                 marginWidth={0}
                 src={osmEmbedUrl}
-                className="w-full h-full filter saturate-125 opacity-90 hover:opacity-100 transition"
+                className="w-full h-full opacity-90 hover:opacity-100 transition"
               />
-              <div className="absolute bottom-2 left-2 bg-slate-900/90 backdrop-blur-sm border border-slate-700 px-2 py-1 rounded text-[10px] text-white flex items-center gap-1 pointer-events-none">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <div className="absolute bottom-2 left-2 bg-[#0a192f]/95 border border-slate-800 px-2.5 py-1 rounded text-[10px] text-white flex items-center gap-1.5 pointer-events-none">
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
                 <span>Ponto registrado no canteiro</span>
               </div>
             </div>
@@ -288,22 +288,22 @@ Localizador Google Maps: ${googleMapsUrl}
               </span>
             </div>
             <p className="leading-relaxed">
-              Registro biométrico/temporal assinado com georreferenciamento auditado por constelação GPS. Dados imutáveis vinculados ao CNPJ da Renovar SC Soluções Prediais Ltda.
+              Registro biométrico/temporal assinado com georreferenciamento auditado por constelação GPS. Dados imutáveis vinculados ao CNPJ 57.293.244/0001-27 da Renovar SC Soluções Prediais Ltda.
             </p>
           </div>
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="bg-[#0f2744] p-3 border-t border-slate-800 flex items-center gap-2">
+        <div className="bg-[#0a192f] p-3.5 border-t border-slate-800 flex items-center gap-2">
           <button
             type="button"
             onClick={handleCopyDetails}
-            className="flex-1 py-2 px-3 rounded-xl bg-[#0a192f] hover:bg-[#14294b] border border-slate-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-[#0f2744] hover:bg-slate-800 border border-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-300">Copiado!</span>
+                <Check className="w-4 h-4 text-amber-400" />
+                <span className="text-amber-400">Copiado!</span>
               </>
             ) : (
               <>
@@ -316,7 +316,7 @@ Localizador Google Maps: ${googleMapsUrl}
           <button
             type="button"
             onClick={handleShare}
-            className="flex-1 py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer"
+            className="flex-1 py-2.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
             <Share2 className="w-4 h-4" />
             <span>Compartilhar</span>

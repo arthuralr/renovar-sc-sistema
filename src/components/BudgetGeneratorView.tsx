@@ -5,6 +5,7 @@ import { notifyBudgetApproved } from '../services/notificationService';
 import {
   generateLocalEngineeringBudget,
   ensureOfficialTemplateStructure,
+  RENOVAR_COMPANY_CNPJ,
 } from '../utils/engineeringEngine';
 import {
   Sparkles,
@@ -26,6 +27,9 @@ import {
   Wrench,
   Layers,
   AlertTriangle,
+  Users,
+  CalendarRange,
+  DollarSign,
 } from 'lucide-react';
 
 interface BudgetGeneratorViewProps {
@@ -395,7 +399,7 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
     if (!activeProposal) return;
     const textToCopy = `
 ======================================================================
-RENOVAR SC — SOLUÇÕES PREDIAIS LTDA (CNPJ: 34.819.520/0001-90)
+RENOVAR SC — SOLUÇÕES PREDIAIS LTDA (CNPJ: ${RENOVAR_COMPANY_CNPJ})
 ${activeProposal.title}
 ======================================================================
 Protocolo Oficial: ${activeProposal.protocol}
@@ -405,13 +409,13 @@ Configuração / Porte: ${activeProposal.towers} Torre(s) | ${activeProposal.flo
 Enquadramento Ambiental: ${activeProposal.environmentalClassification || 'Classe III/IV - ABNT NBR 6118'}
 Grau de Risco / Urgência: ${activeProposal.urgency}
 
-1. OBJETO E ESCOPO TÉCNICO DO MEMORIAL DESCRITIVO:
+1. ESCOPO TÉCNICO DETALHADO DO MEMORIAL DESCRITIVO:
 ${activeProposal.scopeDeclaration}
 
 Síntese de Vistoria:
 ${activeProposal.executiveSummary}
 
-2. DIAGNÓSTICO PERICIAL EXATO DAS PATOLOGIAS INFORMADAS:
+2. DIAGNÓSTICO PERICIAL DE PATOLOGIAS:
 ${(activeProposal.pathologyDiagnostics || [])
   .map(
     (d) =>
@@ -419,25 +423,19 @@ ${(activeProposal.pathologyDiagnostics || [])
   )
   .join('\n\n')}
 
-3. METODOLOGIA EXECUTIVA POR ETAPAS (PADRÃO RENOVAR SC):
+3. METODOLOGIA EXECUTIVA POR FASES (PADRÃO RENOVAR SC):
 ${activeProposal.methodologyHighlights
   .map(
     (m) =>
-      `${m.phaseCode || `ETAPA 0${m.step}`} — ${m.title} [${m.technicalStandard || 'ABNT/NR'}]\n   ${m.detail}`
+      `${m.phaseCode || `FASE 0${m.step}`} — ${m.title} [${m.technicalStandard || 'ABNT/NR'}]\n   ${m.detail}`
   )
   .join('\n\n')}
 
-4. NORMAS TÉCNICAS E ESPECIFICAÇÃO DE MATERIAIS HOMOLOGADOS:
-- ${activeProposal.norms.join('\n- ')}
-
-Insumos Especificados:
-- ${(activeProposal.materialSpecifications || []).join('\n- ')}
-
-5. PLANILHA ORÇAMENTÁRIA ANALÍTICA E DISCRIMINADA:
+4. PLANILHA DE SERVIÇOS COM QUANTITATIVOS E INSUMOS:
 ${activeProposal.services
   .map(
     (s) =>
-      `• ${s.code} - ${s.description}\n  Procedimento: ${s.methodology}\n  Quant.: ${s.quantity.toLocaleString('pt-BR')} ${s.unit} x R$ ${s.unitPrice.toFixed(2)} = R$ ${s.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+      `• ${s.code} - ${s.description}\n  Procedimento: ${s.methodology}\n  Insumos Aplicados: ${s.inputsAndMaterials || 'Insumos industriais homologados ABNT'}\n  Quant.: ${s.quantity.toLocaleString('pt-BR')} ${s.unit} x R$ ${s.unitPrice.toFixed(2)} = R$ ${s.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
   )
   .join('\n\n')}
 
@@ -446,14 +444,33 @@ Subtotal Direto (Mão de Obra, Balancins e Insumos): R$ ${activeProposal.subtota
 BDI Corporativo, Seguros, ART/CREA-SC e Encargos (${activeProposal.bdiPercent}%): R$ ${(activeProposal.totalPrice - activeProposal.subtotal).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
 VALOR GLOBAL PROPOSTO: R$ ${activeProposal.totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
 
-6. GARANTIAS CONTRATUAIS E CONDIÇÕES COMERCIAIS:
+5. TABELA DE EQUIPE TÉCNICA E OPERACIONAL ALOCADA:
+${(activeProposal.teamAllocation || [])
+  .map(
+    (t) =>
+      `• ${t.role} (${t.quantity} prof.) — ${t.qualification}\n  Atribuição: ${t.assignment}`
+  )
+  .join('\n')}
+
+6. CRONOGRAMA FÍSICO-FINANCEIRO POR SEMANAS (${activeProposal.timelineWeeks} SEMANAS):
+${(activeProposal.weeklySchedule || [])
+  .map(
+    (w) =>
+      `• ${w.phase} (${w.weeksLabel}): ${w.stageTitle} | Peso: ${w.physicalWeightPercent}% | Medição: R$ ${w.financialAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+  )
+  .join('\n')}
+
+7. GARANTIA CONTRATUAL DE 05 ANOS (ART. 618 CC / ABNT NBR 15575):
 ${(activeProposal.warrantyClauses || [])
   .map((w) => `• ${w.category}: ${w.period} (${w.normReference}) — ${w.coverageDescription}`)
   .join('\n')}
 
+8. CONDIÇÕES COMERCIAIS E DADOS EMPRESARIAIS:
+Razão Social: RENOVAR SC SOLUÇÕES PREDIAIS LTDA | CNPJ: ${RENOVAR_COMPANY_CNPJ}
 Prazo de Execução: ${activeProposal.timelineWeeks} semanas
-Garantia Contratual Global: ${activeProposal.warrantyYears} anos (Art. 618 Código Civil / ABNT NBR 15575)
+Garantia Contratual Global: 0${activeProposal.warrantyYears} anos
 Condições de Pagamento: ${activeProposal.paymentConditions}
+${(activeProposal.commercialTermsList || []).map((c) => `• ${c}`).join('\n')}
 Responsabilidade Técnica: ${activeProposal.technicalResponsible}
 ${
   activeProposal.contractAcceptance?.signed
@@ -470,14 +487,14 @@ ${
   const handleWhatsAppShare = () => {
     if (!activeProposal) return;
     const msg =
-      `*RENOVAR SC — MEMORIAL DESCRITIVO & PROPOSTA TÉCNICA OFICIAL*\n\n` +
+      `*RENOVAR SC (CNPJ ${RENOVAR_COMPANY_CNPJ}) — MEMORIAL DESCRITIVO & ORÇAMENTO OFICIAL*\n\n` +
       `*Protocolo:* ${activeProposal.protocol}\n` +
       `*Contratante / Cliente:* ${activeProposal.condoName}\n` +
       `*Localização:* ${activeProposal.location}\n` +
       `*Porte:* ${activeProposal.towers} Torre(s) • ${activeProposal.floors} Pavimentos (${activeProposal.estimatedArea.toLocaleString('pt-BR')} m²)\n` +
       `*Patologias Diagnosticadas:* ${activeProposal.pathologies.join(', ')}\n` +
       `*Investimento Global Proposto:* R$ ${activeProposal.totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n` +
-      `*Prazo de Execução:* ${activeProposal.timelineWeeks} semanas | *Garantia Contratual:* ${activeProposal.warrantyYears} anos\n` +
+      `*Prazo de Execução:* ${activeProposal.timelineWeeks} semanas | *Garantia Contratual:* 0${activeProposal.warrantyYears} anos\n` +
       (activeProposal.contractAcceptance?.signed
         ? `*Status:* Homologado Digitalmente pelo Contratante (${activeProposal.contractAcceptance.protocolHash})\n\n`
         : `\n`) +
@@ -503,16 +520,16 @@ ${
   };
 
   return (
-    <div className="space-y-4 lg:space-y-6 pb-nav lg:pb-6">
+    <div className="space-y-5 lg:space-y-6 pb-nav lg:pb-8">
       {/* View Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0f2744]/80 border border-amber-500/20 rounded-2xl p-3.5 lg:p-4 shadow-lg">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0f2744] border border-slate-800 rounded-2xl p-4 lg:p-5 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-base lg:text-lg font-bold text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 lg:w-5 lg:h-5 text-amber-400" />
               Memorial Descritivo & Orçamento Oficial IA
             </h2>
-            <span className="hidden sm:inline-flex text-[10px] font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
+            <span className="hidden sm:inline-flex text-[10px] font-semibold bg-[#0a192f] text-amber-400 border border-slate-800 px-2.5 py-0.5 rounded-md">
               Template Estruturado Padrão Renovar SC
             </span>
           </div>
@@ -522,12 +539,12 @@ ${
         </div>
 
         {/* Sub tabs */}
-        <div className="flex items-center bg-[#0a192f] p-1 rounded-xl border border-slate-700/80">
+        <div className="flex items-center bg-[#0a192f] p-1 rounded-xl border border-slate-800">
           <button
             onClick={() => setActiveSubTab('create')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
               activeSubTab === 'create'
-                ? 'bg-amber-400 text-slate-950 shadow-sm font-bold'
+                ? 'bg-amber-400 text-slate-950 font-bold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -537,7 +554,7 @@ ${
             onClick={() => setActiveSubTab('saved')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
               activeSubTab === 'saved'
-                ? 'bg-amber-400 text-slate-950 shadow-sm font-bold'
+                ? 'bg-amber-400 text-slate-950 font-bold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -574,18 +591,18 @@ ${
                     setGeneratedProposal(prop);
                     setActiveSubTab('create');
                   }}
-                  className="bg-[#0f2744] hover:bg-[#14294b] border border-slate-700 hover:border-amber-400/50 rounded-2xl p-4 cursor-pointer transition shadow-lg flex flex-col justify-between"
+                  className="bg-[#0f2744] hover:bg-[#132c4e] border border-slate-800 hover:border-slate-700 rounded-2xl p-4 cursor-pointer transition shadow-sm flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-start justify-between mb-1.5">
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/30">
+                          <span className="text-[10px] font-mono font-bold text-amber-400 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-800">
                             {prop.protocol}
                           </span>
                           {prop.contractAcceptance?.signed && (
-                            <span className="text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.2 rounded flex items-center gap-1">
-                              <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                            <span className="text-[9px] font-semibold bg-[#0a192f] text-slate-200 border border-slate-700 px-1.5 py-0.5 rounded flex items-center gap-1">
+                              <CheckCircle2 className="w-2.5 h-2.5 text-amber-400" />
                               Homologado
                             </span>
                           )}
@@ -596,12 +613,12 @@ ${
                           {prop.location}
                         </p>
                       </div>
-                      <span className="text-sm font-black text-emerald-400">
+                      <span className="text-sm font-bold text-amber-400">
                         {formatCurrency(prop.totalPrice)}
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-slate-300 mt-2 bg-[#0a192f] p-2.5 rounded-lg line-clamp-3 border border-slate-800">
+                    <div className="text-[11px] text-slate-300 mt-2.5 bg-[#0a192f] p-2.5 rounded-lg line-clamp-3 border border-slate-800">
                       {prop.executiveSummary}
                     </div>
                   </div>
@@ -610,7 +627,7 @@ ${
                     <span>
                       {prop.towers} torre(s) • {prop.floors} pav. ({prop.estimatedArea.toLocaleString('pt-BR')} m²)
                     </span>
-                    <span className="text-amber-300 font-semibold">Abrir Memorial Completo →</span>
+                    <span className="text-amber-400 font-semibold">Abrir Memorial Completo →</span>
                   </div>
                 </div>
               );
@@ -621,11 +638,11 @@ ${
         /* Desktop 2-Column Split Workstation & Mobile Single-Column Flow */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
           {/* LEFT COLUMN: Variable Input Parameters & Presets */}
-          <div className="lg:col-span-5 xl:col-span-4 space-y-3.5 lg:sticky lg:top-20">
+          <div className="lg:col-span-5 xl:col-span-4 space-y-4 lg:sticky lg:top-20">
             {/* Quick Presets for Field Engineers */}
-            <div className="bg-[#0f2744] border border-slate-700/80 rounded-2xl p-3 space-y-2">
+            <div className="bg-[#0f2744] border border-slate-800 rounded-2xl p-3.5 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
                   Modelos Rápidos de Canteiro (SC):
                 </span>
                 <span className="text-[10px] text-slate-400">1 clique</span>
@@ -634,21 +651,21 @@ ${
                 <button
                   type="button"
                   onClick={() => handleApplyPreset('brava')}
-                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-amber-400/60 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
+                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
                 >
                   🏢 Terraços da Brava (2T • 18 and.)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleApplyPreset('itapema')}
-                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-amber-400/60 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
+                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
                 >
                   🌊 Golden Bay (1T • 14 and.)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleApplyPreset('florianopolis')}
-                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-amber-400/60 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
+                  className="flex-shrink-0 px-2.5 py-1.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-[11px] text-slate-200 font-medium cursor-pointer transition text-left"
                 >
                   🏝️ Solar dos Açores (1T • 8 and.)
                 </button>
@@ -658,14 +675,14 @@ ${
             {/* Form */}
             <form
               onSubmit={handleGenerate}
-              className="bg-[#0f2744] border border-amber-500/25 rounded-2xl p-4 lg:p-5 shadow-xl space-y-3.5"
+              className="bg-[#0f2744] border border-slate-800 rounded-2xl p-4 lg:p-5 shadow-sm space-y-4"
             >
-              <div className="border-b border-slate-700/80 pb-2.5 flex items-center justify-between">
+              <div className="border-b border-slate-800 pb-2.5 flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                   <Building2 className="w-4 h-4" />
                   Dados Variáveis do Contratante & Obra
                 </h3>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-mono text-slate-300 bg-[#0a192f] border border-slate-800 px-2 py-0.5 rounded">
                   Template Fixo ABNT
                 </span>
               </div>
@@ -681,7 +698,7 @@ ${
                   onChange={(e) => setCondoName(e.target.value)}
                   required
                   placeholder="Ex: Condomínio Residencial Atlântico"
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/70"
                 />
               </div>
 
@@ -698,13 +715,13 @@ ${
                     onChange={(e) => setLocation(e.target.value)}
                     required
                     placeholder="Ex: Balneário Camboriú, SC"
-                    className="w-full pl-9 pr-3 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                    className="w-full pl-9 pr-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/70"
                   />
                 </div>
               </div>
 
               {/* Torres, Pavimentos e Área */}
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-300 mb-1">
                     Torres / Blocos
@@ -719,7 +736,7 @@ ${
                       setTowers(val);
                       setEstimatedArea(val * floors * 130);
                     }}
-                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400/70"
                   />
                 </div>
 
@@ -737,7 +754,7 @@ ${
                       setFloors(val);
                       setEstimatedArea(towers * val * 130);
                     }}
-                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400/70"
                   />
                 </div>
 
@@ -750,7 +767,7 @@ ${
                     step="50"
                     value={estimatedArea}
                     onChange={(e) => setEstimatedArea(parseInt(e.target.value, 10) || 0)}
-                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-amber-400 text-center font-bold focus:outline-none focus:border-amber-400"
+                    className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-amber-400 text-center font-bold focus:outline-none focus:border-amber-400/70"
                   />
                 </div>
               </div>
@@ -759,7 +776,7 @@ ${
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
                   <span>Patologias Informadas para o Diagnóstico</span>
-                  <span className="text-[10px] text-amber-400 font-bold">
+                  <span className="text-[10px] text-amber-400 font-semibold">
                     {selectedPathologies.length} selecionada(s)
                   </span>
                 </label>
@@ -773,8 +790,8 @@ ${
                         onClick={() => handleTogglePathology(pathology)}
                         className={`text-[11px] px-2.5 py-1.5 rounded-lg border transition text-left cursor-pointer ${
                           isSelected
-                            ? 'bg-amber-400/20 border-amber-400 text-amber-300 font-semibold'
-                            : 'bg-[#0a192f] border-slate-700 text-slate-400 hover:border-slate-600'
+                            ? 'bg-amber-400/15 border-amber-400/50 text-amber-300 font-semibold'
+                            : 'bg-[#0a192f] border-slate-800 text-slate-400 hover:border-slate-700'
                         }`}
                       >
                         {isSelected ? '✓ ' : '+ '}
@@ -798,10 +815,8 @@ ${
                       onClick={() => setUrgency(level)}
                       className={`py-1.5 px-2 rounded-lg text-xs font-semibold border transition text-center cursor-pointer ${
                         urgency === level
-                          ? level === 'Alta / Risco de Queda'
-                            ? 'bg-rose-500/20 border-rose-500 text-rose-300 font-bold'
-                            : 'bg-amber-400/20 border-amber-400 text-amber-300 font-bold'
-                          : 'bg-[#0a192f] border-slate-700 text-slate-400'
+                          ? 'bg-amber-400/15 border-amber-400/50 text-amber-300 font-bold'
+                          : 'bg-[#0a192f] border-slate-800 text-slate-400 hover:border-slate-700'
                       }`}
                     >
                       {level}
@@ -820,7 +835,7 @@ ${
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Ex: Necessidade de tela fachadeira reforçada sobre área de lazer e garagens..."
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 resize-none"
+                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/70 resize-none"
                 />
               </div>
 
@@ -828,7 +843,7 @@ ${
               <button
                 type="submit"
                 disabled={isLoading || selectedPathologies.length === 0}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-amber-500/20 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                className="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm tracking-wide shadow-sm transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {isLoading ? (
                   <>
@@ -848,38 +863,73 @@ ${
           {/* RIGHT COLUMN: Official Structured Engineering Memorial & Budget Document */}
           <div className="lg:col-span-7 xl:col-span-8">
             {activeProposal && (
-              <div className="bg-[#0f2744] border-2 border-amber-400/40 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-5 animate-in fade-in slide-in-from-bottom-3 duration-300">
-                {/* Official Document Header Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-700/80 pb-4">
+              <div className="bg-[#0f2744] border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
+                {/* CABEÇALHO INSTITUCIONAL DA EMPRESA COM LOGOTIPO E CNPJ 57.293.244/0001-27 */}
+                <div className="bg-[#0a192f] border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white p-1 border border-slate-700 flex-shrink-0 overflow-hidden">
+                      <img
+                        src="/assets/aistudio/Logotipo_Renovar_51718f31.jpg"
+                        alt="Renovar SC"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm sm:text-base font-bold text-white tracking-tight">
+                          RENOVAR <span className="text-amber-400">SC</span> — SOLUÇÕES PREDIAIS LTDA
+                        </span>
+                        <span className="text-[10px] font-mono font-semibold bg-[#0f2744] text-amber-400 border border-slate-800 px-2 py-0.5 rounded">
+                          CNPJ: {RENOVAR_COMPANY_CNPJ}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 mt-0.5">
+                        Engenharia Civil • Recuperação Estrutural, Impermeabilização e Restauração de Fachadas
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                        Registro CREA-SC • Conformidade Normativa ABNT NBR 13755 / NBR 6118 / NR-35 • Santa Catarina
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="sm:text-right border-t sm:border-t-0 border-slate-800 pt-2.5 sm:pt-0 flex-shrink-0">
+                    <span className="text-[10px] font-mono font-bold bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded inline-block">
+                      {activeProposal.protocol}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-1">
+                      Emissão: {new Date(activeProposal.createdAt).toLocaleDateString('pt-BR')}
+                    </span>
+                    <span className="text-[10px] text-amber-400 font-semibold block">
+                      Garantia Contratual: 0{activeProposal.warrantyYears} Anos
+                    </span>
+                  </div>
+                </div>
+
+                {/* Official Document Title & Global Investment Banner */}
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-800 pb-4">
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] font-mono font-black bg-amber-400 text-slate-950 px-2.5 py-0.5 rounded">
-                        PROTOCOLO: {activeProposal.protocol}
-                      </span>
-                      <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded">
-                        MODELO OFICIAL DE ENGENHARIA CIVIL
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-medium">
-                        Garantia Contratual: {activeProposal.warrantyYears} anos (Art. 618 CC)
+                      <span className="text-[10px] font-semibold bg-[#0a192f] text-amber-400 border border-slate-800 px-2.5 py-0.5 rounded">
+                        MODELO FORMAL DE ENGENHARIA CIVIL — PADRÃO OFICIAL RENOVAR SC
                       </span>
                     </div>
-                    <h3 className="text-base sm:text-lg font-black text-white mt-1.5 leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-white mt-1.5 leading-snug">
                       {activeProposal.title}
                     </h3>
-                    <p className="text-xs text-amber-300 font-semibold">
-                      Contratante / Cliente: {activeProposal.condoName} • {activeProposal.location}
+                    <p className="text-xs text-slate-300 font-medium">
+                      Contratante / Cliente: <strong className="text-white">{activeProposal.condoName}</strong> • {activeProposal.location}
                     </p>
                   </div>
 
-                  <div className="bg-[#0a192f] border border-amber-500/30 rounded-xl px-3.5 py-2 sm:text-right flex-shrink-0">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold block">
-                      Investimento Global
+                  <div className="bg-[#0a192f] border border-slate-800 rounded-xl px-4 py-2.5 sm:text-right flex-shrink-0">
+                    <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                      Investimento Global Proposto
                     </span>
-                    <span className="text-base sm:text-lg font-black text-amber-400 font-mono">
+                    <span className="text-base sm:text-lg font-bold text-amber-400 font-mono">
                       {formatCurrency(activeProposal.totalPrice)}
                     </span>
-                    <span className="text-[10px] text-emerald-400 block">
-                      Prazo: {activeProposal.timelineWeeks} semanas
+                    <span className="text-[10px] text-slate-400 block">
+                      Execução: {activeProposal.timelineWeeks} semanas • Garantia: 0{activeProposal.warrantyYears} anos
                     </span>
                   </div>
                 </div>
@@ -889,7 +939,7 @@ ${
                   <button
                     type="button"
                     onClick={() => setShowPdfModal(true)}
-                    className="col-span-2 sm:col-span-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-xs font-black flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 transition cursor-pointer hover:brightness-105"
+                    className="col-span-2 sm:col-span-1 py-2.5 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
                     <FileText className="w-4 h-4 text-slate-950" />
                     <span>Exportar PDF Oficial</span>
@@ -898,13 +948,13 @@ ${
                   <button
                     type="button"
                     onClick={handleCopyClipboard}
-                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-amber-400/50 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                     title="Copiar memorial completo formatado"
                   >
                     {copySuccess ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Memorial Copiado</span>
+                        <Check className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-amber-400">Memorial Copiado</span>
                       </>
                     ) : (
                       <>
@@ -917,21 +967,21 @@ ${
                   <button
                     type="button"
                     onClick={handleWhatsAppShare}
-                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-emerald-500/50 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
-                    <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <Share2 className="w-3.5 h-3.5 text-amber-400" />
                     <span>Enviar WhatsApp</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleSaveToHistory}
-                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-700 hover:border-amber-400/50 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="py-2.5 px-2.5 rounded-xl bg-[#0a192f] border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
                     {saveSuccess ? (
                       <>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Salvo no Acervo</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-amber-400">Salvo no Acervo</span>
                       </>
                     ) : (
                       <>
@@ -942,67 +992,77 @@ ${
                   </button>
                 </div>
 
-                {/* QUADRO I: Dados Técnicos Injetados do Empreendimento */}
-                <div className="bg-[#0a192f] p-3.5 rounded-xl border border-amber-500/25 space-y-2">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                    <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                {/* QUADRO I: Identificação do Contratante / Cliente e Caracterização da Edificação */}
+                <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-2.5">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5" />
-                      Quadro Técnico do Empreendimento (Parâmetros Injetados)
+                      Identificação do Contratante / Cliente e Dados da Edificação
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      CREA-SC • ABNT
+                      CNPJ Emissor: {RENOVAR_COMPANY_CNPJ}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs pt-1">
-                    <div className="bg-[#0f2744]/80 p-2.5 rounded-lg border border-slate-800">
+                    <div className="bg-[#0f2744]/70 p-2.5 rounded-lg border border-slate-800">
                       <span className="text-[10px] text-slate-400 block">Contratante / Cliente</span>
                       <span className="font-bold text-white truncate block" title={activeProposal.condoName}>
                         {activeProposal.condoName}
                       </span>
                     </div>
-                    <div className="bg-[#0f2744]/80 p-2.5 rounded-lg border border-slate-800">
-                      <span className="text-[10px] text-slate-400 block">Localização</span>
+                    <div className="bg-[#0f2744]/70 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block">Localização / Município</span>
                       <span className="font-bold text-white truncate block" title={activeProposal.location}>
                         {activeProposal.location}
                       </span>
                     </div>
-                    <div className="bg-[#0f2744]/80 p-2.5 rounded-lg border border-slate-800">
+                    <div className="bg-[#0f2744]/70 p-2.5 rounded-lg border border-slate-800">
                       <span className="text-[10px] text-slate-400 block">Torres & Pavimentos</span>
-                      <span className="font-bold text-amber-300">
+                      <span className="font-bold text-white">
                         {activeProposal.towers} Torre(s) • {activeProposal.floors} Pav.
                       </span>
                     </div>
-                    <div className="bg-[#0f2744]/80 p-2.5 rounded-lg border border-slate-800">
-                      <span className="text-[10px] text-slate-400 block">Área de Intervenção</span>
-                      <span className="font-bold text-emerald-400 font-mono">
+                    <div className="bg-[#0f2744]/70 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block">Área Estimada Fachada</span>
+                      <span className="font-bold text-amber-400 font-mono">
                         {activeProposal.estimatedArea.toLocaleString('pt-BR')} m²
                       </span>
                     </div>
                   </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px]">
+                    <div className="bg-[#0f2744]/50 px-3 py-2 rounded-lg border border-slate-800 text-slate-300">
+                      <strong className="text-white">Enquadramento Ambiental: </strong>
+                      {activeProposal.environmentalClassification}
+                    </div>
+                    <div className="bg-[#0f2744]/50 px-3 py-2 rounded-lg border border-slate-800 text-slate-300">
+                      <strong className="text-white">Grau de Prioridade / Urgência: </strong>
+                      <span className="text-amber-400 font-semibold">{activeProposal.urgency}</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* SEÇÃO 1: Escopo Detalhado e Resumo Executivo */}
+                {/* SEÇÃO 1: Escopo Técnico Detalhado e Síntese de Vistoria */}
                 <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-2.5">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-2">
                     <ClipboardCheck className="w-4 h-4" />
-                    1. Objeto, Escopo Técnico Detalhado e Síntese de Vistoria
+                    1. Escopo Técnico Detalhado e Síntese de Vistoria
                   </span>
                   <p className="text-xs text-slate-300 leading-relaxed text-justify">
                     {activeProposal.scopeDeclaration}
                   </p>
-                  <div className="bg-[#0f2744]/90 p-3 rounded-lg border border-slate-700/80 text-xs text-slate-200 leading-relaxed text-justify">
-                    <strong className="text-amber-300">Parecer Executivo de Campo: </strong>
+                  <div className="bg-[#0f2744]/70 p-3 rounded-lg border border-slate-800 text-xs text-slate-200 leading-relaxed text-justify">
+                    <strong className="text-amber-400">Parecer Técnico de Vistoria: </strong>
                     {activeProposal.executiveSummary}
                   </div>
                 </div>
 
-                {/* SEÇÃO 2: Diagnóstico Exato das Patologias Informadas */}
+                {/* SEÇÃO 2: Diagnóstico Pericial de Patologias */}
                 {activeProposal.pathologyDiagnostics && activeProposal.pathologyDiagnostics.length > 0 && (
                   <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                         <AlertTriangle className="w-4 h-4" />
-                        2. Diagnóstico Técnico Exato das Patologias Informadas
+                        2. Diagnóstico Pericial de Patologias
                       </span>
                       <span className="text-[10px] text-slate-400">
                         {activeProposal.pathologyDiagnostics.length} patologia(s) laudada(s)
@@ -1013,31 +1073,31 @@ ${
                       {activeProposal.pathologyDiagnostics.map((diag, idx) => (
                         <div
                           key={idx}
-                          className="p-3.5 rounded-xl bg-[#0f2744]/80 border border-slate-700/90 space-y-2 text-xs"
+                          className="p-3.5 rounded-xl bg-[#0f2744]/70 border border-slate-800 space-y-2 text-xs"
                         >
                           <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-slate-800 pb-1.5">
                             <span className="font-bold text-white flex items-center gap-1.5">
-                              <span className="text-[10px] font-mono bg-amber-400/20 text-amber-300 border border-amber-400/40 px-1.5 py-0.5 rounded">
+                              <span className="text-[10px] font-mono bg-[#0a192f] text-amber-400 border border-slate-800 px-1.5 py-0.5 rounded">
                                 {diag.code}
                               </span>
                               {diag.pathology}
                             </span>
-                            <span className="text-[10px] font-semibold text-amber-300 bg-[#0a192f] px-2 py-0.5 rounded border border-amber-500/30">
+                            <span className="text-[10px] font-medium text-slate-300 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-800">
                               {diag.severityLabel}
                             </span>
                           </div>
 
                           <div className="space-y-1.5 text-[11px] text-slate-300 leading-relaxed">
                             <p>
-                              <strong className="text-slate-100">• Mecanismo e Causa Técnica: </strong>
+                              <strong className="text-white">• Origem e Mecanismo Físico-Químico: </strong>
                               {diag.technicalOrigin}
                             </p>
                             <p>
-                              <strong className="text-rose-300">• Risco Associado à Edificação: </strong>
+                              <strong className="text-white">• Risco Associado à Edificação: </strong>
                               {diag.riskImpact}
                             </p>
                             <p>
-                              <strong className="text-emerald-300">• Terapia Normativa Prescrita: </strong>
+                              <strong className="text-amber-400">• Terapia Normativa Prescrita: </strong>
                               {diag.normativeTherapy}
                             </p>
                           </div>
@@ -1047,15 +1107,15 @@ ${
                   </div>
                 )}
 
-                {/* SEÇÃO 3: Metodologia Executiva por Etapas */}
+                {/* SEÇÃO 3: Metodologia Executiva por Fases */}
                 {activeProposal.methodologyHighlights && (
                   <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Wrench className="w-4 h-4" />
-                        3. Metodologia Executiva por Etapas (Padrão de Engenharia Renovar SC)
+                        3. Metodologia Executiva por Fases (Procedimento Operacional Padrão)
                       </span>
-                      <span className="text-[10px] text-slate-400">7 Etapas Normativas</span>
+                      <span className="text-[10px] text-slate-400">7 Fases Normativas</span>
                     </div>
 
                     <div className="space-y-2.5">
@@ -1066,13 +1126,13 @@ ${
                         >
                           <div className="flex flex-wrap items-center justify-between gap-1">
                             <div className="font-bold text-white flex items-center gap-2">
-                              <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black flex items-center justify-center flex-shrink-0">
+                              <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-bold flex items-center justify-center flex-shrink-0">
                                 {m.step || idx + 1}
                               </span>
                               <span>{m.title}</span>
                             </div>
                             {m.technicalStandard && (
-                              <span className="text-[10px] font-mono text-amber-300 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-700">
+                              <span className="text-[10px] font-mono text-slate-300 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-800">
                                 {m.technicalStandard}
                               </span>
                             )}
@@ -1083,93 +1143,106 @@ ${
                         </div>
                       ))}
                     </div>
+
+                    {/* Normas e Especificação Geral de Materiais */}
+                    <div className="pt-2 border-t border-slate-800 space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                        Enquadramento Normativo Aplicável (ABNT / MTE):
+                      </span>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                        {activeProposal.norms.map((norm, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-1.5 text-[11px] text-slate-300 bg-[#0f2744]/50 p-2 rounded-lg border border-slate-800"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <span>{norm}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* SEÇÃO 4: Normas Técnicas e Especificação de Materiais Homologados */}
-                <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
-                    <ShieldCheck className="w-4 h-4" />
-                    4. Normas Técnicas ABNT / NR e Especificação de Materiais Homologados
-                  </span>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-                    {activeProposal.norms.map((norm, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-1.5 text-[11px] text-slate-300 bg-[#0f2744]/60 p-2 rounded-lg border border-slate-800"
-                      >
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                        <span>{norm}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {activeProposal.materialSpecifications && (
-                    <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                        Especificação de Insumos e Controle Tecnológico:
-                      </span>
-                      {activeProposal.materialSpecifications.map((mat, idx) => (
-                        <p key={idx} className="text-[11px] text-slate-300 leading-relaxed">
-                          <span className="text-amber-400 font-bold">• </span>
-                          {mat}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* SEÇÃO 5: Planilha Orçamentária Discriminada */}
+                {/* SEÇÃO 4: Planilha de Serviços com Quantitativos e Insumos */}
                 <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 overflow-hidden space-y-3">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                    <span className="text-xs font-black text-amber-400 uppercase tracking-wider block">
-                      5. Planilha Orçamentária Analítica e Discriminada
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <DollarSign className="w-4 h-4" />
+                      4. Planilha de Serviços com Quantitativos, Insumos e Preços
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">
                       Valores em R$ (BRL)
                     </span>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {activeProposal.services.map((item, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl bg-[#0f2744]/80 border border-slate-800 text-xs space-y-1.5"
+                        className="p-3.5 rounded-xl bg-[#0f2744]/70 border border-slate-800 text-xs space-y-2"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <span className="font-bold text-white leading-snug">
                             <span className="text-amber-400 font-mono mr-1.5">[{item.code}]</span>
                             {item.description}
                           </span>
-                          <span className="font-black text-emerald-400 font-mono flex-shrink-0">
+                          <span className="font-bold text-amber-400 font-mono flex-shrink-0">
                             {formatCurrency(item.total)}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-300 leading-relaxed">{item.methodology}</p>
-                        <div className="flex justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-800/80 font-mono">
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          <strong className="text-white">Procedimento: </strong>
+                          {item.methodology}
+                        </p>
+                        {item.inputsAndMaterials && (
+                          <div className="bg-[#0a192f]/80 px-3 py-2 rounded-lg border border-slate-800 text-[11px] text-slate-300 leading-relaxed">
+                            <strong className="text-amber-400">Insumos & Materiais Inclusos: </strong>
+                            {item.inputsAndMaterials}
+                          </div>
+                        )}
+                        <div className="flex flex-wrap justify-between gap-2 text-[11px] text-slate-300 pt-1.5 border-t border-slate-800 font-mono">
                           <span>
-                            Quantitativo: {item.quantity.toLocaleString('pt-BR')} {item.unit}
+                            Quantitativo: <strong className="text-white">{item.quantity.toLocaleString('pt-BR')} {item.unit}</strong>
                           </span>
-                          <span>Preço Unitário: {formatCurrency(item.unitPrice)}</span>
+                          <span>
+                            Preço Unitário: <strong className="text-white">{formatCurrency(item.unitPrice)}</strong>
+                          </span>
+                          <span>
+                            Subtotal Item: <strong className="text-amber-400">{formatCurrency(item.total)}</strong>
+                          </span>
                         </div>
                       </div>
                     ))}
                   </div>
 
+                  {/* Especificações Tecnológicas Complementares */}
+                  {activeProposal.materialSpecifications && (
+                    <div className="p-3 rounded-xl bg-[#0f2744]/50 border border-slate-800 space-y-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">
+                        Padrão Tecnológico dos Insumos Homologados:
+                      </span>
+                      {activeProposal.materialSpecifications.map((mat, idx) => (
+                        <p key={idx} className="text-[11px] text-slate-300 leading-relaxed">
+                          • {mat}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Subtotal, BDI e Total Final */}
                   <div className="mt-3 pt-3 border-t border-slate-800 space-y-1.5 text-xs">
                     <div className="flex justify-between text-slate-300">
-                      <span>Subtotal Direto (Mão de Obra Especializada, Insumos e Balancins):</span>
+                      <span>Subtotal Direto (Mão de Obra Especializada, Insumos, Equipamentos e Balancins):</span>
                       <span className="font-mono font-semibold">{formatCurrency(activeProposal.subtotal)}</span>
                     </div>
                     <div className="flex justify-between text-slate-300">
-                      <span>BDI Corporativo, Seguros, ART/CREA-SC e Encargos ({activeProposal.bdiPercent}%):</span>
+                      <span>BDI Corporativo, Tributos, Seguros, ART/CREA-SC e Administração ({activeProposal.bdiPercent}%):</span>
                       <span className="font-mono font-semibold">
                         {formatCurrency(activeProposal.totalPrice - activeProposal.subtotal)}
                       </span>
                     </div>
-                    <div className="flex justify-between text-base font-black text-white pt-2 border-t border-slate-700">
+                    <div className="flex justify-between text-base font-bold text-white pt-2 border-t border-slate-800">
                       <span className="text-amber-400">VALOR GLOBAL PROPOSTO:</span>
                       <span className="text-amber-400 font-mono">
                         {formatCurrency(activeProposal.totalPrice)}
@@ -1178,22 +1251,126 @@ ${
                   </div>
                 </div>
 
-                {/* SEÇÃO 6: Garantias Contratuais e Condições Comerciais */}
-                <div className="bg-[#0a192f] p-4 rounded-xl border border-amber-500/30 space-y-3">
-                  <span className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
-                    <Award className="w-4 h-4" />
-                    6. Garantias Contratuais, Segurança NR-35 e Condições Comerciais
-                  </span>
+                {/* SEÇÃO 5: Tabela de Equipe Técnica e Operacional */}
+                {activeProposal.teamAllocation && activeProposal.teamAllocation.length > 0 && (
+                  <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        5. Tabela de Equipe Técnica e Operacional Alocada
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Efetivo Próprio • NR-35 / NR-18
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto border border-slate-800 rounded-xl">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="bg-[#0f2744] text-slate-200 border-b border-slate-800 text-[11px]">
+                            <th className="py-2.5 px-3 font-bold">Função / Cargo na Obra</th>
+                            <th className="py-2.5 px-2.5 font-bold text-center">Qtd.</th>
+                            <th className="py-2.5 px-3 font-bold">Habilitação & Certificações</th>
+                            <th className="py-2.5 px-3 font-bold">Atribuição Técnica no Canteiro</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800 text-[11px] text-slate-300">
+                          {activeProposal.teamAllocation.map((member, idx) => (
+                            <tr key={idx} className="bg-[#0a192f] hover:bg-[#0f2744]/50">
+                              <td className="py-2.5 px-3 font-bold text-white align-top">
+                                {member.role}
+                              </td>
+                              <td className="py-2.5 px-2.5 text-center font-mono font-bold text-amber-400 align-top">
+                                {String(member.quantity).padStart(2, '0')}
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-300 align-top">
+                                {member.qualification}
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-400 align-top leading-relaxed">
+                                {member.assignment}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* SEÇÃO 6: Cronograma Físico-Financeiro por Semanas */}
+                {activeProposal.weeklySchedule && activeProposal.weeklySchedule.length > 0 && (
+                  <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CalendarRange className="w-4 h-4" />
+                        6. Cronograma Físico-Financeiro por Semanas ({activeProposal.timelineWeeks} Semanas)
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Planejamento de Medições
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto border border-slate-800 rounded-xl">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="bg-[#0f2744] text-slate-200 border-b border-slate-800 text-[11px]">
+                            <th className="py-2.5 px-3 font-bold">Fase</th>
+                            <th className="py-2.5 px-3 font-bold">Período Semanal</th>
+                            <th className="py-2.5 px-3 font-bold">Etapa Executiva & Entrega</th>
+                            <th className="py-2.5 px-2.5 font-bold text-center">Peso (%)</th>
+                            <th className="py-2.5 px-3 font-bold text-right">Medição Prevista (R$)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800 text-[11px] text-slate-300">
+                          {activeProposal.weeklySchedule.map((sch, idx) => (
+                            <tr key={idx} className="bg-[#0a192f] hover:bg-[#0f2744]/50">
+                              <td className="py-2.5 px-3 font-mono font-bold text-amber-400 align-top whitespace-nowrap">
+                                {sch.phase}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono text-white font-semibold align-top whitespace-nowrap">
+                                {sch.weeksLabel}
+                              </td>
+                              <td className="py-2.5 px-3 align-top">
+                                <span className="font-bold text-white block">{sch.stageTitle}</span>
+                                <span className="text-[10px] text-slate-400 block mt-0.5">
+                                  Entrega: {sch.deliverable}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-2.5 text-center font-mono font-bold text-slate-200 align-top">
+                                {sch.physicalWeightPercent}%
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-amber-400 align-top whitespace-nowrap">
+                                {formatCurrency(sch.financialAmount)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* SEÇÃO 7: Garantia Contratual de 05 Anos */}
+                <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Award className="w-4 h-4" />
+                      7. Termo de Garantia Contratual de 05 (Cinco) Anos
+                    </span>
+                    <span className="text-[10px] font-semibold bg-[#0f2744] text-amber-400 border border-slate-800 px-2 py-0.5 rounded">
+                      Art. 618 Código Civil • ABNT NBR 15575
+                    </span>
+                  </div>
 
                   {activeProposal.warrantyClauses && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                       {activeProposal.warrantyClauses.map((wc, idx) => (
                         <div
                           key={idx}
-                          className="p-3 rounded-xl bg-[#0f2744]/80 border border-slate-700/80 space-y-1 text-xs"
+                          className="p-3 rounded-xl bg-[#0f2744]/70 border border-slate-800 space-y-1 text-xs"
                         >
                           <span className="font-bold text-white block">{wc.category}</span>
-                          <span className="inline-block text-[10px] font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded">
+                          <span className="inline-block text-[10px] font-semibold text-amber-400 bg-[#0a192f] border border-slate-800 px-2 py-0.5 rounded">
                             {wc.period} • {wc.normReference}
                           </span>
                           <p className="text-[11px] text-slate-300 leading-relaxed pt-0.5">
@@ -1203,27 +1380,50 @@ ${
                       ))}
                     </div>
                   )}
+                </div>
 
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-[#0f2744] to-[#122e54] border border-amber-500/30 text-xs space-y-1.5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div className="flex justify-between sm:justify-start sm:gap-2">
-                        <span className="text-slate-400">Prazo de Execução:</span>
+                {/* SEÇÃO 8: Condições Comerciais e Responsabilidade Contratual */}
+                <div className="bg-[#0a192f] p-4 rounded-xl border border-slate-800 space-y-3">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-2">
+                    <FileText className="w-4 h-4" />
+                    8. Condições Comerciais, Faturamento e Cláusulas Contratuais
+                  </span>
+
+                  <div className="p-3.5 rounded-xl bg-[#0f2744]/70 border border-slate-800 text-xs space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Empresa Contratada:</span>
+                        <span className="text-white font-bold">Renovar SC (CNPJ {RENOVAR_COMPANY_CNPJ})</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Prazo Total de Execução:</span>
                         <span className="text-white font-bold">
-                          {activeProposal.timelineWeeks} semanas de cronograma
+                          {activeProposal.timelineWeeks} semanas
                         </span>
                       </div>
-                      <div className="flex justify-between sm:justify-start sm:gap-2">
-                        <span className="text-slate-400">Garantia Contratual:</span>
-                        <span className="text-emerald-400 font-bold">
-                          {activeProposal.warrantyYears} anos (Art. 618 CC / NBR 15575)
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Garantia Global:</span>
+                        <span className="text-amber-400 font-bold">
+                          0{activeProposal.warrantyYears} anos (Integral)
                         </span>
                       </div>
                     </div>
-                    <div className="text-[11px] text-slate-200 pt-1 border-t border-slate-700/80">
-                      <span className="font-bold text-amber-300">Condições de Medição e Pagamento: </span>
+                    <div className="text-[11px] text-slate-300 pt-2 border-t border-slate-800">
+                      <span className="font-bold text-white">Condição Padrão de Pagamento: </span>
                       {activeProposal.paymentConditions}
                     </div>
                   </div>
+
+                  {activeProposal.commercialTermsList && (
+                    <div className="space-y-1.5 text-[11px] text-slate-300">
+                      {activeProposal.commercialTermsList.map((item, idx) => (
+                        <p key={idx} className="leading-relaxed bg-[#0f2744]/40 px-3 py-2 rounded-lg border border-slate-800">
+                          <span className="text-amber-400 font-bold">• </span>
+                          {item}
+                        </p>
+                      ))}
+                    </div>
+                  )}
 
                   {activeProposal.contractualTerms && (
                     <div className="space-y-1 text-[11px] text-slate-300 pt-1">
@@ -1237,29 +1437,29 @@ ${
                   )}
                 </div>
 
-                {/* SEÇÃO 7: TERMO DE ACEITE & ASSINATURA DIGITAL DO CONTRATANTE */}
-                <div className="bg-[#0a192f] border-2 border-amber-500/40 rounded-2xl p-4 space-y-3.5">
+                {/* SEÇÃO 9: TERMO DE ACEITE & ASSINATURA DIGITAL DO CONTRATANTE */}
+                <div className="bg-[#0a192f] border border-slate-800 rounded-2xl p-4 space-y-3.5">
                   <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                     <div className="flex items-center gap-2">
                       <PenTool className="w-4 h-4 text-amber-400" />
                       <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                        7. Termo de Aceite & Assinatura Digital do Contratante / Cliente
+                        9. Aprovação do Orçamento & Assinatura Digital do Contratante / Cliente
                       </h4>
                     </div>
-                    <span className="text-[9px] bg-amber-400/15 text-amber-300 border border-amber-400/30 px-1.5 py-0.5 rounded font-bold">
+                    <span className="text-[9px] bg-[#0f2744] text-slate-300 border border-slate-800 px-2 py-0.5 rounded font-semibold">
                       Validação Jurídica em Tela
                     </span>
                   </div>
 
                   {activeProposal.contractAcceptance?.signed ? (
                     /* Visual Record of Acceptance Seal */
-                    <div className="bg-emerald-500/10 border-2 border-emerald-500/50 rounded-xl p-3.5 space-y-2.5 text-xs animate-in zoom-in-95">
-                      <div className="flex items-center justify-between pb-2 border-b border-emerald-500/30">
-                        <div className="flex items-center gap-2 text-emerald-400 font-bold">
-                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                    <div className="bg-[#0f2744] border border-amber-400/40 rounded-xl p-4 space-y-3 text-xs">
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                        <div className="flex items-center gap-2 text-amber-400 font-bold">
+                          <CheckCircle2 className="w-5 h-5 text-amber-400" />
                           <span>CONTRATO HOMOLOGADO DIGITALMENTE PELO CONTRATANTE</span>
                         </div>
-                        <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">
+                        <span className="text-[10px] font-mono text-slate-300 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-800">
                           {activeProposal.contractAcceptance.protocolHash}
                         </span>
                       </div>
@@ -1285,7 +1485,7 @@ ${
                         </div>
                         <div>
                           <span className="text-slate-400 block text-[10px]">Data do Aceite:</span>
-                          <span className="font-semibold text-emerald-400">
+                          <span className="font-semibold text-white">
                             {new Date(activeProposal.contractAcceptance.signedAt).toLocaleString('pt-BR')}
                           </span>
                         </div>
@@ -1304,7 +1504,7 @@ ${
                       </div>
 
                       <div className="flex justify-between items-center pt-1">
-                        <span className="text-[10px] text-emerald-400 font-medium">
+                        <span className="text-[10px] text-slate-300 font-medium">
                           ✓ Incluído no PDF Oficial do Memorial Descritivo
                         </span>
                         <button
@@ -1328,7 +1528,7 @@ ${
                         O Contratante, Cliente ou Representante Legal pode assinar diretamente no quadro abaixo (com o mouse no computador ou toque no celular) para homologação formal do Memorial Descritivo.
                       </p>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
                         <div>
                           <label className="block text-[11px] text-slate-300 font-semibold mb-1">
                             Nome do Contratante / Representante
@@ -1338,7 +1538,7 @@ ${
                             value={clientSignName}
                             onChange={(e) => setClientSignName(e.target.value)}
                             placeholder="Ex: Roberto Albuquerque"
-                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-700 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400"
+                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-800 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400/70"
                           />
                         </div>
                         <div>
@@ -1350,7 +1550,7 @@ ${
                             value={clientSignRole}
                             onChange={(e) => setClientSignRole(e.target.value)}
                             placeholder="Ex: Contratante / Administrador"
-                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-700 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400"
+                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-800 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400/70"
                           />
                         </div>
                         <div>
@@ -1362,7 +1562,7 @@ ${
                             value={clientSignCpf}
                             onChange={(e) => setClientSignCpf(e.target.value)}
                             placeholder="000.000.000-00"
-                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-700 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400 font-mono"
+                            className="w-full px-2.5 py-1.5 bg-[#0f2744] border border-slate-800 rounded-lg text-white text-xs focus:outline-none focus:border-amber-400/70 font-mono"
                           />
                         </div>
                       </div>
@@ -1383,7 +1583,7 @@ ${
                           </button>
                         </div>
 
-                        <div className="relative rounded-xl overflow-hidden border-2 border-dashed border-amber-400/60 bg-white shadow-inner">
+                        <div className="relative rounded-xl overflow-hidden border border-slate-600 bg-white">
                           <canvas
                             ref={canvasRef}
                             width={520}
@@ -1411,7 +1611,7 @@ ${
                         type="button"
                         onClick={handleApproveContract}
                         disabled={!hasDrawn}
-                        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-95 transition flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                        className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
                       >
                         <CheckCircle2 className="w-4 h-4" />
                         <span>Homologar Memorial & Registrar Aceite Digital do Contratante</span>

@@ -64,11 +64,11 @@ export const Header: React.FC<HeaderProps> = ({
   const currentModule = MODULE_TITLES[activeTab] || MODULE_TITLES.dashboard;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#0a192f]/95 backdrop-blur-md border-b border-amber-500/20 px-3.5 sm:px-6 lg:px-8 py-2.5 lg:py-3.5 pt-safe print:hidden">
-      <div className="max-w-md md:max-w-4xl lg:max-w-[1600px] mx-auto flex items-center justify-between gap-4">
-        {/* Mobile Brand Logo (Hidden on Desktop where Sidebar shows Brand) */}
-        <div className="flex lg:hidden items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-white border border-amber-500/40 flex items-center justify-center p-0.5 shadow-md shadow-amber-500/10 overflow-hidden">
+    <header className="sticky top-0 z-30 bg-[#0a192f]/95 backdrop-blur-md border-b border-slate-800/90 px-4 sm:px-6 lg:px-8 py-3 md:py-3.5 pt-safe print:hidden">
+      <div className="max-w-md md:max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+        {/* Mobile Brand Logo (Hidden on Notebooks & Desktop where Sidebar shows Brand) */}
+        <div className="flex md:hidden items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-white border border-slate-700 flex items-center justify-center p-0.5 shadow-sm overflow-hidden">
             <img
               src="/assets/aistudio/Logotipo_Renovar_51718f31.jpg"
               alt="Renovar SC Logo"
@@ -86,13 +86,13 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Desktop Active Module Title & Breadcrumb (Visible on lg+) */}
-        <div className="hidden lg:block min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-md">
+        {/* Desktop & Notebook Active Module Title & Breadcrumb (Visible on md+) */}
+        <div className="hidden md:block min-w-0">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-[#0f2744] border border-slate-800 px-2 py-0.5 rounded-md flex-shrink-0">
               Sistema Web Corporativo
             </span>
-            <h1 className="text-base font-black text-white truncate">
+            <h1 className="text-sm lg:text-base font-bold text-white truncate">
               {currentModule.title}
             </h1>
           </div>
@@ -105,15 +105,15 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2.5">
           {/* Desktop Telemetry Badges */}
           <div className="hidden xl:flex items-center gap-2 mr-1">
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#0f2744] border border-slate-700/80 text-[11px] text-slate-300">
-              <Wind className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0f2744]/80 border border-slate-800 text-[11px] text-slate-300">
+              <Wind className="w-3.5 h-3.5 text-amber-400" />
               <span>Vento Litoral SC:</span>
-              <strong className="text-emerald-400">14 km/h (Seguro NR-35)</strong>
+              <strong className="text-white">14 km/h (Seguro NR-35)</strong>
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#0f2744] border border-slate-700/80 text-[11px] text-slate-300">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0f2744]/80 border border-slate-800 text-[11px] text-slate-300">
               <Building2 className="w-3.5 h-3.5 text-amber-400" />
               <span>Canteiros Ativos:</span>
-              <strong className="text-amber-400">Santa Catarina</strong>
+              <strong className="text-white">Santa Catarina</strong>
             </div>
           </div>
 
@@ -121,12 +121,12 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => setShowNotificationModal(true)}
-            className="relative p-2 lg:p-2.5 rounded-xl bg-[#0f2744] border border-slate-700/80 hover:border-amber-400/50 text-slate-200 active:scale-95 transition cursor-pointer"
+            className="relative p-2 lg:p-2.5 rounded-xl bg-[#0f2744] border border-slate-800 hover:border-slate-700 text-slate-200 transition cursor-pointer"
             title="Notificações do Gestor"
           >
             <Bell className="w-4 h-4 text-amber-400" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shadow-md shadow-amber-500/50 animate-pulse">
+              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-amber-400 text-slate-950 text-[10px] font-bold">
                 {unreadCount}
               </span>
             )}
@@ -136,15 +136,15 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center gap-2 pl-2 pr-2 py-1 lg:py-1.5 rounded-xl bg-[#0f2744] border border-slate-700/80 hover:border-amber-400/50 text-slate-200 active:scale-95 transition cursor-pointer"
+              className="flex items-center gap-2 pl-2 pr-2 py-1 lg:py-1.5 rounded-xl bg-[#0f2744] border border-slate-800 hover:border-slate-700 text-slate-200 transition cursor-pointer"
               title="Perfil do Usuário"
             >
-              <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-lg bg-amber-500/20 text-amber-400 font-bold text-xs flex items-center justify-center border border-amber-500/30">
+              <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-lg bg-[#0a192f] text-amber-400 font-bold text-xs flex items-center justify-center border border-slate-800">
                 {user.name.charAt(0)}
               </div>
               <div className="hidden sm:block text-left">
                 <p className="text-xs font-bold text-white leading-tight">{user.name}</p>
-                <p className="text-[10px] text-amber-400 font-medium leading-tight">
+                <p className="text-[10px] text-slate-400 font-medium leading-tight">
                   {user.roleLabel}
                 </p>
               </div>
@@ -158,20 +158,20 @@ export const Header: React.FC<HeaderProps> = ({
                   className="fixed inset-0 z-40"
                   onClick={() => setShowProfileMenu(false)}
                 />
-                <div className="absolute right-0 mt-2 w-64 rounded-xl bg-[#0f2744] border border-amber-500/30 p-3 shadow-2xl z-50 text-slate-100 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="pb-2.5 mb-2.5 border-b border-slate-700">
+                <div className="absolute right-0 mt-2 w-64 rounded-xl bg-[#0f2744] border border-slate-700 p-3.5 shadow-xl z-50 text-slate-100 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="pb-2.5 mb-2.5 border-b border-slate-800">
                     <p className="text-xs font-bold text-white truncate">{user.name}</p>
                     <p className="text-[11px] text-amber-400 font-medium truncate">{user.roleLabel}</p>
                     <p className="text-[10px] text-slate-400 truncate mt-0.5">{user.email}</p>
                   </div>
 
-                  <div className="space-y-1 text-xs">
-                    <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-[#0a192f] text-slate-300 text-[11px]">
-                      <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#0a192f] border border-slate-800/80 text-slate-300 text-[11px]">
+                      <Shield className="w-3.5 h-3.5 text-amber-400" />
                       <span>Sessão Corporativa Ativa</span>
                     </div>
 
-                    <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-[#0a192f] text-slate-300 text-[11px]">
+                    <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-[#0a192f] border border-slate-800/80 text-slate-300 text-[11px]">
                       <UserCheck className="w-3.5 h-3.5 text-amber-400" />
                       <span>NR-35 / Trabalho em Altura OK</span>
                     </div>
@@ -181,9 +181,9 @@ export const Header: React.FC<HeaderProps> = ({
                         setShowProfileMenu(false);
                         onLogout();
                       }}
-                      className="w-full mt-2 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold transition cursor-pointer"
+                      className="w-full mt-2 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0a192f] hover:bg-slate-900 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition cursor-pointer"
                     >
-                      <LogOut className="w-3.5 h-3.5" />
+                      <LogOut className="w-3.5 h-3.5 text-slate-400" />
                       <span>Sair do Sistema</span>
                     </button>
                   </div>

@@ -2,8 +2,12 @@ import {
   BudgetProposal,
   BudgetServiceItem,
   PathologyDiagnosisItem,
+  TeamMemberAllocation,
+  WeeklyScheduleItem,
   WarrantyClauseItem,
 } from '../types';
+
+export const RENOVAR_COMPANY_CNPJ = '57.293.244/0001-27';
 
 export interface GenerateBudgetParams {
   condoName: string;
@@ -144,13 +148,15 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
 
   const urgencyFactor = urgency === 'Alta / Risco de Queda' ? 1.12 : urgency === 'Média' ? 1.05 : 1.0;
 
-  // Build analytical budget items following the exact 7-stage engineering methodology
+  // Build analytical budget items following the exact 7-stage engineering methodology with Quantitativos & Insumos
   const services: BudgetServiceItem[] = [
     {
       code: '01.01',
       description: `Mobilização técnica, emissão de ART/CREA-SC, engenharia de ancoragem testada e instalação de balancins elétricos/suspensos e proteções coletivas (${towersNum} torre(s) / ${floorsNum} pavimentos)`,
       methodology:
         'Montagem de plataformas suspensas com duplo cabo de aço independente, trava-quedas retráteis, linhas de vida certificadas, telas fachadeiras e bandejas de contenção conforme NR-18 e NR-35.',
+      inputsAndMaterials:
+        'Balancins suspensos elétricos/leves homologados, cabos de aço galvanizados Ø 8mm, olhais e chumbadores químicos inox AISI 316, telas fachadeiras de polietileno de alta densidade, trava-quedas duplos, cintos paraquedistas NR-35 e taxa de ART/CREA-SC.',
       unit: 'vb',
       quantity: towersNum,
       unitPrice: Math.round(7800 * urgencyFactor),
@@ -161,6 +167,8 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       description: `Hidrojateamento técnico controlado a 300 bar e descontaminação superficial integral da envoltória predial (${condoName})`,
       methodology:
         'Lavagem pressurizada em leque para remoção de cloretos marinhos, fuligem, biofilmes (fungos/algas), eflorescências e partículas friáveis, preparando o substrato para ancoragem química.',
+      inputsAndMaterials:
+        'Lavadoras industriais de alta pressão (300 bar / 4.350 psi) com bico rotativo e leque calibrado, solução sanitizante fungicida/algicida biodegradável e neutralizador químico alcalino para sais solúveis.',
       unit: 'm²',
       quantity: areaNum,
       unitPrice: 11.5,
@@ -172,6 +180,9 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       methodology: hasCeramics
         ? 'Sondagem auditiva milimétrica com martelo de percussão conforme ABNT NBR 13755, demolição seletiva das placas com som oco, apicoamento, regularização polimérica e assentamento com argamassa AC-III.'
         : 'Inspeção percussiva integral da fachada, escarificação de trechos de reboco/emboço pulverulento ou desagregado e recomposição com argamassa polimérica tixotrópica.',
+      inputsAndMaterials: hasCeramics
+        ? 'Argamassa colante industrializada flexível AC-III E (ABNT NBR 14081), argamassa polimérica de regularização, ponte de aderência acrílica, pastilhas/placas cerâmicas de reposição e rejunte acrílico impermeável anti-fungo.'
+        : 'Argamassa polimérica industrializada fibrorreforçada de baixa retração, aditivo promotor de aderência estireno-acrílico e tela de fibra de vidro álcali-resistente nas interfaces.',
       unit: 'm²',
       quantity: areaNum,
       unitPrice: hasCeramics ? 14.0 : 8.5,
@@ -182,6 +193,8 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       description: `Recuperação estrutural localizada e passivação de armaduras com escovamento St-3, primer rico em zinco e graute tixotrópico classe R4`,
       methodology:
         'Corte ortogonal perimetral, escarificação até 2 cm além da corrosão, decapagem mecânica do aço, proteção catódica galvânica e recomposição volumétrica conforme ABNT NBR 6118.',
+      inputsAndMaterials:
+        'Discos diamantados de corte seco, escovas rotativas de aço carbono, primer anticorrosivo epóxi rico em zinco (passivador catódico), ponte de aderência epoxídica e argamassa estrutural tixotrópica classe R4 (> 45 MPa).',
       unit: 'un',
       quantity: hasRebar ? Math.max(16, Math.round(floorsNum * towersNum * 2.2)) : Math.max(6, Math.round(floorsNum * towersNum * 0.8)),
       unitPrice: 295.0,
@@ -192,6 +205,8 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       description: `Tratamento técnico de fissuras, trincas de cisalhamento e renovação de juntas de dilatação/movimentação com Polímero Híbrido MS / PU`,
       methodology:
         'Abertura em perfil "V", limpeza pneumática, imprimação de bordas, inserção de delimitador Tarucel (fator de forma 2:1), calafetação elastomérica UV-resistente e reforço com tela de poliéster.',
+      inputsAndMaterials:
+        'Selante elastomérico monocomponente à base de Polímero Híbrido MS / Poliuretano (ISO 11600 F-25LM), cordão delimitador de polietileno expandido (Tarucel), primer silano promotor de adesão e tela estruturante de poliéster.',
       unit: 'm',
       quantity: Math.round(areaNum * (hasCracks || hasJoints ? 0.18 : 0.08)),
       unitPrice: 52.0,
@@ -203,6 +218,8 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       methodology: hasEfflorescenceOrInfiltration
         ? 'Neutralização de alcalinidade, 01 demão de selador acoplador, reforço impermeabilizante em peitoris/marquises (ABNT NBR 9574) e 03 demãos de membrana elastomérica anti-fissura.'
         : 'Aplicação de 01 demão farta de selador acrílico de penetração seguida de 03 demãos cruzadas de revestimento elastomérico puro com proteção UV e barreira contra maresia.',
+      inputsAndMaterials:
+        'Fundo preparador aglutinante de partículas, selador acrílico pigmentado alcalino-resistente, revestimento acrílico elastomérico puro de alto desempenho (03 demãos) e hidrofugante silano-siloxano.',
       unit: 'm²',
       quantity: areaNum,
       unitPrice: hasEfflorescenceOrInfiltration ? 28.5 : 24.5,
@@ -213,6 +230,8 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       description: `Desmobilização operacional, limpeza fina pós-obra de vidros/esquadrias, destinação licenciada de resíduos e entrega técnica homologada`,
       methodology:
         'Desmontagem segura de balancins e ancoragens, limpeza detalhada das áreas afetadas, remoção de entulhos e vistoria conjunta com o Contratante / Cliente para emissão do Termo de Garantia.',
+      inputsAndMaterials:
+        'Caçambas estacionárias licenciadas com Manifesto de Transporte de Resíduos (MTR), insumos de limpeza fina para vidros e alumínio anodizado, e dossiê As-Built com Certificado de Garantia de 05 Anos.',
       unit: 'vb',
       quantity: 1,
       unitPrice: Math.round(3200 + towersNum * 1200),
@@ -224,7 +243,7 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
   const bdiPercent = 22;
   const totalPrice = Math.round(subtotal * (1 + bdiPercent / 100));
 
-  const scopeDeclaration = `O presente MEMORIAL DESCRITIVO TÉCNICO E PROPOSTA ORÇAMENTÁRIA FORMAL, elaborado pelo Departamento de Engenharia Diagnóstica da RENOVAR SC — SOLUÇÕES PREDIAIS LTDA, estabelece de forma rigorosa as especificações executivas, diretrizes de segurança em altura, controle tecnológico de insumos e condições comerciais para a execução integral dos serviços de Recuperação Estrutural, Tratamento de Patologias, Estanqueidade e Revitalização de Fachadas do empreendimento ${condoName}, localizado em ${location}. O escopo técnico abrange a totalidade da envoltória configurada por ${towersNum} torre(s) / bloco(s) e ${floorsNum} pavimentos, perfazendo área estimada de intervenção de ${areaNum.toLocaleString('pt-BR')} m², apresentado ao Contratante / Cliente para avaliação técnica, aprovação financeira e formalização contratual.`;
+  const scopeDeclaration = `O presente MEMORIAL DESCRITIVO TÉCNICO E PROPOSTA ORÇAMENTÁRIA FORMAL, elaborado pelo Departamento de Engenharia Diagnóstica da RENOVAR SC — SOLUÇÕES PREDIAIS LTDA (CNPJ: ${RENOVAR_COMPANY_CNPJ}), estabelece de forma rigorosa as especificações executivas, diretrizes de segurança em altura, controle tecnológico de insumos, dimensionamento de equipe, cronograma físico-financeiro e condições comerciais para a execução integral dos serviços de Recuperação Estrutural, Tratamento de Patologias, Estanqueidade e Revitalização de Fachadas do empreendimento ${condoName}, localizado em ${location}. O escopo técnico abrange a totalidade da envoltória configurada por ${towersNum} torre(s) / bloco(s) e ${floorsNum} pavimentos, perfazendo área estimada de intervenção de ${areaNum.toLocaleString('pt-BR')} m², apresentado ao Contratante / Cliente para avaliação técnica, aprovação financeira e formalização contratual.`;
 
   const executiveSummary = `Em vistoria técnica preliminar realizada no empreendimento ${condoName} (${location}), edificação constituída por ${towersNum} torre(s) e ${floorsNum} pavimentos (área estimada de fachada de ${areaNum.toLocaleString('pt-BR')} m²), constatou-se a presença ativa das seguintes manifestações patológicas prioritárias: ${pathologies.join('; ')}. Classificado sob grau de prioridade "${urgency}", o quadro patológico diagnosticado exige intervenção corretiva sistematizada segundo os preceitos das normas ABNT NBR 13755, NBR 6118, NBR 9574 e NBR 15575, com isolamento imediato das áreas de projeção térrea, instalação de balancins suspensos certificados (NR-18 / NR-35) e emprego de sistemas poliméricos e elastoméricos de alto desempenho compatíveis com a agressividade ambiental catarinense.${params.aiVariableObservation ? ` Parecer Complementar de Vistoria: ${params.aiVariableObservation}` : ` Observações registradas em campo: ${fieldNotes}`}`;
 
@@ -237,54 +256,158 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
     areaNum
   );
 
+  // Team Allocation Table dynamically scaled to building size
+  const fachadeirosCount = Math.max(2, Math.min(12, towersNum * 2 + Math.floor(areaNum / 2200)));
+  const restauradoresCount = Math.max(2, Math.min(8, towersNum + Math.floor(areaNum / 2500)));
+  const auxiliaresCount = Math.max(1, Math.min(6, towersNum + Math.floor(areaNum / 3500)));
+
+  const teamAllocation: TeamMemberAllocation[] = [
+    {
+      role: 'Engenheiro Civil Responsável Técnico',
+      quantity: 1,
+      qualification: 'Registro CREA-SC Ativo • Especialista em Patologia das Construções',
+      assignment: `Emissão de ART, supervisão normativa ABNT, validação de ensaios de tração/percussão e aprovação das medições junto ao Contratante / Cliente (${condoName}).`,
+    },
+    {
+      role: 'Técnico em Segurança do Trabalho (TST)',
+      quantity: 1,
+      qualification: 'Registro MTE • Instrutor Habilitado NR-35 e NR-18',
+      assignment: 'Inspeção de pontos de ancoragem, linhas de vida, liberação de Permissão de Trabalho em Altura (PTA), DDS diário e auditoria de EPIs/EPCs.',
+    },
+    {
+      role: 'Encarregado Geral de Canteiro / Mestre de Fachada',
+      quantity: 1,
+      qualification: 'Certificação NR-35 / NR-18 • +10 anos em Restauração Predial',
+      assignment: `Coordenação direta das frentes de serviço nas ${towersNum} torre(s), controle de traço/consumo de insumos poliméricos e registro de diário de obra.`,
+    },
+    {
+      role: 'Líderes Fachadeiros / Operadores de Balancim e Acesso por Corda',
+      quantity: fachadeirosCount,
+      qualification: 'Certificação NR-35 / NR-18 Vigente + ASO Apto para Altura',
+      assignment: `Execução de hidrojateamento 300 bar, mapeamento percussivo malha a malha, abertura/selagem de fissuras em "V" e aplicação de sistema elastomérico.`,
+    },
+    {
+      role: 'Pedreiros Restauradores / Especialistas em Recuperação Estrutural',
+      quantity: restauradoresCount,
+      qualification: 'Certificação NR-35 / NR-18 + Qualificação em Sistemas R4 e AC-III',
+      assignment: 'Escarificação ortogonal, tratamento anticorrosivo de armaduras (St-3 + zinco), grauteamento tixotrópico e recomposição de revestimentos cerâmicos/argamassados.',
+    },
+    {
+      role: 'Auxiliares Técnicos de Apoio Terrestre e Logística',
+      quantity: auxiliaresCount,
+      qualification: 'Treinamento NR-18 • Controle de Perímetro e Preparação',
+      assignment: 'Isolamento de segurança no térreo, preparo mecanizado de argamassas/tintas, movimentação de insumos e organização/limpeza diária do canteiro.',
+    },
+  ];
+
+  const timelineWeeks = Math.max(8, Math.min(24, Math.round(areaNum / 380) + towersNum * 2));
+
+  // Weekly Physical-Financial Schedule dynamically scaled to timelineWeeks and totalPrice
+  const w1End = Math.max(1, Math.round(timelineWeeks * 0.15));
+  const w2End = Math.max(w1End + 1, Math.round(timelineWeeks * 0.30));
+  const w3End = Math.max(w2End + 1, Math.round(timelineWeeks * 0.50));
+  const w4End = Math.max(w3End + 1, Math.round(timelineWeeks * 0.70));
+  const w5End = Math.max(w4End + 1, Math.round(timelineWeeks * 0.90));
+
+  const weeklySchedule: WeeklyScheduleItem[] = [
+    {
+      phase: 'Fase 01',
+      weeksLabel: `Semana 01 a ${String(w1End).padStart(2, '0')}`,
+      stageTitle: 'Mobilização Técnica, ART/CREA-SC, Ancoragens e Montagem de Balancins',
+      physicalWeightPercent: 12,
+      financialAmount: Math.round(totalPrice * 0.12),
+      deliverable: 'Canteiro isolado, laudo de ancoragem e plataformas NR-18 operacionais',
+    },
+    {
+      phase: 'Fase 02',
+      weeksLabel: `Semana ${String(w1End).padStart(2, '0')} a ${String(w2End).padStart(2, '0')}`,
+      stageTitle: 'Hidrojateamento Controlado (300 bar) e Mapeamento Percussivo 100%',
+      physicalWeightPercent: 16,
+      financialAmount: Math.round(totalPrice * 0.16),
+      deliverable: 'Substrato descontaminado e mapa topográfico de som cavo/patologias',
+    },
+    {
+      phase: 'Fase 03',
+      weeksLabel: `Semana ${String(w2End).padStart(2, '0')} a ${String(w3End).padStart(2, '0')}`,
+      stageTitle: 'Recuperação Estrutural (Armaduras St-3 + Graute R4) e Recomposição de Base',
+      physicalWeightPercent: 24,
+      financialAmount: Math.round(totalPrice * 0.24),
+      deliverable: 'Passivação concluída, cobrimento estrutural recomposto e panos regularizados',
+    },
+    {
+      phase: 'Fase 04',
+      weeksLabel: `Semana ${String(w3End).padStart(2, '0')} a ${String(w4End).padStart(2, '0')}`,
+      stageTitle: 'Tratamento de Fissuras em "V", Tela de Poliéster e Juntas de Dilatação (MS/PU)',
+      physicalWeightPercent: 18,
+      financialAmount: Math.round(totalPrice * 0.18),
+      deliverable: 'Estanqueidade de trincas e juntas de movimentação homologada',
+    },
+    {
+      phase: 'Fase 05',
+      weeksLabel: `Semana ${String(w4End).padStart(2, '0')} a ${String(w5End).padStart(2, '0')}`,
+      stageTitle: 'Selamento Alcalino e Aplicação de Pintura Elastomérica (03 Demãos Cruzadas)',
+      physicalWeightPercent: 22,
+      financialAmount: Math.round(totalPrice * 0.22),
+      deliverable: 'Envoltória impermeabilizada com película monolítica de alto desempenho',
+    },
+    {
+      phase: 'Fase 06',
+      weeksLabel: `Semana ${String(w5End).padStart(2, '0')} a ${String(timelineWeeks).padStart(2, '0')}`,
+      stageTitle: 'Desmobilização, Limpeza Fina Pós-Obra, Vistoria Final e Termo de Garantia 05 Anos',
+      physicalWeightPercent: 8,
+      financialAmount: totalPrice - Math.round(totalPrice * 0.92),
+      deliverable: 'Entrega definitiva aprovada pelo Contratante / Cliente + Certificado 05 Anos',
+    },
+  ];
+
   const methodologyHighlights = [
     {
       step: 1,
-      phaseCode: 'ETAPA 01 • NR-18 / NR-35',
+      phaseCode: 'FASE 01 • NR-18 / NR-35',
       title: 'Mobilização Técnica, Engenharia de Segurança, Ancoragens e Balancins',
       detail: `Emissão de ART de execução junto ao CREA-SC, instalação e teste estático de dispositivos de ancoragem nas ${towersNum} torre(s) do ${condoName}, montagem de balancins suspensos com duplo cabo de aço, trava-quedas independentes, telas fachadeiras e bandejas coletoras de proteção para resguardo integral de pedestres, veículos e áreas comuns do Contratante / Cliente.`,
       technicalStandard: 'NR-35 / NR-18 / ABNT NBR 16325',
     },
     {
       step: 2,
-      phaseCode: 'ETAPA 02 • PREPARAÇÃO DE BASE',
+      phaseCode: 'FASE 02 • PREPARAÇÃO DE BASE',
       title: 'Hidrojateamento Técnico Controlado (300 bar) e Descontaminação Salina',
       detail: `Lavagem mecânica de alta pressão regulada a 300 bar em toda a área de ${areaNum.toLocaleString('pt-BR')} m² (${floorsNum} pavimentos) para remoção profunda de cloretos marinhos, fuligem atmosférica, carbonatos livres, fungos e partículas friáveis, promovendo a abertura controlada de porosidade do substrato sem agressão às partes sãs.`,
       technicalStandard: 'ABNT NBR 13245 / NBR 5674',
     },
     {
       step: 3,
-      phaseCode: 'ETAPA 03 • SONDAGEM E RECOMPOSIÇÃO',
+      phaseCode: 'FASE 03 • SONDAGEM E RECOMPOSIÇÃO',
       title: 'Mapeamento Percussivo 100% (Som Cavo) e Recomposição de Revestimentos',
       detail: `Inspeção táctil-auditiva malha a malha com martelo de percussão em 100% dos panos de fachada do ${condoName}. Demarcação topográfica, demolição seletiva das regiões com perda de aderência, preparo da base com ponte de aderência acrílica/epoxídica e recomposição com argamassa polimérica e/ou argamassa colante flexível AC-III em dupla colagem.`,
       technicalStandard: 'ABNT NBR 13755 / NBR 14081 / NBR 7200',
     },
     {
       step: 4,
-      phaseCode: 'ETAPA 04 • RECUPERAÇÃO ESTRUTURAL',
+      phaseCode: 'FASE 04 • RECUPERAÇÃO ESTRUTURAL',
       title: 'Tratamento de Concreto Armado e Passivação Galvânica de Armaduras',
       detail: `Delaminação ortogonal com disco diamantado, escarificação mecânica até 2,0 cm além da frente oxidada, limpeza da barra de aço até padrão visual St-3, aplicação de primer anticorrosivo rico em zinco (proteção catódica) e recomposição volumétrica do cobrimento com graute tixotrópico polimérico classe R4 de retração compensada.`,
       technicalStandard: 'ABNT NBR 6118 / ISO 8501-1 / EN 1504-3',
     },
     {
       step: 5,
-      phaseCode: 'ETAPA 05 • ESTANQUEIDADE E JUNTAS',
+      phaseCode: 'FASE 05 • ESTANQUEIDADE E JUNTAS',
       title: 'Tratamento de Fissuras de Cisalhamento e Juntas de Dilatação (Polímero MS)',
       detail: `Abertura de sulco em "V" ao longo das trincas mapeadas, limpeza pneumática, imprimação de bordas, inserção de corpo de apoio em polietileno expandido (Tarucel) e vedação elástica com selante Híbrido MS / Poliuretano de baixo módulo, acrescido de tela de poliéster nos encontros alvenaria-estrutura.`,
       technicalStandard: 'ABNT NBR 15575 / ISO 11600 Classe F-25LM',
     },
     {
       step: 6,
-      phaseCode: 'ETAPA 06 • PROTEÇÃO E ACABAMENTO',
+      phaseCode: 'FASE 06 • PROTEÇÃO E ACABAMENTO',
       title: 'Sistema de Impermeabilização e Pintura Elastomérica Premium (03 Demãos)',
       detail: `Aplicação de 01 demão farta de selador acrílico alcalino-resistente para uniformização de absorção, seguida de 03 (três) demãos cruzadas de Revestimento Elastomérico Puro de alta formação de filme nos ${areaNum.toLocaleString('pt-BR')} m² do ${condoName}, formando membrana monolítica impermeável à água de chuva e permeável ao vapor.`,
       technicalStandard: 'ABNT NBR 9574 / NBR 15079 / NBR 13245',
     },
     {
       step: 7,
-      phaseCode: 'ETAPA 07 • ENTREGA HOMOLOGADA',
+      phaseCode: 'FASE 07 • ENTREGA HOMOLOGADA',
       title: 'Desmobilização, Limpeza Fina Pós-Obra e Termo de Recebimento Definitivo',
-      detail: `Desmontagem técnica dos balancins, limpeza detalhada de vidros, esquadrias de alumínio, peitoris e pisos térreos, remoção integral de resíduos em caçambas licenciadas e realização de Vistoria Conjunta Final com o Contratante / Cliente em ${location} para emissão do Certificado de Garantia Contratual.`,
+      detail: `Desmontagem técnica dos balancins, limpeza detalhada de vidros, esquadrias de alumínio, peitoris e pisos térreos, remoção integral de resíduos em caçambas licenciadas e realização de Vistoria Conjunta Final com o Contratante / Cliente em ${location} para emissão do Certificado de Garantia Contratual de 05 Anos.`,
       technicalStandard: 'ABNT NBR 5674 / Código Civil Art. 618',
     },
   ];
@@ -325,16 +448,22 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
   ];
 
   const contractualTerms = [
-    `Responsabilidade Técnica e Trabalhista: A RENOVAR SC assume integral responsabilidade técnica (com emissão de ART junto ao CREA-SC antes do início da montagem dos balancins) e responsabilidade trabalhista, previdenciária e securitária sobre 100% de sua equipe própria alocada no ${condoName}.`,
+    `Responsabilidade Técnica e Trabalhista: A RENOVAR SC (CNPJ ${RENOVAR_COMPANY_CNPJ}) assume integral responsabilidade técnica (com emissão de ART junto ao CREA-SC antes do início da montagem dos balancins) e responsabilidade trabalhista, previdenciária e securitária sobre 100% de sua equipe própria alocada no ${condoName}.`,
     `Segurança em Altura (NR-35 / NR-18): Todos os operadores possuem certificação NR-35 e NR-18 vigentes, ASO específico para trabalho em altura, seguro de vida em grupo e utilização obrigatória de cinto paraquedista com duplo talabarte e trava-quedas em linha de vida independente.`,
-    `Fornecimento de Equipamentos e Medições: Estão inclusos no preço global todos os equipamentos de acesso vertical (balancins, cabos, guinchos, cadeirinhas), EPIs, EPCs e ferramentas. Os pagamentos das parcelas estão estritamente vinculados às medições físicas quinzenais aferidas e aprovadas pelo Contratante / Cliente.`,
+    `Fornecimento de Equipamentos e Medições: Estão inclusos no preço global todos os equipamentos de acesso vertical (balancins, cabos, guinchos, cadeirinhas), EPIs, EPCs e ferramentas. Os pagamentos das parcelas estão estritamente vinculados às medições físicas aferidas e aprovadas pelo Contratante / Cliente.`,
   ];
 
-  const timelineWeeks = Math.max(6, Math.min(24, Math.round(areaNum / 380) + towersNum));
+  const commercialTermsList = [
+    `Faturamento Direto e Nota Fiscal: Todos os pagamentos serão realizados mediante emissão de Nota Fiscal de Serviços Eletrônica (NFS-e) pela RENOVAR SC SOLUÇÕES PREDIAIS LTDA (CNPJ: ${RENOVAR_COMPANY_CNPJ}), acompanhada de certidões negativas (CND Federal, Estadual, Municipal, FGTS e Trabalhista) e boletim de medição física assinado.`,
+    `Opções de Parcelamento Comercial: (Opção A) Entrada de 20% na assinatura para mobilização/ART/materiais + saldo em até 06 parcelas mensais ou medições quinzenais conforme avanço físico; (Opção B) Pagamento à vista na homologação do contrato com 5% de desconto financeiro sobre o valor global.`,
+    `Insumos e Taxas Inclusos: O valor global proposto é fechado (regime de empreitada global a preço fixo), já contemplando 100% dos materiais especificados, locação/montagem de balancins, encargos sociais (INSS/FGTS), seguro de responsabilidade civil de obras e taxa de ART/CREA-SC, sem custos ocultos ao Contratante / Cliente.`,
+    `Validade da Proposta: 30 (trinta) dias corridos a contar da data de emissão deste Memorial Descritivo Oficial.`,
+  ];
 
   return {
     id: `prop-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     protocol,
+    companyCnpj: RENOVAR_COMPANY_CNPJ,
     condoName,
     location,
     towers: towersNum,
@@ -357,18 +486,21 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
       'NR-35 e NR-18 (Ministério do Trabalho) — Trabalho em Altura, Ancoragens Prediais e Segurança na Indústria da Construção',
     ],
     services,
+    teamAllocation,
+    weeklySchedule,
     methodologyHighlights,
     materialSpecifications,
     warrantyClauses,
     contractualTerms,
+    commercialTermsList,
     timelineWeeks,
     warrantyYears: 5,
     paymentConditions:
-      'Sinal de 20% na assinatura do contrato (mobilização técnica, ART e balancins) + saldo em medições quinzenais vinculadas ao avanço físico atestado pelo Contratante / Cliente.',
+      'Sinal de 20% na assinatura do contrato (mobilização técnica, ART/CREA-SC e aquisição de insumos) + saldo parcelado conforme medições físicas quinzenais/mensais atestadas pelo Contratante / Cliente (ou 5% de desconto à vista).',
     subtotal,
     bdiPercent,
     totalPrice,
-    technicalResponsible: 'Engenharia Diagnóstica & Gestão Operacional — Renovar SC (CREA-SC)',
+    technicalResponsible: `Engenharia Diagnóstica & Gestão Operacional — Renovar SC (CNPJ ${RENOVAR_COMPANY_CNPJ} • CREA-SC)`,
     createdAt: new Date().toISOString(),
   };
 }
@@ -378,13 +510,19 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
  */
 export function ensureOfficialTemplateStructure(proposal: BudgetProposal): BudgetProposal {
   if (
+    proposal.companyCnpj === RENOVAR_COMPANY_CNPJ &&
     proposal.scopeDeclaration &&
     proposal.pathologyDiagnostics &&
     proposal.pathologyDiagnostics.length > 0 &&
+    proposal.teamAllocation &&
+    proposal.teamAllocation.length > 0 &&
+    proposal.weeklySchedule &&
+    proposal.weeklySchedule.length > 0 &&
     proposal.warrantyClauses &&
     proposal.warrantyClauses.length > 0 &&
     proposal.materialSpecifications &&
-    proposal.contractualTerms
+    proposal.contractualTerms &&
+    proposal.commercialTermsList
   ) {
     return proposal;
   }
@@ -401,9 +539,22 @@ export function ensureOfficialTemplateStructure(proposal: BudgetProposal): Budge
     protocolOverride: proposal.protocol,
   });
 
+  const mergedServices = (proposal.services && proposal.services.length > 0
+    ? proposal.services
+    : completeTemplate.services
+  ).map((srv, idx) => ({
+    ...srv,
+    inputsAndMaterials:
+      srv.inputsAndMaterials ||
+      completeTemplate.services[idx]?.inputsAndMaterials ||
+      'Insumos industriais homologados ABNT, EPIs/EPCs NR-35 e equipamentos de acesso vertical.',
+  }));
+
   return {
     ...completeTemplate,
     ...proposal,
+    companyCnpj: RENOVAR_COMPANY_CNPJ,
+    services: mergedServices,
     scopeDeclaration: proposal.scopeDeclaration || completeTemplate.scopeDeclaration,
     environmentalClassification:
       proposal.environmentalClassification || completeTemplate.environmentalClassification,
@@ -411,6 +562,14 @@ export function ensureOfficialTemplateStructure(proposal: BudgetProposal): Budge
       proposal.pathologyDiagnostics && proposal.pathologyDiagnostics.length > 0
         ? proposal.pathologyDiagnostics
         : completeTemplate.pathologyDiagnostics,
+    teamAllocation:
+      proposal.teamAllocation && proposal.teamAllocation.length > 0
+        ? proposal.teamAllocation
+        : completeTemplate.teamAllocation,
+    weeklySchedule:
+      proposal.weeklySchedule && proposal.weeklySchedule.length > 0
+        ? proposal.weeklySchedule
+        : completeTemplate.weeklySchedule,
     methodologyHighlights:
       proposal.methodologyHighlights && proposal.methodologyHighlights.length >= 6
         ? proposal.methodologyHighlights
@@ -419,5 +578,7 @@ export function ensureOfficialTemplateStructure(proposal: BudgetProposal): Budge
       proposal.materialSpecifications || completeTemplate.materialSpecifications,
     warrantyClauses: proposal.warrantyClauses || completeTemplate.warrantyClauses,
     contractualTerms: proposal.contractualTerms || completeTemplate.contractualTerms,
+    commercialTermsList:
+      proposal.commercialTermsList || completeTemplate.commercialTermsList,
   };
 }

@@ -40,6 +40,7 @@ export interface BudgetServiceItem {
   code: string;
   description: string;
   methodology: string;
+  inputsAndMaterials?: string;
   unit: string;
   quantity: number;
   unitPrice: number;
@@ -53,6 +54,22 @@ export interface PathologyDiagnosisItem {
   technicalOrigin: string;
   riskImpact: string;
   normativeTherapy: string;
+}
+
+export interface TeamMemberAllocation {
+  role: string;
+  quantity: number;
+  qualification: string;
+  assignment: string;
+}
+
+export interface WeeklyScheduleItem {
+  phase: string;
+  weeksLabel: string;
+  stageTitle: string;
+  physicalWeightPercent: number;
+  financialAmount: number;
+  deliverable: string;
 }
 
 export interface WarrantyClauseItem {
@@ -75,6 +92,7 @@ export interface ContractAcceptance {
 export interface BudgetProposal {
   id: string;
   protocol: string;
+  companyCnpj?: string;
   condoName: string;
   location: string;
   towers: number;
@@ -90,6 +108,8 @@ export interface BudgetProposal {
   pathologyDiagnostics?: PathologyDiagnosisItem[];
   norms: string[];
   services: BudgetServiceItem[];
+  teamAllocation?: TeamMemberAllocation[];
+  weeklySchedule?: WeeklyScheduleItem[];
   methodologyHighlights: {
     step: number;
     phaseCode?: string;
@@ -100,6 +120,7 @@ export interface BudgetProposal {
   materialSpecifications?: string[];
   warrantyClauses?: WarrantyClauseItem[];
   contractualTerms?: string[];
+  commercialTermsList?: string[];
   timelineWeeks: number;
   warrantyYears: number;
   paymentConditions: string;

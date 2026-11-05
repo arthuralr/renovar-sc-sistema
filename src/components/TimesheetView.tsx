@@ -281,21 +281,21 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
   };
 
   return (
-    <div className="space-y-4 pb-nav">
+    <div className="space-y-6 pb-nav">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold text-white flex items-center gap-1.5">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Clock className="w-4 h-4 text-amber-400" />
             Controle de Ponto de Campo
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 mt-0.5">
             Registro com rastreamento GPS e cerca digital Portaria 671 MTE
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <span className="text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-            <Radio className="w-2.5 h-2.5 text-emerald-400 animate-pulse" />
+          <span className="text-[10px] font-semibold bg-[#0f2744] text-slate-200 border border-slate-800 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+            <Radio className="w-3 h-3 text-amber-400" />
             GPS Canteiro Conectado
           </span>
         </div>
@@ -304,287 +304,283 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
       {/* Desktop 12-Col Layout & Mobile Single-Col Flow */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
         {/* LEFT COLUMN ON DESKTOP: Terminal + Selectors + Overtime Summary */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className="lg:col-span-5 space-y-5">
           {/* Collaborator & Obra Selectors */}
-          <div className="bg-[#0f2744] border border-amber-500/25 rounded-2xl p-3.5 shadow-lg space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {/* Obra Canteiro Dropdown */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Canteiro de Obra Atual
-            </label>
-            <div className="relative">
-              <select
-                value={selectedObraName}
-                onChange={(e) => setSelectedObraName(e.target.value)}
-                className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
-              >
-                {obras.map((obr) => (
-                  <option key={obr.id} value={obr.name}>
-                    {obr.name} ({obr.city})
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 space-y-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Obra Canteiro Dropdown */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Canteiro de Obra Atual
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedObraName}
+                    onChange={(e) => setSelectedObraName(e.target.value)}
+                    className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
+                  >
+                    {obras.map((obr) => (
+                      <option key={obr.id} value={obr.name}>
+                        {obr.name} ({obr.city})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Collaborator Dropdown */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Colaborador em Canteiro
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedEmployeeId}
+                    onChange={(e) => setSelectedEmployeeId(e.target.value)}
+                    className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
+                  >
+                    {employees.map((emp) => (
+                      <option key={emp.id} value={emp.id}>
+                        {emp.name} — {emp.role}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Selected Employee Certifications & Status */}
+            <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 text-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-white text-sm flex items-center gap-1.5">
+                  <HardHat className="w-4 h-4 text-amber-400" />
+                  {activeEmployee.name}
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  CPF: {activeEmployee.cpfMasked}
+                </span>
+              </div>
+
+              <p className="text-[11px] text-amber-400 font-medium">{activeEmployee.role}</p>
+
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[10px]">
+                <div className="flex items-center gap-1.5 text-slate-300">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span>NR-35 Altura: Válido</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-300">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <span>ASO: {activeEmployee.asoValidUntil}</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Collaborator Dropdown */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Colaborador em Canteiro
-            </label>
-            <div className="relative">
-              <select
-                value={selectedEmployeeId}
-                onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-700 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
-              >
-                {employees.map((emp) => (
-                  <option key={emp.id} value={emp.id}>
-                    {emp.name} — {emp.role}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            </div>
-          </div>
-        </div>
+          {/* Clock-In Interactive Terminal Card with Real-Time GPS Tracking */}
+          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-5 text-center space-y-4 relative overflow-hidden">
+            {/* GPS Live Radar Banner */}
+            <div className="bg-[#0a192f] border border-slate-800 rounded-lg p-3 text-left space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                  <span className="text-[11px] font-semibold text-white flex items-center gap-1.5">
+                    <LocateFixed className="w-3.5 h-3.5 text-amber-400" />
+                    <span>{gpsStatusLabel}</span>
+                  </span>
+                </div>
 
-        {/* Selected Employee Certifications & Status */}
-        <div className="bg-[#0a192f] p-3 rounded-xl border border-slate-800 text-xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-white text-sm flex items-center gap-1.5">
-              <HardHat className="w-4 h-4 text-amber-400" />
-              {activeEmployee.name}
-            </span>
-            <span className="text-[11px] text-slate-400 font-mono">
-              CPF: {activeEmployee.cpfMasked}
-            </span>
-          </div>
+                <button
+                  type="button"
+                  onClick={captureGpsPosition}
+                  disabled={isLocating}
+                  className="text-[10px] font-semibold text-amber-400 bg-[#0f2744] hover:bg-slate-800 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1 transition cursor-pointer"
+                >
+                  <RotateCw className={`w-3 h-3 ${isLocating ? 'animate-spin' : ''}`} />
+                  <span>{isLocating ? 'Sincronizando...' : 'Recalibrar GPS'}</span>
+                </button>
+              </div>
 
-          <p className="text-[11px] text-amber-300 font-medium">{activeEmployee.role}</p>
-
-          <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800 text-[10px]">
-            <div className="flex items-center gap-1.5 text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0" />
-              <span>NR-35 Altura: Válido</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-emerald-400">
-              <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-              <span>ASO: {activeEmployee.asoValidUntil}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Clock-In Interactive Terminal Card with Real-Time GPS Tracking */}
-      <div className="bg-gradient-to-br from-[#122e54] to-[#0a192f] border-2 border-amber-400/50 rounded-2xl p-4 shadow-xl text-center space-y-3 relative overflow-hidden">
-        
-        {/* GPS Live Radar Banner */}
-        <div className="bg-[#0a192f]/90 border border-emerald-500/40 rounded-xl p-2.5 text-left space-y-1.5 shadow-inner">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
-              <span className="text-[11px] font-bold text-emerald-300 flex items-center gap-1">
-                <LocateFixed className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{gpsStatusLabel}</span>
-              </span>
+              <div className="grid grid-cols-2 gap-2 text-[10px] pt-2 border-t border-slate-800">
+                <div>
+                  <span className="text-slate-400 block">Coordenadas Exatas (SC):</span>
+                  <span className="font-mono font-bold text-white text-xs">
+                    {formatGpsCoordinate(currentGps.latitude, currentGps.longitude)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-slate-400 block">Precisão / Cerca Digital:</span>
+                  <span className="text-slate-300 font-medium font-mono">
+                    ±{currentGps.accuracyMeters.toFixed(1)}m • {currentGps.distanceToObraMeters}m do canteiro
+                  </span>
+                </div>
+              </div>
             </div>
 
+            {/* Big Live Digital Clock */}
+            <div className="py-1">
+              <div className="text-3xl sm:text-4xl font-bold text-white font-mono tracking-wider">
+                {currentTime.toLocaleTimeString('pt-BR')}
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                {currentTime.toLocaleDateString('pt-BR', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </p>
+            </div>
+
+            {/* 4-Punch Progress Indicators */}
+            <div className="grid grid-cols-4 gap-2 pt-1 text-[10px]">
+              <div className={`p-2 rounded-lg border transition ${
+                punchStep === 'entrada' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              }`}>
+                <span className="text-slate-400 block">1. Entrada</span>
+                <span className="font-bold text-white">{entryTime}</span>
+              </div>
+              <div className={`p-2 rounded-lg border transition ${
+                punchStep === 'almoco_ida' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              }`}>
+                <span className="text-slate-400 block">2. Almoço</span>
+                <span className="font-bold text-white">{lunchStartTime}</span>
+              </div>
+              <div className={`p-2 rounded-lg border transition ${
+                punchStep === 'almoco_volta' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              }`}>
+                <span className="text-slate-400 block">3. Retorno</span>
+                <span className="font-bold text-white">{lunchEndTime}</span>
+              </div>
+              <div className={`p-2 rounded-lg border transition ${
+                punchStep === 'saida' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              }`}>
+                <span className="text-slate-400 block">4. Saída</span>
+                <span className="font-bold text-amber-400">{exitTime}</span>
+              </div>
+            </div>
+
+            {/* Safety checklist toggles before punching */}
+            <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800 text-left space-y-2 text-xs">
+              <label className="flex items-center gap-2.5 cursor-pointer text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={epiVerified}
+                  onChange={(e) => setEpiVerified(e.target.checked)}
+                  className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
+                />
+                <span className="text-[11px]">
+                  EPIs Obrigatórios em Uso (Cinto Paraquedista + Trava-quedas duplo + Capacete Jugular)
+                </span>
+              </label>
+              <label className="flex items-center gap-2.5 cursor-pointer text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={balancimOk}
+                  onChange={(e) => setBalancimOk(e.target.checked)}
+                  className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
+                />
+                <span className="text-[11px]">
+                  Inspeção Diária do Balancim Elétrico Aprovada pelo Encarregado
+                </span>
+              </label>
+            </div>
+
+            {/* Big Tactile Punch Button with GPS lock */}
             <button
               type="button"
-              onClick={captureGpsPosition}
-              disabled={isLocating}
-              className="text-[10px] font-semibold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 px-2 py-0.5 rounded border border-amber-400/30 flex items-center gap-1 transition cursor-pointer"
+              onClick={handlePunchNow}
+              className="w-full py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 cursor-pointer"
             >
-              <RotateCw className={`w-3 h-3 ${isLocating ? 'animate-spin' : ''}`} />
-              <span>{isLocating ? 'Sincronizando...' : 'Recalibrar GPS'}</span>
+              <LocateFixed className="w-4 h-4 text-slate-950" />
+              <span>
+                {punchStep === 'entrada'
+                  ? 'BATER PONTO DE ENTRADA (COM GPS)'
+                  : punchStep === 'almoco_ida'
+                  ? 'BATER SAÍDA DE ALMOÇO (COM GPS)'
+                  : punchStep === 'almoco_volta'
+                  ? 'BATER RETORNO DE ALMOÇO (COM GPS)'
+                  : 'BATER PONTO DE SAÍDA (COM GPS)'}
+              </span>
             </button>
+
+            {/* GPS Punch Feedback Alert */}
+            {justPunched && lastPunchGpsMessage && (
+              <div className="p-3 rounded-lg bg-[#0a192f] border border-amber-400/30 text-slate-200 text-xs font-medium space-y-1 text-left">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <span className="font-semibold text-white">Batida de ponto gravada com coordenadas exatas!</span>
+                </div>
+                <p className="text-[11px] font-mono text-slate-400">
+                  {lastPunchGpsMessage}
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-[10px] pt-1 border-t border-slate-800">
-            <div>
-              <span className="text-slate-400 block">Coordenadas Exatas (SC):</span>
-              <span className="font-mono font-bold text-white text-xs">
-                {formatGpsCoordinate(currentGps.latitude, currentGps.longitude)}
+          {/* Horas Extras & Summary of the Day */}
+          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 space-y-3.5 text-xs">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <span className="font-bold text-white flex items-center gap-2">
+                <FileSpreadsheet className="w-4 h-4 text-amber-400" />
+                Apuração de Horas & Horas Extras
               </span>
+              <span className="text-[10px] text-slate-400">Período Vigente</span>
             </div>
-            <div className="text-right">
-              <span className="text-slate-400 block">Precisão / Cerca Digital:</span>
-              <span className="text-emerald-300 font-semibold font-mono">
-                ±{currentGps.accuracyMeters.toFixed(1)}m • {currentGps.distanceToObraMeters}m do canteiro
-              </span>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800">
+                <span className="text-[10px] text-slate-400">Total Horas Normais</span>
+                <p className="text-base font-bold text-white mt-0.5">{totalRegular.toFixed(1)} h</p>
+              </div>
+              <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800">
+                <span className="text-[10px] text-slate-400">Horas Extras Acumuladas</span>
+                <p className="text-base font-bold text-amber-400 mt-0.5">+{totalOvertime.toFixed(1)} h</p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Big Live Digital Clock */}
-        <div>
-          <div className="text-3xl sm:text-4xl font-black text-amber-400 font-mono tracking-wider drop-shadow-[0_0_14px_rgba(251,191,36,0.35)]">
-            {currentTime.toLocaleTimeString('pt-BR')}
-          </div>
-          <p className="text-xs text-slate-300 mt-0.5">
-            {currentTime.toLocaleDateString('pt-BR', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </p>
-        </div>
-
-        {/* 4-Punch Progress Indicators */}
-        <div className="grid grid-cols-4 gap-1.5 pt-1 text-[10px]">
-          <div className={`p-1.5 rounded-lg border transition ${
-            punchStep === 'entrada' ? 'bg-amber-400/20 border-amber-400' : 'bg-[#0a192f] border-slate-800'
-          }`}>
-            <span className="text-slate-400 block">1. Entrada</span>
-            <span className="font-bold text-white">{entryTime}</span>
-          </div>
-          <div className={`p-1.5 rounded-lg border transition ${
-            punchStep === 'almoco_ida' ? 'bg-amber-400/20 border-amber-400' : 'bg-[#0a192f] border-slate-800'
-          }`}>
-            <span className="text-slate-400 block">2. Almoço</span>
-            <span className="font-bold text-white">{lunchStartTime}</span>
-          </div>
-          <div className={`p-1.5 rounded-lg border transition ${
-            punchStep === 'almoco_volta' ? 'bg-amber-400/20 border-amber-400' : 'bg-[#0a192f] border-slate-800'
-          }`}>
-            <span className="text-slate-400 block">3. Retorno</span>
-            <span className="font-bold text-white">{lunchEndTime}</span>
-          </div>
-          <div className={`p-1.5 rounded-lg border transition ${
-            punchStep === 'saida' ? 'bg-amber-400/20 border-amber-400' : 'bg-[#0a192f] border-slate-800'
-          }`}>
-            <span className="text-slate-400 block">4. Saída</span>
-            <span className="font-bold text-amber-400">{exitTime}</span>
-          </div>
-        </div>
-
-        {/* Safety checklist toggles before punching */}
-        <div className="bg-[#0a192f]/90 p-2.5 rounded-xl border border-slate-700 text-left space-y-1.5 text-xs">
-          <label className="flex items-center gap-2 cursor-pointer text-slate-300">
-            <input
-              type="checkbox"
-              checked={epiVerified}
-              onChange={(e) => setEpiVerified(e.target.checked)}
-              className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
-            />
-            <span className="text-[11px]">
-              EPIs Obrigatórios em Uso (Cinto Paraquedista + Trava-quedas duplo + Capacete Jugular)
-            </span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer text-slate-300">
-            <input
-              type="checkbox"
-              checked={balancimOk}
-              onChange={(e) => setBalancimOk(e.target.checked)}
-              className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
-            />
-            <span className="text-[11px]">
-              Inspeção Diária do Balancim Elétrico Aprovada pelo Encarregado
-            </span>
-          </label>
-        </div>
-
-        {/* Big Tactile Punch Button with GPS lock */}
-        <button
-          type="button"
-          onClick={handlePunchNow}
-          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-amber-500/25 active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <LocateFixed className="w-5 h-5 text-slate-950" />
-          <span>
-            {punchStep === 'entrada'
-              ? 'BATER PONTO DE ENTRADA (COM GPS)'
-              : punchStep === 'almoco_ida'
-              ? 'BATER SAÍDA DE ALMOÇO (COM GPS)'
-              : punchStep === 'almoco_volta'
-              ? 'BATER RETORNO DE ALMOÇO (COM GPS)'
-              : 'BATER PONTO DE SAÍDA (COM GPS)'}
-          </span>
-        </button>
-
-        {/* GPS Punch Feedback Alert */}
-        {justPunched && lastPunchGpsMessage && (
-          <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-bold animate-in fade-in space-y-1 text-left">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-              <span>Batida de ponto gravada com coordenadas exatas!</span>
-            </div>
-            <p className="text-[11px] font-mono text-emerald-200">
-              {lastPunchGpsMessage}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Horas Extras & Summary of the Day */}
-      <div className="bg-[#0f2744] border border-slate-700 rounded-xl p-3.5 space-y-3 text-xs">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-          <span className="font-bold text-white flex items-center gap-1.5">
-            <FileSpreadsheet className="w-4 h-4 text-amber-400" />
-            Apuração de Horas & Horas Extras
-          </span>
-          <span className="text-[10px] text-slate-400">Período Vigente</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">Total Horas Normais</span>
-            <p className="text-base font-bold text-white">{totalRegular.toFixed(1)} h</p>
-          </div>
-          <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">Horas Extras Acumuladas</span>
-            <p className="text-base font-bold text-amber-400">+{totalOvertime.toFixed(1)} h</p>
-          </div>
-        </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 50% (H)</label>
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                max="6"
-                value={overtime50}
-                onChange={(e) => setOvertime50(parseFloat(e.target.value) || 0)}
-                className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 100% (H)</label>
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                max="8"
-                value={overtime100}
-                onChange={(e) => setOvertime100(parseFloat(e.target.value) || 0)}
-                className="w-full px-2.5 py-1.5 bg-[#0a192f] border border-slate-700 rounded-lg text-white text-center font-bold"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 50% (H)</label>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="6"
+                  value={overtime50}
+                  onChange={(e) => setOvertime50(parseFloat(e.target.value) || 0)}
+                  className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-lg text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 100% (H)</label>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="8"
+                  value={overtime100}
+                  onChange={(e) => setOvertime100(parseFloat(e.target.value) || 0)}
+                  className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-lg text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                />
+              </div>
             </div>
           </div>
-        </div>
         </div>
 
         {/* RIGHT COLUMN ON DESKTOP: Historical Records Table / List with GPS Badges */}
         <div className="lg:col-span-7">
-          <div className="flex items-center justify-between mb-2.5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Histórico de Jornadas com Rastreamento GPS ({activeEmployee.name})
             </h3>
-            <span className="text-[10px] text-amber-400 font-semibold">
+            <span className="text-[11px] text-amber-400 font-semibold">
               {employeeTimesheets.length} registros auditados
             </span>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             {employeeTimesheets.map((ts) => {
               const entGps = ts.punchesGps?.entrada || ts.gpsLocation;
               const saiGps = ts.punchesGps?.saida || ts.gpsLocation;
@@ -592,9 +588,9 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
               return (
                 <div
                   key={ts.id}
-                  className="bg-[#0f2744] border border-slate-700 hover:border-amber-400/40 rounded-xl p-3.5 text-xs space-y-2.5 transition shadow flex flex-col justify-between"
+                  className="bg-[#0f2744] border border-slate-800 hover:border-slate-700 rounded-xl p-4 text-xs space-y-3 transition flex flex-col justify-between"
                 >
-                  <div className="space-y-2.5">
+                  <div className="space-y-3">
                     {/* Header */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
@@ -604,14 +600,14 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                           • {ts.obraName}
                         </span>
                       </div>
-                      <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span className="text-[10px] font-semibold bg-[#0a192f] text-slate-200 border border-slate-700 px-2.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-amber-400" />
                         APROVADO
                       </span>
                     </div>
 
                     {/* 4 Times */}
-                    <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-300 bg-[#0a192f] p-1.5 rounded-lg text-center font-mono">
+                    <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-300 bg-[#0a192f] p-2 rounded-lg border border-slate-800 text-center font-mono">
                       <div>
                         <span className="text-slate-500 block text-[9px]">Entrada</span>
                         <span className="font-bold text-white">{ts.entryTime}</span>
@@ -631,30 +627,30 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                     </div>
 
                     {/* Exact GPS Coordinates Section */}
-                    <div className="bg-[#0a192f] p-2.5 rounded-lg border border-slate-800 space-y-1.5 text-[11px]">
+                    <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800 space-y-2 text-[11px]">
                       <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                        <span className="font-semibold text-slate-300 flex items-center gap-1">
+                        <span className="font-semibold text-slate-300 flex items-center gap-1.5">
                           <Satellite className="w-3 h-3 text-amber-400" />
                           Coordenadas Registradas via GPS
                         </span>
-                        <span className="text-emerald-400 font-medium">
+                        <span className="text-amber-400 font-medium">
                           ✓ Cerca Digital OK
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 gap-1 text-[10px] font-mono">
+                      <div className="grid grid-cols-1 gap-1.5 text-[10px] font-mono">
                         {entGps && (
-                          <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
+                          <div className="flex items-center justify-between bg-[#0f2744]/80 px-2.5 py-1 rounded border border-slate-800/80">
                             <span className="text-slate-400">Entrada:</span>
-                            <span className="text-amber-300 font-bold">
+                            <span className="text-slate-200 font-semibold">
                               {entGps.latitude.toFixed(6)}, {entGps.longitude.toFixed(6)}
                             </span>
                           </div>
                         )}
                         {saiGps && (
-                          <div className="flex items-center justify-between bg-[#0f2744]/70 px-2 py-1 rounded">
+                          <div className="flex items-center justify-between bg-[#0f2744]/80 px-2.5 py-1 rounded border border-slate-800/80">
                             <span className="text-slate-400">Saída:</span>
-                            <span className="text-amber-300 font-bold">
+                            <span className="text-slate-200 font-semibold">
                               {saiGps.latitude.toFixed(6)}, {saiGps.longitude.toFixed(6)}
                             </span>
                           </div>
@@ -667,7 +663,7 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedProofTimesheet(ts)}
-                    className="w-full py-1.5 px-3 rounded-lg bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="w-full py-2 px-3 rounded-lg bg-[#0a192f] hover:bg-slate-800/80 border border-slate-800 text-amber-400 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
                     <MapPin className="w-3.5 h-3.5 text-amber-400" />
                     <span>Ver Comprovante GPS & Mapa Interativo</span>

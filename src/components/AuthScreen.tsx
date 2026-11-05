@@ -82,60 +82,56 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a192f] text-slate-100 flex flex-col justify-between px-4 py-6 sm:py-10 max-w-md lg:max-w-6xl mx-auto relative overflow-hidden">
-      {/* Decorative architectural ambient glow */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="my-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10">
-        {/* Left Branding & Corporate Showcase (Centered on Mobile, Left Panel on Desktop) */}
-        <div className="lg:col-span-6 text-center lg:text-left space-y-4">
-          <div className="inline-flex items-center justify-center p-1 rounded-2xl bg-white border-2 border-amber-500/60 shadow-xl shadow-amber-500/20 overflow-hidden">
+    <div className="min-h-screen bg-[#0a192f] text-slate-100 flex flex-col justify-between px-4 sm:px-6 lg:px-8 py-8 sm:py-12 max-w-md md:max-w-5xl mx-auto relative overflow-hidden">
+      <div className="my-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center z-10">
+        {/* Left Branding & Corporate Showcase (Centered on Mobile, Left Panel on Notebooks & Desktop) */}
+        <div className="md:col-span-6 text-center md:text-left space-y-5">
+          <div className="inline-flex items-center justify-center p-1.5 rounded-xl bg-white border border-slate-800 overflow-hidden">
             <img
               src="/assets/aistudio/Logotipo_Renovar_51718f31.jpg"
               alt="Renovar SC"
-              className="w-20 h-20 lg:w-24 lg:h-24 object-contain rounded-xl"
+              className="w-20 h-20 lg:w-24 lg:h-24 object-contain rounded-lg"
             />
           </div>
 
           <div>
-            <h1 className="text-2xl lg:text-4xl font-black tracking-tight text-white flex items-center justify-center lg:justify-start gap-2">
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-white flex items-center justify-center md:justify-start gap-2">
               RENOVAR <span className="text-amber-400">SC</span>
             </h1>
-            <p className="text-xs lg:text-sm uppercase font-bold tracking-widest text-amber-400/90 mt-1">
+            <p className="text-xs uppercase font-semibold tracking-widest text-amber-400 mt-1">
               Soluções Prediais • Engenharia & Gestão de Fachadas
             </p>
-            <p className="text-xs lg:text-sm text-slate-300 mt-2 max-w-md mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-xs lg:text-sm text-slate-300 mt-2.5 max-w-md mx-auto md:mx-0 leading-relaxed">
               Plataforma corporativa integrada para emissão de Memoriais Descritivos padrão ABNT, controle físico-financeiro, laudos periciais e gestão de canteiros em Santa Catarina.
             </p>
           </div>
 
-          {/* Desktop Engineering Highlights */}
-          <div className="hidden lg:grid grid-cols-1 gap-3 pt-2">
-            <div className="bg-[#0f2744]/80 border border-amber-500/25 rounded-xl p-3.5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-lg bg-amber-400/15 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-400/30">
+          {/* Desktop & Notebook Engineering Highlights */}
+          <div className="hidden md:grid grid-cols-1 gap-3.5 pt-2">
+            <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-lg bg-[#0a192f] text-amber-400 flex items-center justify-center flex-shrink-0 border border-slate-800">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
                 <h3 className="text-xs font-bold text-white">
                   Memorial Descritivo Estruturado de Engenharia Civil
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Diagnóstico exato das patologias, metodologia executiva em 7 etapas e garantias contratuais para Contratantes e Clientes.
+                <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                  Diagnóstico exato das patologias, metodologia executiva por fases, planilha de insumos, tabela de equipe e garantia de 05 anos para Contratantes.
                 </p>
               </div>
             </div>
 
-            <div className="bg-[#0f2744]/80 border border-slate-700/80 rounded-xl p-3.5 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center flex-shrink-0 border border-emerald-500/30">
+            <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-lg bg-[#0a192f] text-amber-400 flex items-center justify-center flex-shrink-0 border border-slate-800">
                 <Award className="w-4 h-4" />
               </div>
               <div>
                 <h3 className="text-xs font-bold text-white">
                   Conformidade Normativa ABNT NBR 13755, NBR 6118 & NR-35
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Controle de ponto GPS Portaria 671 MTE, cronograma de 12 semanas e faturamento NFS-e integrado.
+                <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                  Controle de ponto GPS Portaria 671 MTE, cronograma físico-financeiro e faturamento NFS-e integrado.
                 </p>
               </div>
             </div>
@@ -143,33 +139,33 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
         </div>
 
         {/* Right Login Card */}
-        <div className="lg:col-span-6 w-full max-w-md mx-auto bg-[#0f2744]/90 border border-amber-500/25 rounded-2xl p-5 lg:p-6 shadow-2xl backdrop-blur-md">
-          <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-700/60">
+        <div className="md:col-span-6 w-full max-w-md mx-auto bg-[#0f2744] border border-slate-800 rounded-xl p-6 lg:p-7">
+          <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-800">
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-1.5">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-amber-400" />
                 Acesso Corporativo
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Autenticação restrita a colaboradores autorizados
               </p>
             </div>
-            <span className="text-[10px] font-semibold bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-semibold bg-[#0a192f] text-amber-400 border border-slate-800 px-2.5 py-0.5 rounded-full">
               SC-2026
             </span>
           </div>
 
           {error && (
-            <div className="mb-4 flex items-center gap-2 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs animate-shake">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400" />
+            <div className="mb-4 flex items-center gap-2 p-3 rounded-lg bg-[#0a192f] border border-amber-400/40 text-amber-300 text-xs">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-400" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* E-mail / Usuário */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                 E-mail ou Usuário Corporativo
               </label>
               <div className="relative">
@@ -180,16 +176,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="gabriel@renovarsc.com.br"
-                  className="w-full pl-9 pr-3 py-2.5 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  className="w-full pl-9 pr-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
                 />
               </div>
             </div>
 
             {/* Senha */}
             <div>
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <label className="text-xs font-semibold text-slate-300">Senha de Acesso</label>
-                <span className="text-[11px] text-amber-400/80 hover:text-amber-300 cursor-pointer">
+                <span className="text-[11px] text-amber-400 hover:underline cursor-pointer">
                   Esqueceu a senha?
                 </span>
               </div>
@@ -201,7 +197,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-10 py-2.5 bg-[#0a192f] border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition"
+                  className="w-full pl-9 pr-10 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
                 />
                 <button
                   type="button"
@@ -214,7 +210,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
             </div>
 
             {/* Remember me */}
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center justify-between pt-0.5">
               <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300">
                 <input
                   type="checkbox"
@@ -230,7 +226,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
             <button
               type="submit"
               disabled={isAuthenticating}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-amber-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm tracking-wide transition flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
             >
               {isAuthenticating ? (
                 <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
@@ -247,11 +243,11 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
               type="button"
               onClick={handleBiometricAuth}
               disabled={isBiometricScanning}
-              className="w-full py-2.5 rounded-xl bg-[#0a192f] hover:bg-[#14294b] border border-slate-700 hover:border-amber-400/50 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 active:scale-95 transition cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-[#0a192f] hover:bg-slate-800/80 border border-slate-800 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <Fingerprint
-                className={`w-4 h-4 ${
-                  isBiometricScanning ? 'text-amber-400 animate-pulse' : 'text-amber-400'
+                className={`w-4 h-4 text-amber-400 ${
+                  isBiometricScanning ? 'animate-pulse' : ''
                 }`}
               />
               <span>
@@ -263,20 +259,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
           </form>
 
           {/* Demo Fast Logins for Field Testing */}
-          <div className="mt-5 pt-3.5 border-t border-slate-800">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+          <div className="mt-5 pt-4 border-t border-slate-800">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1">
               <span>Acessos Rápidos de Demonstração:</span>
             </p>
-            <div className="grid grid-cols-1 gap-1.5">
+            <div className="grid grid-cols-1 gap-2">
               {DEMO_USERS.map((usr) => (
                 <button
                   key={usr.id}
                   type="button"
                   onClick={() => handleSelectDemoUser(usr)}
-                  className={`text-left px-2.5 py-1.5 rounded-lg border text-xs transition flex items-center justify-between cursor-pointer ${
+                  className={`text-left px-3 py-2 rounded-lg border text-xs transition flex items-center justify-between cursor-pointer ${
                     email === usr.email
-                      ? 'bg-amber-400/15 border-amber-400/50 text-amber-300 font-medium'
-                      : 'bg-[#0a192f]/60 border-slate-800 text-slate-300 hover:border-slate-700'
+                      ? 'bg-amber-400/10 border-amber-400/40 text-amber-400 font-medium'
+                      : 'bg-[#0a192f] border-slate-800 text-slate-300 hover:border-slate-700'
                   }`}
                 >
                   <div className="truncate mr-2">
@@ -296,12 +292,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
       </div>
 
       {/* Security Footer */}
-      <div className="text-center pt-4 text-[11px] text-slate-500 z-10 space-y-1">
+      <div className="text-center pt-6 text-[11px] text-slate-500 z-10 space-y-1">
         <p className="flex items-center justify-center gap-1.5 text-slate-400">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
           <span>Ambiente Seguro • NR-35 / NR-18</span>
         </p>
-        <p>© 2026 Renovar SC Soluções Prediais Ltda. Balneário Camboriú / Florianópolis</p>
+        <p>© 2026 Renovar SC Soluções Prediais Ltda • CNPJ: 57.293.244/0001-27</p>
       </div>
     </div>
   );
