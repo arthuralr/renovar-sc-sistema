@@ -1,0 +1,11 @@
+{
+  "name": "Renovar SC - Soluções Prediais",
+  "description": "PWA corporativa mobile-first para recuperação de fachadas, laudos técnicos com fotos, orçamentos com IA, controle de ponto de campo e gestão de NFS-e.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
