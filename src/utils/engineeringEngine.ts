@@ -454,10 +454,11 @@ export function generateLocalEngineeringBudget(params: GenerateBudgetParams): Bu
   ];
 
   const commercialTermsList = [
-    `Faturamento Direto e Nota Fiscal: Todos os pagamentos serão realizados mediante emissão de Nota Fiscal de Serviços Eletrônica (NFS-e) pela RENOVAR SC SOLUÇÕES PREDIAIS LTDA (CNPJ: ${RENOVAR_COMPANY_CNPJ}), acompanhada de certidões negativas (CND Federal, Estadual, Municipal, FGTS e Trabalhista) e boletim de medição física assinado.`,
-    `Opções de Parcelamento Comercial: (Opção A) Entrada de 20% na assinatura para mobilização/ART/materiais + saldo em até 06 parcelas mensais ou medições quinzenais conforme avanço físico; (Opção B) Pagamento à vista na homologação do contrato com 5% de desconto financeiro sobre o valor global.`,
-    `Insumos e Taxas Inclusos: O valor global proposto é fechado (regime de empreitada global a preço fixo), já contemplando 100% dos materiais especificados, locação/montagem de balancins, encargos sociais (INSS/FGTS), seguro de responsabilidade civil de obras e taxa de ART/CREA-SC, sem custos ocultos ao Contratante / Cliente.`,
-    `Validade da Proposta: 30 (trinta) dias corridos a contar da data de emissão deste Memorial Descritivo Oficial.`,
+    `Forma de Pagamento — Opção 01 (Parcelamento por Medição / Cronograma): Sinal/Entrada de 20% (${(totalPrice * 0.2).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}) na assinatura contratual para mobilização técnica, emissão de ART/CREA-SC e aquisição de insumos químicos/elastoméricos + Saldo de 80% (${(totalPrice * 0.8).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}) parcelado em até 06 (seis) parcelas mensais ou medições quinzenais vinculadas ao avanço físico-financeiro atestado pelo Contratante / Cliente.`,
+    `Forma de Pagamento — Opção 02 (À Vista com Desconto Corporativo): Pagamento integral na homologação contratual com 5% de desconto financeiro, perfazendo o valor líquido final de ${(totalPrice * 0.95).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.`,
+    `Faturamento Direto e Regularidade Fiscal: Todos os pagamentos serão efetuados mediante emissão de Nota Fiscal de Serviços Eletrônica (NFS-e) pela RENOVAR SC SOLUÇÕES PREDIAIS LTDA (CNPJ: ${RENOVAR_COMPANY_CNPJ}), acompanhada de Certidões Negativas de Débitos (CND Federal/INSS, Estadual, Municipal, FGTS e Trabalhista) e Boletim de Medição assinado.`,
+    `Regime de Empreitada Global (Insumos, Equipamentos e Taxas Inclusos): O valor global proposto contempla 100% dos materiais industriais especificados, locação e montagem de balancins NR-18, encargos sociais e trabalhistas, seguro de responsabilidade civil de engenharia e taxa de ART/CREA-SC, sem custos adicionais ou aditivos imprevistos para o Contratante / Cliente.`,
+    `Validade da Proposta Orçamentária: 30 (trinta) dias corridos a contar da data de emissão deste Memorial Descritivo Oficial.`,
   ];
 
   return {

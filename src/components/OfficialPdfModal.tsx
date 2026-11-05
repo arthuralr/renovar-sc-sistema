@@ -182,25 +182,42 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
             </div>
           </div>
 
-          {/* 1. Escopo Técnico Detalhado */}
-          <div className="space-y-1.5">
+          {/* 1. Objeto do Orçamento, Finalidade e Diretrizes Técnicas */}
+          <div className="space-y-2">
             <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-              1. OBJETO, FINALIDADE E ESCOPO TÉCNICO DETALHADO
+              1. OBJETO DO ORÇAMENTO, FINALIDADE E DIRETRIZES TÉCNICAS
             </h2>
-            <p className="text-slate-700 leading-relaxed text-justify">
-              {proposal.scopeDeclaration}
-            </p>
-            <p className="text-slate-700 leading-relaxed text-justify mt-1.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
-              <strong>Síntese Diagnóstica de Vistoria: </strong>
-              {proposal.executiveSummary}
-            </p>
+            <div className="space-y-2 text-[11px] text-slate-700 leading-relaxed text-justify">
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <strong className="text-[#0a192f] block mb-0.5 uppercase text-[10px]">
+                  1.1 Objeto do Orçamento:
+                </strong>
+                {proposal.scopeDeclaration}
+              </div>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <strong className="text-[#0a192f] block mb-0.5 uppercase text-[10px]">
+                  1.2 Finalidade Técnica e Parecer de Vistoria:
+                </strong>
+                {proposal.executiveSummary}
+              </div>
+              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <strong className="text-[#0a192f] block mb-1 uppercase text-[10px]">
+                  1.3 Diretrizes Técnicas e Normas Regulamentadoras Aplicáveis:
+                </strong>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10px] text-slate-700">
+                  {proposal.norms.map((norm, idx) => (
+                    <div key={idx}>• {norm}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* 2. Diagnóstico Pericial de Patologias */}
+          {/* 2. Diagnóstico Pericial Exato das Patologias Identificadas */}
           {proposal.pathologyDiagnostics && proposal.pathologyDiagnostics.length > 0 && (
             <div className="space-y-2">
               <h2 className="text-xs font-black uppercase tracking-wider text-[#0a192f] border-b-2 border-slate-200 pb-1">
-                2. DIAGNÓSTICO PERICIAL DE PATOLOGIAS ({proposal.condoName.toUpperCase()})
+                2. DIAGNÓSTICO PERICIAL EXATO DAS PATOLOGIAS IDENTIFICADAS ({proposal.condoName.toUpperCase()})
               </h2>
               <div className="space-y-2.5 pt-1">
                 {proposal.pathologyDiagnostics.map((diag, idx) => (
@@ -307,23 +324,33 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
                     </tr>
                   ))}
                 </tbody>
+                <tfoot className="bg-slate-100 border-t-2 border-slate-300 text-xs">
+                  <tr className="border-b border-slate-200">
+                    <td colSpan={5} className="py-2 px-2.5 text-right font-semibold text-slate-700">
+                      Subtotal Direto (Mão de Obra Especializada, Insumos, Balancins e EPCs):
+                    </td>
+                    <td className="py-2 px-2.5 text-right font-mono font-bold text-slate-900">
+                      {formatCurrency(proposal.subtotal)}
+                    </td>
+                  </tr>
+                  <tr className="border-b border-slate-200">
+                    <td colSpan={5} className="py-2 px-2.5 text-right font-semibold text-slate-700">
+                      BDI Corporativo, Tributos, Seguros, ART/CREA-SC e Administração ({proposal.bdiPercent}%):
+                    </td>
+                    <td className="py-2 px-2.5 text-right font-mono font-bold text-slate-900">
+                      {formatCurrency(proposal.totalPrice - proposal.subtotal)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={5} className="py-2.5 px-2.5 text-right font-black text-slate-900 uppercase">
+                      VALOR GLOBAL PROPOSTO ({proposal.condoName.toUpperCase()}):
+                    </td>
+                    <td className="py-2.5 px-2.5 text-right font-mono font-black text-sm text-amber-800">
+                      {formatCurrency(proposal.totalPrice)}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
-            </div>
-
-            {/* Totais do Orçamento */}
-            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-300 space-y-1.5 text-xs">
-              <div className="flex justify-between text-slate-600">
-                <span>Subtotal Direto (Mão de Obra Especializada, Insumos, Balancins e EPCs):</span>
-                <span className="font-mono font-semibold">{formatCurrency(proposal.subtotal)}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>BDI Corporativo, Tributos, Seguros, ART/CREA-SC e Administração ({proposal.bdiPercent}%):</span>
-                <span className="font-mono font-semibold">{formatCurrency(proposal.totalPrice - proposal.subtotal)}</span>
-              </div>
-              <div className="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-300">
-                <span>INVESTIMENTO GLOBAL PROPOSTO ({proposal.condoName.toUpperCase()}):</span>
-                <span className="text-amber-700 font-mono text-base">{formatCurrency(proposal.totalPrice)}</span>
-              </div>
             </div>
           </div>
 
@@ -437,19 +464,22 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-300">
               <div>
-                <span className="text-[10px] text-slate-500 block">Razão Social & CNPJ:</span>
-                <span className="font-bold text-slate-900">Renovar SC Ltda • {RENOVAR_COMPANY_CNPJ}</span>
+                <span className="text-[10px] text-slate-500 block">Entrada / Mobilização (20%):</span>
+                <span className="font-bold text-slate-900 font-mono">{formatCurrency(proposal.totalPrice * 0.2)}</span>
+                <span className="text-[10px] text-slate-500 block">Na assinatura p/ ART, balancins e insumos</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 block">Prazo Estimado de Execução:</span>
-                <span className="font-bold text-slate-900">{proposal.timelineWeeks} semanas</span>
+                <span className="text-[10px] text-slate-500 block">Saldo Parcelado (80% em Medições):</span>
+                <span className="font-bold text-slate-900 font-mono">{formatCurrency(proposal.totalPrice * 0.8)}</span>
+                <span className="text-[10px] text-slate-500 block">Em até 06x ou conforme cronograma semanal</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 block">Garantia Contratual Global:</span>
-                <span className="font-bold text-slate-900">0{proposal.warrantyYears} anos (Integral)</span>
+                <span className="text-[10px] text-slate-500 block">Opção À Vista (5% de Desconto):</span>
+                <span className="font-bold text-amber-800 font-mono">{formatCurrency(proposal.totalPrice * 0.95)}</span>
+                <span className="text-[10px] text-slate-500 block">Economia direta de {formatCurrency(proposal.totalPrice * 0.05)}</span>
               </div>
               <div className="sm:col-span-3 pt-1.5 border-t border-slate-200">
-                <span className="text-[10px] text-slate-500 block">Condições de Medição e Pagamento:</span>
+                <span className="text-[10px] text-slate-500 block">Condições Gerais de Medição e Pagamento (CNPJ {RENOVAR_COMPANY_CNPJ}):</span>
                 <span className="font-semibold text-slate-800">{proposal.paymentConditions}</span>
               </div>
             </div>
