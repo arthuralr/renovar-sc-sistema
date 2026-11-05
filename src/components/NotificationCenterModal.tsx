@@ -133,27 +133,27 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
     switch (category) {
       case 'cronograma':
         return (
-          <span className="text-[9px] font-bold bg-[#0a192f] text-amber-400 border border-slate-800 px-2 py-0.5 rounded flex items-center gap-1">
-            <Clock className="w-2.5 h-2.5 text-amber-400" />
+          <span className="text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded flex items-center gap-1">
+            <Clock className="w-2.5 h-2.5 text-amber-600" />
             Cronograma
           </span>
         );
       case 'orcamento_aprovado':
         return (
-          <span className="text-[9px] font-bold bg-[#0a192f] text-amber-400 border border-slate-800 px-2 py-0.5 rounded flex items-center gap-1">
-            <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+          <span className="text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded flex items-center gap-1">
+            <Sparkles className="w-2.5 h-2.5 text-amber-600" />
             Orçamento Aprovado
           </span>
         );
       case 'fiscal':
         return (
-          <span className="text-[9px] font-bold bg-[#0a192f] text-slate-200 border border-slate-800 px-2 py-0.5 rounded">
+          <span className="text-[9px] font-bold bg-slate-100 text-[#0f172a] border border-slate-200 px-2 py-0.5 rounded">
             Fiscal / NFS-e
           </span>
         );
       default:
         return (
-          <span className="text-[9px] font-bold bg-[#0a192f] text-slate-300 border border-slate-800 px-2 py-0.5 rounded">
+          <span className="text-[9px] font-bold bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded">
             Geral
           </span>
         );
@@ -161,58 +161,58 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-[#0f2744] border border-slate-800 w-full max-w-md rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white border border-slate-200 w-full max-w-md rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] text-[#0f172a]">
         {/* Header */}
-        <div className="bg-[#0a192f] p-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#0f2744] border border-slate-800 flex items-center justify-center text-amber-400">
+            <div className="w-8 h-8 rounded-lg bg-[#0a192f] flex items-center justify-center text-amber-400">
               <Bell className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-white">Central de Notificações</h3>
+                <h3 className="text-sm font-bold text-[#0f172a]">Central de Notificações</h3>
                 {unreadCount > 0 && (
-                  <span className="text-[10px] font-bold bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-[#0a192f] text-white px-2 py-0.5 rounded-full">
                     {unreadCount} nova{unreadCount > 1 ? 's' : ''}
                   </span>
                 )}
               </div>
-              <p className="text-[10px] text-slate-400">
+              <p className="text-[10px] text-slate-500">
                 Alertas push de prazos de obras e orçamentos aprovados
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-400 hover:text-white transition cursor-pointer"
+            className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-[#0f172a] transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Browser Push Permission Status Banner */}
-        <div className="p-3.5 bg-[#0f2744] border-b border-slate-800 space-y-2 text-xs">
+        <div className="p-3.5 bg-white border-b border-slate-200 space-y-2 text-xs">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-slate-300 flex items-center gap-1.5 text-[11px]">
-              <Radio className="w-3.5 h-3.5 text-amber-400" />
+            <span className="font-bold text-slate-700 flex items-center gap-1.5 text-[11px]">
+              <Radio className="w-3.5 h-3.5 text-amber-600" />
               Notificações no Dispositivo:
             </span>
 
             {permissionStatus === 'granted' ? (
-              <span className="text-[10px] font-bold text-white bg-[#0a192f] border border-slate-800 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3 text-amber-400" />
+              <span className="text-[10px] font-bold text-[#0f172a] bg-slate-50 border border-slate-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-amber-600" />
                 Ativas no Navegador
               </span>
             ) : permissionStatus === 'denied' ? (
-              <span className="text-[10px] font-semibold text-amber-400 bg-[#0a192f] border border-slate-800 px-2.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
                 Alertas em Tela Ativos
               </span>
             ) : (
               <button
                 type="button"
                 onClick={handleRequestPermission}
-                className="text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 px-2.5 py-1 rounded-lg transition cursor-pointer"
+                className="text-[10px] font-bold bg-[#0a192f] hover:bg-slate-800 text-white px-2.5 py-1 rounded-lg transition cursor-pointer"
               >
                 Ativar Push no Celular
               </button>
@@ -220,27 +220,27 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
           </div>
 
           {/* Quick Simulation Action Buttons for Testing */}
-          <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
               Simular Notificação:
             </span>
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={handleTestCronogramaAlert}
-                className="px-2.5 py-1 rounded-lg bg-[#0a192f] hover:bg-slate-800 border border-slate-800 text-[10px] font-semibold text-slate-200 flex items-center gap-1 transition cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[10px] font-semibold text-[#0f172a] flex items-center gap-1 transition cursor-pointer"
                 title="Testar alerta de prazo de cronograma vencendo"
               >
-                <Clock className="w-3 h-3 text-amber-400" />
+                <Clock className="w-3 h-3 text-amber-600" />
                 <span>Prazo Obra</span>
               </button>
               <button
                 type="button"
                 onClick={handleTestBudgetAlert}
-                className="px-2.5 py-1 rounded-lg bg-[#0a192f] hover:bg-slate-800 border border-slate-800 text-[10px] font-semibold text-slate-200 flex items-center gap-1 transition cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[10px] font-semibold text-[#0f172a] flex items-center gap-1 transition cursor-pointer"
                 title="Testar alerta de orçamento aprovado pelo contratante"
               >
-                <Sparkles className="w-3 h-3 text-amber-400" />
+                <Sparkles className="w-3 h-3 text-amber-600" />
                 <span>Orçamento</span>
               </button>
             </div>
@@ -250,9 +250,9 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         {/* Scrollable Notification List */}
         <div className="p-3.5 overflow-y-auto space-y-2.5 text-xs flex-1 max-h-[50vh]">
           {notifications.length === 0 ? (
-            <div className="text-center py-8 space-y-2 text-slate-400">
-              <Bell className="w-8 h-8 text-slate-600 mx-auto" />
-              <p className="text-sm font-semibold text-slate-300">Nenhuma notificação no momento</p>
+            <div className="text-center py-8 space-y-2 text-slate-500">
+              <Bell className="w-8 h-8 text-slate-300 mx-auto" />
+              <p className="text-sm font-bold text-[#0f172a]">Nenhuma notificação no momento</p>
               <p className="text-xs">
                 Você será avisado automaticamente quando prazos de obras vencerem ou contratos forem aprovados.
               </p>
@@ -264,8 +264,8 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 onClick={() => handleItemClick(notif)}
                 className={`p-3.5 rounded-xl border transition cursor-pointer relative space-y-1.5 ${
                   notif.read
-                    ? 'bg-[#0a192f]/60 border-slate-800 hover:border-slate-700 text-slate-300'
-                    : 'bg-[#0a192f] border-amber-400/40 hover:border-amber-400 text-white'
+                    ? 'bg-slate-50/70 border-slate-200 hover:border-slate-300 text-slate-600'
+                    : 'bg-white border-amber-300 hover:border-amber-400 text-[#0f172a] shadow-sm'
                 }`}
               >
                 {/* Header row */}
@@ -273,7 +273,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                   <div className="flex items-center gap-1.5">
                     {getCategoryBadge(notif.category)}
                     {!notif.read && (
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      <span className="w-2 h-2 rounded-full bg-amber-600" />
                     )}
                   </div>
                   <span className="text-[10px] text-slate-400 font-mono">
@@ -282,24 +282,24 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 </div>
 
                 {/* Title */}
-                <h4 className="font-bold text-xs text-white leading-snug">
+                <h4 className="font-bold text-xs text-[#0f172a] leading-snug">
                   {notif.title}
                 </h4>
 
                 {/* Body message */}
-                <p className="text-[11px] text-slate-300 leading-relaxed">
+                <p className="text-[11px] text-slate-600 leading-relaxed">
                   {notif.message}
                 </p>
 
                 {/* Action footer */}
                 {notif.actionTab && (
-                  <div className="flex items-center justify-between pt-1 text-[10px] text-amber-400 font-medium">
+                  <div className="flex items-center justify-between pt-1 text-[10px] text-amber-700 font-bold">
                     <span className="flex items-center gap-0.5">
                       Ver no módulo {notif.actionTab}
                       <ChevronRight className="w-3 h-3" />
                     </span>
                     {!notif.read && (
-                      <span className="text-slate-400 text-[9px]">Toque para abrir</span>
+                      <span className="text-slate-400 text-[9px] font-normal">Toque para abrir</span>
                     )}
                   </div>
                 )}
@@ -310,20 +310,20 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
         {/* Footer Actions */}
         {notifications.length > 0 && (
-          <div className="p-3.5 bg-[#0a192f] border-t border-slate-800 flex items-center justify-between text-xs">
+          <div className="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
             <button
               type="button"
               onClick={handleMarkAllRead}
-              className="flex items-center gap-1 text-[11px] font-semibold text-slate-300 hover:text-white transition cursor-pointer"
+              className="flex items-center gap-1 text-[11px] font-semibold text-slate-600 hover:text-[#0f172a] transition cursor-pointer"
             >
-              <CheckCheck className="w-3.5 h-3.5 text-amber-400" />
+              <CheckCheck className="w-3.5 h-3.5 text-amber-600" />
               <span>Marcar todas lidas</span>
             </button>
 
             <button
               type="button"
               onClick={handleClearAll}
-              className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-white transition cursor-pointer"
+              className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-[#0f172a] transition cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Limpar histórico</span>

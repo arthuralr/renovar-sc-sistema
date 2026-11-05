@@ -53,31 +53,31 @@ export const PushNotificationToast: React.FC<PushNotificationToastProps> = ({
 
   return (
     <div className="fixed top-3 left-3 right-3 sm:left-auto sm:right-4 sm:w-96 z-50 animate-in slide-in-from-top-4 duration-300">
-      <div className="bg-[#0f2744] border border-slate-700 rounded-xl p-3.5 shadow-xl flex items-start gap-3 backdrop-blur-md">
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xl flex items-start gap-3">
         {/* Leading icon */}
-        <div className="w-10 h-10 rounded-xl bg-[#0a192f] border border-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <div className="w-10 h-10 rounded-xl bg-[#0a192f] flex items-center justify-center flex-shrink-0 mt-0.5">
           {getIcon()}
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0 cursor-pointer" onClick={handleClick}>
           <div className="flex items-center justify-between gap-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-[#0a192f] border border-slate-800 px-1.5 py-0.5 rounded">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
               Notificação Push
             </span>
             <span className="text-[9px] text-slate-400">Agora</span>
           </div>
 
-          <h4 className="text-xs font-bold text-white mt-1 leading-snug">
+          <h4 className="text-xs font-bold text-[#0f172a] mt-1 leading-snug">
             {activeToast.title}
           </h4>
 
-          <p className="text-[11px] text-slate-300 mt-0.5 line-clamp-2 leading-relaxed">
+          <p className="text-[11px] text-slate-600 mt-0.5 line-clamp-2 leading-relaxed">
             {activeToast.message}
           </p>
 
           {activeToast.actionTab && (
-            <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-amber-400 hover:text-amber-300">
+            <div className="mt-1.5 flex items-center gap-1 text-[10px] font-bold text-amber-700 hover:text-amber-800">
               <span>Toque para abrir no sistema</span>
               <ChevronRight className="w-3 h-3" />
             </div>
@@ -90,7 +90,7 @@ export const PushNotificationToast: React.FC<PushNotificationToastProps> = ({
             e.stopPropagation();
             setActiveToast(null);
           }}
-          className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-[#0a192f] transition cursor-pointer"
+          className="p-1 rounded-lg text-slate-400 hover:text-[#0f172a] hover:bg-slate-100 transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

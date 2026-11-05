@@ -108,22 +108,22 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
     switch (status) {
       case 'paga':
         return (
-          <span className="text-[10px] font-semibold bg-[#0a192f] text-slate-200 border border-slate-700 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-amber-400" />
+          <span className="text-[10px] font-semibold bg-slate-100 text-[#0f172a] border border-slate-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-amber-600" />
             Liquidada
           </span>
         );
       case 'emitida':
         return (
-          <span className="text-[10px] font-semibold bg-amber-400/10 text-amber-400 border border-amber-400/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-            <Clock className="w-3 h-3 text-amber-400" />
+          <span className="text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <Clock className="w-3 h-3 text-amber-600" />
             Emitida
           </span>
         );
       case 'aguardando_retencao':
         return (
-          <span className="text-[10px] font-medium bg-[#0a192f] text-slate-400 border border-slate-800 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-            <AlertTriangle className="w-3 h-3 text-slate-400" />
+          <span className="text-[10px] font-medium bg-slate-50 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3 text-slate-500" />
             Aguardando Retenção
           </span>
         );
@@ -133,52 +133,52 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
   return (
     <div className="space-y-6 pb-nav">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div>
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <ReceiptText className="w-4 h-4 text-amber-400" />
+          <h2 className="text-base sm:text-lg font-bold text-[#0f172a] flex items-center gap-2">
+            <ReceiptText className="w-4 h-4 text-amber-600" />
             Gestão Fiscal & NFS-e
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Notas fiscais eletrônicas para tomadores de serviços e clientes
           </p>
         </div>
 
         <button
           onClick={() => setShowNewInvoiceModal(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer shadow-sm"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 text-amber-400" />
           <span>Emitir NFS-e</span>
         </button>
       </div>
 
       {/* Fiscal Totals Bar — 2 cols on mobile, 4 cols on desktop */}
-      <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 lg:p-5 space-y-3.5">
-        <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-2.5">
-          <span className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-2">
-            <FileCheck className="w-3.5 h-3.5 text-amber-400" />
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between text-xs border-b border-slate-200 pb-3">
+          <span className="font-bold text-[#0a192f] uppercase tracking-wider text-[11px] flex items-center gap-2">
+            <FileCheck className="w-3.5 h-3.5 text-amber-600" />
             Balanço Fiscal de Serviços
           </span>
-          <span className="text-[10px] text-slate-400">SC • Simples / Lucro Presumido</span>
+          <span className="text-[10px] text-slate-500">SC • Simples / Lucro Presumido</span>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div className="bg-[#0a192f] p-3 lg:p-3.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">Faturamento Bruto</span>
-            <p className="text-base lg:text-lg font-bold text-white mt-0.5">{formatCurrency(totalGross)}</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
+          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 font-semibold">Faturamento Bruto</span>
+            <p className="text-base lg:text-lg font-bold text-[#0f172a] mt-0.5">{formatCurrency(totalGross)}</p>
           </div>
-          <div className="bg-[#0a192f] p-3 lg:p-3.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">Total Líquido a Receber</span>
-            <p className="text-base lg:text-lg font-bold text-amber-400 mt-0.5">{formatCurrency(totalNet)}</p>
+          <div className="bg-amber-50/70 p-3.5 rounded-xl border border-amber-200">
+            <span className="text-[10px] text-amber-800 font-semibold">Total Líquido a Receber</span>
+            <p className="text-base lg:text-lg font-bold text-amber-800 mt-0.5">{formatCurrency(totalNet)}</p>
           </div>
-          <div className="bg-[#0a192f] p-3 lg:p-3.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">Retenção INSS (11%)</span>
-            <p className="text-sm lg:text-base font-semibold text-slate-200 mt-0.5">{formatCurrency(totalInss)}</p>
+          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 font-semibold">Retenção INSS (11%)</span>
+            <p className="text-sm lg:text-base font-bold text-slate-700 mt-0.5">{formatCurrency(totalInss)}</p>
           </div>
-          <div className="bg-[#0a192f] p-3 lg:p-3.5 rounded-lg border border-slate-800">
-            <span className="text-[10px] text-slate-400">ISS Retido (2%~3%)</span>
-            <p className="text-sm lg:text-base font-semibold text-slate-200 mt-0.5">{formatCurrency(totalIss)}</p>
+          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 font-semibold">ISS Retido (2%~3%)</span>
+            <p className="text-sm lg:text-base font-bold text-slate-700 mt-0.5">{formatCurrency(totalIss)}</p>
           </div>
         </div>
       </div>
@@ -186,13 +186,13 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
       {/* Search and Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por contratante, cliente, cidade ou nº da nota..."
-            className="w-full pl-9 pr-3 py-2 bg-[#0f2744] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+            className="w-full pl-9 pr-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-[#0f172a] placeholder-slate-400 focus:outline-none focus:border-[#0a192f] shadow-sm"
           />
         </div>
 
@@ -206,10 +206,10 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
             <button
               key={tab.key}
               onClick={() => setStatusFilter(tab.key as any)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-lg border text-xs font-semibold transition cursor-pointer ${
+              className={`flex-shrink-0 px-3.5 py-2 rounded-xl border text-xs font-semibold transition cursor-pointer ${
                 statusFilter === tab.key
-                  ? 'bg-amber-400 text-slate-950 border-amber-400'
-                  : 'bg-[#0f2744] text-slate-400 border-slate-800 hover:text-white'
+                  ? 'bg-[#0a192f] text-white border-[#0a192f] shadow-sm'
+                  : 'bg-white text-slate-600 border-slate-200 hover:text-[#0f172a] hover:bg-slate-50'
               }`}
             >
               {tab.label}
@@ -224,20 +224,20 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
           <div
             key={inv.id}
             onClick={() => setSelectedInvoiceModal(inv)}
-            className="bg-[#0f2744] border border-slate-800 hover:border-slate-700 rounded-xl p-4 cursor-pointer transition"
+            className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 cursor-pointer transition shadow-sm"
           >
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-semibold text-amber-400 bg-[#0a192f] px-2 py-0.5 rounded border border-slate-800">
+                  <span className="text-xs font-mono font-bold text-[#0a192f] bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200">
                     NFS-e nº {inv.invoiceNumber}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono">
+                  <span className="text-[10px] text-slate-500 font-mono">
                     {inv.rpsNumber}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-white mt-1.5">{inv.condoName}</h4>
-                <p className="text-[11px] text-slate-400">
+                <h4 className="text-sm font-bold text-[#0f172a] mt-1.5">{inv.condoName}</h4>
+                <p className="text-[11px] text-slate-500">
                   CNPJ: {inv.condoCnpj} • {inv.city}
                 </p>
               </div>
@@ -245,25 +245,25 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
               <div>{getStatusBadge(inv.status)}</div>
             </div>
 
-            <div className="bg-[#0a192f] p-2.5 rounded-lg text-xs mb-3 border border-slate-800">
-              <span className="text-slate-400 text-[10px] block">Referência da Medição:</span>
-              <p className="text-white font-medium truncate">{inv.measurementReference}</p>
+            <div className="bg-slate-50 p-3 rounded-xl text-xs mb-3 border border-slate-200">
+              <span className="text-slate-500 text-[10px] block">Referência da Medição:</span>
+              <p className="text-[#0f172a] font-semibold truncate">{inv.measurementReference}</p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 text-[11px] pt-2 border-t border-slate-800">
+            <div className="grid grid-cols-3 gap-2 text-[11px] pt-2.5 border-t border-slate-100">
               <div>
-                <span className="text-[10px] text-slate-400 block">Valor Bruto</span>
-                <span className="font-bold text-white">{formatCurrency(inv.grossAmount)}</span>
+                <span className="text-[10px] text-slate-500 block">Valor Bruto</span>
+                <span className="font-bold text-[#0f172a]">{formatCurrency(inv.grossAmount)}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-400 block">Retenções (INSS+ISS)</span>
-                <span className="font-medium text-slate-300">
+                <span className="text-[10px] text-slate-500 block">Retenções (INSS+ISS)</span>
+                <span className="font-medium text-slate-600">
                   - {formatCurrency(inv.inssRetentionAmount + inv.issRetentionAmount)}
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-400 block">Valor Líquido</span>
-                <span className="font-bold text-amber-400">{formatCurrency(inv.netAmount)}</span>
+                <span className="text-[10px] text-slate-500 block">Valor Líquido</span>
+                <span className="font-bold text-amber-700">{formatCurrency(inv.netAmount)}</span>
               </div>
             </div>
           </div>
@@ -272,18 +272,18 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
 
       {/* DANFSE Detailed Modal */}
       {selectedInvoiceModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4">
-          <div className="w-full max-w-md rounded-xl bg-[#0f2744] border border-slate-800 shadow-xl text-slate-100 max-h-[92vh] flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-[#0a192f]">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 shadow-xl text-[#0f172a] max-h-[92vh] flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-400" />
-                <h3 className="text-sm font-bold text-white">
+                <FileText className="w-4 h-4 text-amber-600" />
+                <h3 className="text-sm font-bold text-[#0f172a]">
                   DANFSE • NFS-e nº {selectedInvoiceModal.invoiceNumber}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedInvoiceModal(null)}
-                className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-400 hover:text-white cursor-pointer"
+                className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-[#0f172a] cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -291,73 +291,73 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
 
             <div className="p-4 space-y-3.5 overflow-y-auto text-xs">
               {/* Official Header Simulation */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-1">
-                <div className="flex justify-between text-[11px] font-bold text-white">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1">
+                <div className="flex justify-between text-[11px] font-bold text-[#0f172a]">
                   <span>PREFEITURA MUNICIPAL DE {selectedInvoiceModal.city.toUpperCase()}</span>
-                  <span className="text-amber-400">{selectedInvoiceModal.rpsNumber}</span>
+                  <span className="text-amber-700">{selectedInvoiceModal.rpsNumber}</span>
                 </div>
-                <p className="text-[10px] text-slate-400">
+                <p className="text-[10px] text-slate-500">
                   Secretaria da Fazenda • Nota Fiscal de Serviços Eletrônica
                 </p>
-                <div className="pt-1 text-[10px] font-mono text-slate-300">
-                  Cód. Verificação: <strong className="text-amber-400">{selectedInvoiceModal.verificationCode}</strong>
+                <div className="pt-1 text-[10px] font-mono text-slate-600">
+                  Cód. Verificação: <strong className="text-[#0a192f]">{selectedInvoiceModal.verificationCode}</strong>
                 </div>
               </div>
 
               {/* Prestador */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider block">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-[10px] font-bold text-[#0a192f] uppercase tracking-wider block">
                   Prestador de Serviços
                 </span>
-                <p className="font-bold text-white">RENOVAR SC SOLUÇÕES PREDIAIS LTDA</p>
-                <p className="text-slate-400">CNPJ: 57.293.244/0001-27 • IM: 149.201-8</p>
-                <p className="text-slate-400">Atividade: 7112-0/00 - Serviços de Engenharia & Restauração</p>
+                <p className="font-bold text-[#0f172a]">RENOVAR SC SOLUÇÕES PREDIAIS LTDA</p>
+                <p className="text-slate-600">CNPJ: 57.293.244/0001-27 • IM: 149.201-8</p>
+                <p className="text-slate-600">Atividade: 7112-0/00 - Serviços de Engenharia & Restauração</p>
               </div>
 
               {/* Tomador (Cliente / Contratante) */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-1">
-                <span className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider block">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1">
+                <span className="text-[10px] font-bold text-[#0a192f] uppercase tracking-wider block">
                   Tomador de Serviços (Contratante)
                 </span>
-                <p className="font-bold text-white">{selectedInvoiceModal.condoName}</p>
-                <p className="text-slate-400">CNPJ: {selectedInvoiceModal.condoCnpj}</p>
-                <p className="text-slate-400">Local: {selectedInvoiceModal.condoAddress}</p>
+                <p className="font-bold text-[#0f172a]">{selectedInvoiceModal.condoName}</p>
+                <p className="text-slate-600">CNPJ: {selectedInvoiceModal.condoCnpj}</p>
+                <p className="text-slate-600">Local: {selectedInvoiceModal.condoAddress}</p>
               </div>
 
               {/* Discriminação dos Serviços */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-1.5">
-                <span className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider block">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-bold text-[#0a192f] uppercase tracking-wider block">
                   Discriminação dos Serviços Prestados
                 </span>
-                <p className="text-white font-semibold">{selectedInvoiceModal.measurementReference}</p>
-                <p className="text-slate-300 leading-relaxed text-[11px]">
+                <p className="text-[#0f172a] font-bold">{selectedInvoiceModal.measurementReference}</p>
+                <p className="text-slate-700 leading-relaxed text-[11px]">
                   {selectedInvoiceModal.serviceDescription}
                 </p>
               </div>
 
               {/* Valores e Retenções */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-2">
-                <div className="flex justify-between text-white font-bold pb-2 border-b border-slate-800">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                <div className="flex justify-between text-[#0f172a] font-bold pb-2 border-b border-slate-200">
                   <span>VALOR TOTAL DOS SERVIÇOS:</span>
                   <span>{formatCurrency(selectedInvoiceModal.grossAmount)}</span>
                 </div>
 
-                <div className="space-y-1 text-slate-300 text-[11px]">
+                <div className="space-y-1 text-slate-600 text-[11px]">
                   <div className="flex justify-between">
                     <span>(-) Retenção INSS Cessão de Mão de Obra (11%):</span>
-                    <span className="text-slate-200 font-semibold">
+                    <span className="text-[#0f172a] font-semibold">
                       - {formatCurrency(selectedInvoiceModal.inssRetentionAmount)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>(-) Retenção ISSQN Municipal ({selectedInvoiceModal.issRetentionRate}%):</span>
-                    <span className="text-slate-200 font-semibold">
+                    <span className="text-[#0f172a] font-semibold">
                       - {formatCurrency(selectedInvoiceModal.issRetentionAmount)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex justify-between text-base font-bold text-amber-400 pt-2 border-t border-slate-800">
+                <div className="flex justify-between text-base font-bold text-amber-700 pt-2 border-t border-slate-200">
                   <span>VALOR LÍQUIDO DA NFS-E:</span>
                   <span>{formatCurrency(selectedInvoiceModal.netAmount)}</span>
                 </div>
@@ -365,12 +365,12 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="p-3.5 bg-[#0a192f] border-t border-slate-800 flex gap-2">
+            <div className="p-3.5 bg-slate-50 border-t border-slate-200 flex gap-2">
               <button
                 onClick={() => window.print()}
-                className="flex-1 py-2.5 rounded-xl bg-[#0f2744] border border-slate-800 hover:border-slate-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-[#0f172a] font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <Printer className="w-3.5 h-3.5 text-amber-400" />
+                <Printer className="w-3.5 h-3.5 text-[#0a192f]" />
                 <span>Imprimir DANFSE</span>
               </button>
 
@@ -385,9 +385,9 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
                     `*Vencimento:* ${selectedInvoiceModal.dueDate}`;
                   window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
               >
-                <Share2 className="w-3.5 h-3.5" />
+                <Share2 className="w-3.5 h-3.5 text-amber-400" />
                 <span>Enviar p/ Contratante</span>
               </button>
             </div>
@@ -397,16 +397,16 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
 
       {/* New Invoice Emission Modal */}
       {showNewInvoiceModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4">
-          <div className="w-full max-w-md rounded-xl bg-[#0f2744] border border-slate-800 shadow-xl text-slate-100 max-h-[92vh] flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-[#0a192f]">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Plus className="w-4 h-4 text-amber-400" />
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 shadow-xl text-[#0f172a] max-h-[92vh] flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+              <h3 className="text-sm font-bold text-[#0f172a] flex items-center gap-2">
+                <Plus className="w-4 h-4 text-amber-600" />
                 Emissão de NFS-e de Medição
               </h3>
               <button
                 onClick={() => setShowNewInvoiceModal(false)}
-                className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-400 hover:text-white cursor-pointer"
+                className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-[#0f172a] cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -414,7 +414,7 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
 
             <form onSubmit={handleCreateInvoice} className="p-4 space-y-3.5 overflow-y-auto text-xs">
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">
+                <label className="block text-slate-700 font-bold mb-1">
                   Contratante / Tomador
                 </label>
                 <input
@@ -422,27 +422,27 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
                   value={newCondoName}
                   onChange={(e) => setNewCondoName(e.target.value)}
                   required
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400"
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">CNPJ</label>
+                  <label className="block text-slate-700 font-bold mb-1">CNPJ</label>
                   <input
                     type="text"
                     value={newCnpj}
                     onChange={(e) => setNewCnpj(e.target.value)}
                     required
-                    className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f]"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Município (SC)</label>
+                  <label className="block text-slate-700 font-bold mb-1">Município (SC)</label>
                   <select
                     value={newCity}
                     onChange={(e) => setNewCity(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f]"
                   >
                     <option value="Balneário Camboriú">Balneário Camboriú (ISS 2.5%)</option>
                     <option value="Itajaí">Itajaí (ISS 2.0%)</option>
@@ -453,7 +453,7 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">
+                <label className="block text-slate-700 font-bold mb-1">
                   Valor Bruto da Medição (R$)
                 </label>
                 <input
@@ -462,12 +462,12 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
                   value={newGrossAmount}
                   onChange={(e) => setNewGrossAmount(parseFloat(e.target.value) || 0)}
                   required
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white font-bold text-sm focus:outline-none focus:border-amber-400"
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] font-bold text-sm focus:bg-white focus:outline-none focus:border-[#0a192f]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">
+                <label className="block text-slate-700 font-bold mb-1">
                   Identificação da Medição de Obra
                 </label>
                 <input
@@ -476,35 +476,35 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
                   onChange={(e) => setNewMeasurement(e.target.value)}
                   placeholder="Ex: 3ª Medição - Conclusão Fachada Sul"
                   required
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400"
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f]"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">
+                <label className="block text-slate-700 font-bold mb-1">
                   Discriminação Técnica
                 </label>
                 <textarea
                   rows={2}
                   value={newServiceDesc}
                   onChange={(e) => setNewServiceDesc(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-400 resize-none"
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f] resize-none"
                 />
               </div>
 
               {/* Automatic Calculation Preview */}
-              <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 space-y-1.5">
-                <div className="flex justify-between text-slate-400">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                <div className="flex justify-between text-slate-600">
                   <span>Retenção INSS (11%):</span>
                   <span>- {formatCurrency(newGrossAmount * 0.11)}</span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-slate-600">
                   <span>Retenção ISS Municipal:</span>
                   <span>
                     - {formatCurrency(newGrossAmount * (newCity === 'Balneário Camboriú' ? 0.025 : 0.02))}
                   </span>
                 </div>
-                <div className="flex justify-between font-bold text-amber-400 pt-1.5 border-t border-slate-800">
+                <div className="flex justify-between font-bold text-amber-700 pt-1.5 border-t border-slate-200">
                   <span>Valor Líquido Estimado:</span>
                   <span>
                     {formatCurrency(
@@ -518,7 +518,7 @@ export const InvoicesView: React.FC<InvoicesViewProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer shadow-sm"
               >
                 Gerar e Transmitir NFS-e
               </button>

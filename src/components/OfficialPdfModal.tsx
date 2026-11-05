@@ -60,16 +60,16 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
-      <div className="w-full max-w-5xl bg-white text-slate-900 rounded-xl shadow-xl flex flex-col max-h-[94vh] overflow-hidden border border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
+      <div className="w-full max-w-5xl bg-white text-slate-900 rounded-2xl shadow-xl flex flex-col max-h-[94vh] overflow-hidden border border-slate-200">
         {/* Floating Controls Bar (Not Printed) */}
-        <div className="p-3.5 sm:px-5 bg-[#0a192f] text-white flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 print:hidden">
-          <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-amber-400" />
-            <span className="text-xs sm:text-sm font-bold text-white">
+        <div className="p-4 sm:px-6 bg-slate-50 text-[#0f172a] flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 print:hidden">
+          <div className="flex items-center gap-2.5">
+            <FileText className="w-4 h-4 text-amber-600" />
+            <span className="text-xs sm:text-sm font-bold text-[#0f172a]">
               Memorial Descritivo de Engenharia Civil • Documento Oficial
             </span>
-            <span className="text-[10px] font-mono bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-bold">
+            <span className="text-[10px] font-mono bg-[#0a192f] text-white px-2.5 py-0.5 rounded font-bold">
               {proposal.protocol}
             </span>
           </div>
@@ -77,23 +77,23 @@ export const OfficialPdfModal: React.FC<OfficialPdfModalProps> = ({ proposal: ra
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Abrir diálogo de impressão e salvar como PDF"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-amber-400" />
               <span>Imprimir / Salvar PDF</span>
             </button>
             <button
               onClick={handleDownloadHtml}
-              className="px-3 py-1.5 rounded-lg bg-[#0f2744] border border-slate-800 hover:border-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
               title="Baixar cópia HTML/Offline do Memorial Descritivo"
             >
-              <Download className="w-3.5 h-3.5 text-amber-400" />
+              <Download className="w-3.5 h-3.5 text-amber-600" />
               <span className="hidden sm:inline">Baixar Memorial</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-[#0f2744] border border-slate-800 text-slate-300 hover:text-white cursor-pointer ml-1"
+              className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-[#0f172a] cursor-pointer ml-1"
             >
               <X className="w-4 h-4" />
             </button>

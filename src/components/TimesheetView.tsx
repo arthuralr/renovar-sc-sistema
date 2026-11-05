@@ -283,19 +283,19 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
   return (
     <div className="space-y-6 pb-nav">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
         <div>
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Clock className="w-4 h-4 text-amber-400" />
+          <h2 className="text-base sm:text-lg font-bold text-[#0f172a] flex items-center gap-2">
+            <Clock className="w-4 h-4 text-amber-600" />
             Controle de Ponto de Campo
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Registro com rastreamento GPS e cerca digital Portaria 671 MTE
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <span className="text-[10px] font-semibold bg-[#0f2744] text-slate-200 border border-slate-800 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-            <Radio className="w-3 h-3 text-amber-400" />
+          <span className="text-[10px] font-bold bg-slate-50 text-[#0a192f] border border-slate-200 px-3 py-1 rounded-full flex items-center gap-1.5">
+            <Radio className="w-3 h-3 text-amber-600" />
             GPS Canteiro Conectado
           </span>
         </div>
@@ -306,18 +306,18 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
         {/* LEFT COLUMN ON DESKTOP: Terminal + Selectors + Overtime Summary */}
         <div className="lg:col-span-5 space-y-5">
           {/* Collaborator & Obra Selectors */}
-          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 space-y-3.5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {/* Obra Canteiro Dropdown */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Canteiro de Obra Atual
                 </label>
                 <div className="relative">
                   <select
                     value={selectedObraName}
                     onChange={(e) => setSelectedObraName(e.target.value)}
-                    className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
+                    className="w-full pl-3.5 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f] appearance-none"
                   >
                     {obras.map((obr) => (
                       <option key={obr.id} value={obr.name}>
@@ -325,20 +325,20 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
               {/* Collaborator Dropdown */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Colaborador em Canteiro
                 </label>
                 <div className="relative">
                   <select
                     value={selectedEmployeeId}
                     onChange={(e) => setSelectedEmployeeId(e.target.value)}
-                    className="w-full pl-3 pr-8 py-2 bg-[#0a192f] border border-slate-800 rounded-xl text-xs font-semibold text-white focus:outline-none focus:border-amber-400 appearance-none"
+                    className="w-full pl-3.5 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-[#0f172a] focus:bg-white focus:outline-none focus:border-[#0a192f] appearance-none"
                   >
                     {employees.map((emp) => (
                       <option key={emp.id} value={emp.id}>
@@ -346,32 +346,32 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
             </div>
 
             {/* Selected Employee Certifications & Status */}
-            <div className="bg-[#0a192f] p-3.5 rounded-lg border border-slate-800 text-xs space-y-2">
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white text-sm flex items-center gap-1.5">
-                  <HardHat className="w-4 h-4 text-amber-400" />
+                <span className="font-bold text-[#0f172a] text-sm flex items-center gap-1.5">
+                  <HardHat className="w-4 h-4 text-amber-600" />
                   {activeEmployee.name}
                 </span>
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-500 font-mono">
                   CPF: {activeEmployee.cpfMasked}
                 </span>
               </div>
 
-              <p className="text-[11px] text-amber-400 font-medium">{activeEmployee.role}</p>
+              <p className="text-[11px] text-amber-700 font-semibold">{activeEmployee.role}</p>
 
-              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[10px]">
-                <div className="flex items-center gap-1.5 text-slate-300">
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-[10px]">
+                <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
                   <span>NR-35 Altura: Válido</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-slate-300">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
                   <span>ASO: {activeEmployee.asoValidUntil}</span>
                 </div>
               </div>
@@ -379,14 +379,14 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
           </div>
 
           {/* Clock-In Interactive Terminal Card with Real-Time GPS Tracking */}
-          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-5 text-center space-y-4 relative overflow-hidden">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 text-center space-y-4 relative overflow-hidden shadow-sm">
             {/* GPS Live Radar Banner */}
-            <div className="bg-[#0a192f] border border-slate-800 rounded-lg p-3 text-left space-y-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-left space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
-                  <span className="text-[11px] font-semibold text-white flex items-center gap-1.5">
-                    <LocateFixed className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="inline-flex rounded-full h-2 w-2 bg-amber-600"></span>
+                  <span className="text-[11px] font-bold text-[#0f172a] flex items-center gap-1.5">
+                    <LocateFixed className="w-3.5 h-3.5 text-amber-600" />
                     <span>{gpsStatusLabel}</span>
                   </span>
                 </div>
@@ -395,23 +395,23 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                   type="button"
                   onClick={captureGpsPosition}
                   disabled={isLocating}
-                  className="text-[10px] font-semibold text-amber-400 bg-[#0f2744] hover:bg-slate-800 px-2.5 py-1 rounded border border-slate-800 flex items-center gap-1 transition cursor-pointer"
+                  className="text-[10px] font-bold text-[#0a192f] bg-white hover:bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 flex items-center gap-1 transition cursor-pointer"
                 >
-                  <RotateCw className={`w-3 h-3 ${isLocating ? 'animate-spin' : ''}`} />
+                  <RotateCw className={`w-3 h-3 text-amber-600 ${isLocating ? 'animate-spin' : ''}`} />
                   <span>{isLocating ? 'Sincronizando...' : 'Recalibrar GPS'}</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[10px] pt-2 border-t border-slate-800">
+              <div className="grid grid-cols-2 gap-2 text-[10px] pt-2 border-t border-slate-200">
                 <div>
-                  <span className="text-slate-400 block">Coordenadas Exatas (SC):</span>
-                  <span className="font-mono font-bold text-white text-xs">
+                  <span className="text-slate-500 block">Coordenadas Exatas (SC):</span>
+                  <span className="font-mono font-bold text-[#0f172a] text-xs">
                     {formatGpsCoordinate(currentGps.latitude, currentGps.longitude)}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-400 block">Precisão / Cerca Digital:</span>
-                  <span className="text-slate-300 font-medium font-mono">
+                  <span className="text-slate-500 block">Precisão / Cerca Digital:</span>
+                  <span className="text-slate-700 font-semibold font-mono">
                     ±{currentGps.accuracyMeters.toFixed(1)}m • {currentGps.distanceToObraMeters}m do canteiro
                   </span>
                 </div>
@@ -420,10 +420,10 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
 
             {/* Big Live Digital Clock */}
             <div className="py-1">
-              <div className="text-3xl sm:text-4xl font-bold text-white font-mono tracking-wider">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#0a192f] font-mono tracking-wider">
                 {currentTime.toLocaleTimeString('pt-BR')}
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1 capitalize">
                 {currentTime.toLocaleDateString('pt-BR', {
                   weekday: 'long',
                   day: 'numeric',
@@ -435,51 +435,51 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
 
             {/* 4-Punch Progress Indicators */}
             <div className="grid grid-cols-4 gap-2 pt-1 text-[10px]">
-              <div className={`p-2 rounded-lg border transition ${
-                punchStep === 'entrada' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              <div className={`p-2 rounded-xl border transition ${
+                punchStep === 'entrada' ? 'bg-amber-50 border-amber-300' : 'bg-slate-50 border-slate-200'
               }`}>
-                <span className="text-slate-400 block">1. Entrada</span>
-                <span className="font-bold text-white">{entryTime}</span>
+                <span className="text-slate-500 block">1. Entrada</span>
+                <span className="font-bold text-[#0f172a]">{entryTime}</span>
               </div>
-              <div className={`p-2 rounded-lg border transition ${
-                punchStep === 'almoco_ida' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              <div className={`p-2 rounded-xl border transition ${
+                punchStep === 'almoco_ida' ? 'bg-amber-50 border-amber-300' : 'bg-slate-50 border-slate-200'
               }`}>
-                <span className="text-slate-400 block">2. Almoço</span>
-                <span className="font-bold text-white">{lunchStartTime}</span>
+                <span className="text-slate-500 block">2. Almoço</span>
+                <span className="font-bold text-[#0f172a]">{lunchStartTime}</span>
               </div>
-              <div className={`p-2 rounded-lg border transition ${
-                punchStep === 'almoco_volta' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              <div className={`p-2 rounded-xl border transition ${
+                punchStep === 'almoco_volta' ? 'bg-amber-50 border-amber-300' : 'bg-slate-50 border-slate-200'
               }`}>
-                <span className="text-slate-400 block">3. Retorno</span>
-                <span className="font-bold text-white">{lunchEndTime}</span>
+                <span className="text-slate-500 block">3. Retorno</span>
+                <span className="font-bold text-[#0f172a]">{lunchEndTime}</span>
               </div>
-              <div className={`p-2 rounded-lg border transition ${
-                punchStep === 'saida' ? 'bg-amber-400/10 border-amber-400/50' : 'bg-[#0a192f] border-slate-800'
+              <div className={`p-2 rounded-xl border transition ${
+                punchStep === 'saida' ? 'bg-amber-50 border-amber-300' : 'bg-slate-50 border-slate-200'
               }`}>
-                <span className="text-slate-400 block">4. Saída</span>
-                <span className="font-bold text-amber-400">{exitTime}</span>
+                <span className="text-slate-500 block">4. Saída</span>
+                <span className="font-bold text-amber-700">{exitTime}</span>
               </div>
             </div>
 
             {/* Safety checklist toggles before punching */}
-            <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800 text-left space-y-2 text-xs">
-              <label className="flex items-center gap-2.5 cursor-pointer text-slate-300">
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-left space-y-2 text-xs">
+              <label className="flex items-center gap-2.5 cursor-pointer text-slate-700">
                 <input
                   type="checkbox"
                   checked={epiVerified}
                   onChange={(e) => setEpiVerified(e.target.checked)}
-                  className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
+                  className="w-4 h-4 rounded accent-[#0a192f]"
                 />
                 <span className="text-[11px]">
                   EPIs Obrigatórios em Uso (Cinto Paraquedista + Trava-quedas duplo + Capacete Jugular)
                 </span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer text-slate-300">
+              <label className="flex items-center gap-2.5 cursor-pointer text-slate-700">
                 <input
                   type="checkbox"
                   checked={balancimOk}
                   onChange={(e) => setBalancimOk(e.target.checked)}
-                  className="w-4 h-4 rounded text-amber-400 bg-slate-900 border-slate-700"
+                  className="w-4 h-4 rounded accent-[#0a192f]"
                 />
                 <span className="text-[11px]">
                   Inspeção Diária do Balancim Elétrico Aprovada pelo Encarregado
@@ -491,9 +491,9 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
             <button
               type="button"
               onClick={handlePunchNow}
-              className="w-full py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 rounded-xl bg-[#0a192f] hover:bg-slate-800 text-white font-bold text-xs tracking-wide transition flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              <LocateFixed className="w-4 h-4 text-slate-950" />
+              <LocateFixed className="w-4 h-4 text-amber-400" />
               <span>
                 {punchStep === 'entrada'
                   ? 'BATER PONTO DE ENTRADA (COM GPS)'
@@ -507,12 +507,12 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
 
             {/* GPS Punch Feedback Alert */}
             {justPunched && lastPunchGpsMessage && (
-              <div className="p-3 rounded-lg bg-[#0a192f] border border-amber-400/30 text-slate-200 text-xs font-medium space-y-1 text-left">
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-slate-700 text-xs font-medium space-y-1 text-left">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                  <span className="font-semibold text-white">Batida de ponto gravada com coordenadas exatas!</span>
+                  <CheckCircle2 className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                  <span className="font-bold text-[#0f172a]">Batida de ponto gravada com coordenadas exatas!</span>
                 </div>
-                <p className="text-[11px] font-mono text-slate-400">
+                <p className="text-[11px] font-mono text-slate-600">
                   {lastPunchGpsMessage}
                 </p>
               </div>
@@ -520,29 +520,29 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
           </div>
 
           {/* Horas Extras & Summary of the Day */}
-          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 space-y-3.5 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-              <span className="font-bold text-white flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4 text-amber-400" />
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3.5 text-xs shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <span className="font-bold text-[#0f172a] flex items-center gap-2">
+                <FileSpreadsheet className="w-4 h-4 text-amber-600" />
                 Apuração de Horas & Horas Extras
               </span>
-              <span className="text-[10px] text-slate-400">Período Vigente</span>
+              <span className="text-[10px] text-slate-500">Período Vigente</span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800">
-                <span className="text-[10px] text-slate-400">Total Horas Normais</span>
-                <p className="text-base font-bold text-white mt-0.5">{totalRegular.toFixed(1)} h</p>
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <span className="text-[10px] text-slate-500">Total Horas Normais</span>
+                <p className="text-base font-bold text-[#0f172a] mt-0.5">{totalRegular.toFixed(1)} h</p>
               </div>
-              <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800">
-                <span className="text-[10px] text-slate-400">Horas Extras Acumuladas</span>
-                <p className="text-base font-bold text-amber-400 mt-0.5">+{totalOvertime.toFixed(1)} h</p>
+              <div className="bg-amber-50/60 p-3 rounded-xl border border-amber-200">
+                <span className="text-[10px] text-amber-800">Horas Extras Acumuladas</span>
+                <p className="text-base font-bold text-amber-700 mt-0.5">+{totalOvertime.toFixed(1)} h</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 50% (H)</label>
+                <label className="block text-[11px] text-slate-600 font-semibold mb-1">Hora Extra 50% (H)</label>
                 <input
                   type="number"
                   step="0.5"
@@ -550,11 +550,11 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                   max="6"
                   value={overtime50}
                   onChange={(e) => setOvertime50(parseFloat(e.target.value) || 0)}
-                  className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-lg text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                  className="w-full px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[#0f172a] text-center font-bold focus:bg-white focus:outline-none focus:border-[#0a192f]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">Hora Extra 100% (H)</label>
+                <label className="block text-[11px] text-slate-600 font-semibold mb-1">Hora Extra 100% (H)</label>
                 <input
                   type="number"
                   step="0.5"
@@ -562,7 +562,7 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                   max="8"
                   value={overtime100}
                   onChange={(e) => setOvertime100(parseFloat(e.target.value) || 0)}
-                  className="w-full px-2.5 py-2 bg-[#0a192f] border border-slate-800 rounded-lg text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                  className="w-full px-2.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-[#0f172a] text-center font-bold focus:bg-white focus:outline-none focus:border-[#0a192f]"
                 />
               </div>
             </div>
@@ -572,10 +572,10 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
         {/* RIGHT COLUMN ON DESKTOP: Historical Records Table / List with GPS Badges */}
         <div className="lg:col-span-7">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0f172a]">
               Histórico de Jornadas com Rastreamento GPS ({activeEmployee.name})
             </h3>
-            <span className="text-[11px] text-amber-400 font-semibold">
+            <span className="text-[11px] text-amber-700 font-bold">
               {employeeTimesheets.length} registros auditados
             </span>
           </div>
@@ -588,69 +588,69 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
               return (
                 <div
                   key={ts.id}
-                  className="bg-[#0f2744] border border-slate-800 hover:border-slate-700 rounded-xl p-4 text-xs space-y-3 transition flex flex-col justify-between"
+                  className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-4 sm:p-5 text-xs space-y-3 transition flex flex-col justify-between shadow-sm"
                 >
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                        <span className="font-bold text-white">{ts.date}</span>
-                        <span className="text-[10px] text-slate-400 font-mono truncate max-w-[140px]">
+                        <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="font-bold text-[#0f172a]">{ts.date}</span>
+                        <span className="text-[10px] text-slate-500 font-mono truncate max-w-[140px]">
                           • {ts.obraName}
                         </span>
                       </div>
-                      <span className="text-[10px] font-semibold bg-[#0a192f] text-slate-200 border border-slate-700 px-2.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-amber-400" />
+                      <span className="text-[10px] font-semibold bg-slate-100 text-[#0f172a] border border-slate-200 px-2.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+                        <CheckCircle2 className="w-2.5 h-2.5 text-amber-600" />
                         APROVADO
                       </span>
                     </div>
 
                     {/* 4 Times */}
-                    <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-300 bg-[#0a192f] p-2 rounded-lg border border-slate-800 text-center font-mono">
+                    <div className="grid grid-cols-4 gap-1 text-[10px] text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-center font-mono">
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Entrada</span>
-                        <span className="font-bold text-white">{ts.entryTime}</span>
+                        <span className="text-slate-400 block text-[9px]">Entrada</span>
+                        <span className="font-bold text-[#0f172a]">{ts.entryTime}</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Almoço</span>
-                        <span className="text-slate-300">{ts.lunchStartTime}</span>
+                        <span className="text-slate-400 block text-[9px]">Almoço</span>
+                        <span className="text-slate-700">{ts.lunchStartTime}</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Retorno</span>
-                        <span className="text-slate-300">{ts.lunchEndTime}</span>
+                        <span className="text-slate-400 block text-[9px]">Retorno</span>
+                        <span className="text-slate-700">{ts.lunchEndTime}</span>
                       </div>
                       <div>
-                        <span className="text-slate-500 block text-[9px]">Saída</span>
-                        <span className="font-bold text-amber-400">{ts.exitTime}</span>
+                        <span className="text-slate-400 block text-[9px]">Saída</span>
+                        <span className="font-bold text-amber-700">{ts.exitTime}</span>
                       </div>
                     </div>
 
                     {/* Exact GPS Coordinates Section */}
-                    <div className="bg-[#0a192f] p-3 rounded-lg border border-slate-800 space-y-2 text-[11px]">
-                      <div className="flex items-center justify-between text-slate-400 text-[10px]">
-                        <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-                          <Satellite className="w-3 h-3 text-amber-400" />
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2 text-[11px]">
+                      <div className="flex items-center justify-between text-slate-500 text-[10px]">
+                        <span className="font-bold text-[#0f172a] flex items-center gap-1.5">
+                          <Satellite className="w-3 h-3 text-amber-600" />
                           Coordenadas Registradas via GPS
                         </span>
-                        <span className="text-amber-400 font-medium">
+                        <span className="text-amber-700 font-bold">
                           ✓ Cerca Digital OK
                         </span>
                       </div>
 
                       <div className="grid grid-cols-1 gap-1.5 text-[10px] font-mono">
                         {entGps && (
-                          <div className="flex items-center justify-between bg-[#0f2744]/80 px-2.5 py-1 rounded border border-slate-800/80">
-                            <span className="text-slate-400">Entrada:</span>
-                            <span className="text-slate-200 font-semibold">
+                          <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
+                            <span className="text-slate-500">Entrada:</span>
+                            <span className="text-[#0f172a] font-semibold">
                               {entGps.latitude.toFixed(6)}, {entGps.longitude.toFixed(6)}
                             </span>
                           </div>
                         )}
                         {saiGps && (
-                          <div className="flex items-center justify-between bg-[#0f2744]/80 px-2.5 py-1 rounded border border-slate-800/80">
-                            <span className="text-slate-400">Saída:</span>
-                            <span className="text-slate-200 font-semibold">
+                          <div className="flex items-center justify-between bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
+                            <span className="text-slate-500">Saída:</span>
+                            <span className="text-[#0f172a] font-semibold">
                               {saiGps.latitude.toFixed(6)}, {saiGps.longitude.toFixed(6)}
                             </span>
                           </div>
@@ -663,11 +663,11 @@ export const TimesheetView: React.FC<TimesheetViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedProofTimesheet(ts)}
-                    className="w-full py-2 px-3 rounded-lg bg-[#0a192f] hover:bg-slate-800/80 border border-slate-800 text-amber-400 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="w-full py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#0a192f] font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                    <MapPin className="w-3.5 h-3.5 text-amber-600" />
                     <span>Ver Comprovante GPS & Mapa Interativo</span>
-                    <ExternalLink className="w-3 h-3 ml-0.5" />
+                    <ExternalLink className="w-3 h-3 ml-0.5 text-slate-400" />
                   </button>
                 </div>
               );

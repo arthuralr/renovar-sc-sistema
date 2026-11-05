@@ -259,7 +259,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a192f] text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-900 md:pl-64 lg:pl-72">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-amber-600 selection:text-white md:pl-64 lg:pl-72">
       {/* Offline Status Badge */}
       <OfflineIndicator />
 
@@ -275,7 +275,7 @@ export default function App() {
       />
 
       {/* Responsive Content Frame: Mobile-First on phones (< md), Full-Width Web Panel on Notebooks & Desktop (md+) */}
-      <main className="flex-1 w-full max-w-md md:max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 pt-3 md:pt-6">
+      <main className="flex-1 w-full max-w-md md:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-7">
         {activeTab === 'dashboard' && (
           <DashboardView
             user={currentUser}
