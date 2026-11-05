@@ -30,6 +30,8 @@ import {
   Users,
   CalendarRange,
   DollarSign,
+  Plus,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 interface BudgetGeneratorViewProps {
@@ -126,19 +128,27 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
   savedProposals,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'create' | 'saved'>('create');
+  const [inputMode, setInputMode] = useState<'presets' | 'custom'>('presets');
   const [activePresetKey, setActivePresetKey] = useState<string>('giovana');
 
-  // Form states (Dados Variáveis Diretos do Contratante / Edificação)
+  // Form states (Dados Variáveis Diretos e 100% Editáveis do Contratante / Edificação)
   const [condoName, setCondoName] = useState(QUICK_PRESETS[0].condoName);
   const [location, setLocation] = useState(QUICK_PRESETS[0].location);
-  const [towers, setTowers] = useState<number>(QUICK_PRESETS[0].towers);
-  const [floors, setFloors] = useState<number>(QUICK_PRESETS[0].floors);
-  const [estimatedArea, setEstimatedArea] = useState<number>(QUICK_PRESETS[0].area);
+  const [towersInput, setTowersInput] = useState<string>(String(QUICK_PRESETS[0].towers));
+  const [floorsInput, setFloorsInput] = useState<string>(String(QUICK_PRESETS[0].floors));
+  const [areaInput, setAreaInput] = useState<string>(String(QUICK_PRESETS[0].area));
   const [selectedPathologies, setSelectedPathologies] = useState<string[]>(
     QUICK_PRESETS[0].pathologies
   );
   const [urgency, setUrgency] = useState<string>(QUICK_PRESETS[0].urgency);
   const [notes, setNotes] = useState<string>(QUICK_PRESETS[0].notes);
+
+  const condoNameInputRef = useRef<HTMLInputElement | null>(null);
+  const memorialOutputRef = useRef<HTMLDivElement | null>(null);
+
+  const towers = Math.max(1, parseInt(towersInput, 10) || 1);
+  const floors = Math.max(1, parseInt(floorsInput, 10) || 1);
+  const estimatedArea = Math.max(100, parseInt(areaInput, 10) || towers * floors * 130);
 
   const [isLoading, setIsLoading] = useState(false);
   const [generatedProposal, setGeneratedProposal] = useState<BudgetProposal | null>(() =>
@@ -176,7 +186,6 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
   ];
 
   const handleTogglePathology = (p: string) => {
-    setActivePresetKey('custom');
     if (selectedPathologies.includes(p)) {
       setSelectedPathologies(selectedPathologies.filter((item) => item !== p));
     } else {
@@ -184,13 +193,37 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
     }
   };
 
+  const handleSwitchToPresetsMode = () => {
+    setInputMode('presets');
+    const currentPreset =
+      QUICK_PRESETS.find((p) => p.key === activePresetKey) || QUICK_PRESETS[0];
+    handleApplyPreset(currentPreset);
+  };
+
+  const handleSwitchToCustomBuildingMode = () => {
+    setInputMode('custom');
+    setActivePresetKey('custom');
+    setCondoName('');
+    setLocation('');
+    setTowersInput('');
+    setFloorsInput('');
+    setAreaInput('');
+    setSelectedPathologies(['Desplacamento cerâmico / som cavo', 'Fissuras e trincas de cisalhamento']);
+    setUrgency('Alta / Risco de Queda');
+    setNotes('');
+    setTimeout(() => {
+      condoNameInputRef.current?.focus();
+    }, 50);
+  };
+
   const handleApplyPreset = (preset: QuickPreset) => {
+    setInputMode('presets');
     setActivePresetKey(preset.key);
     setCondoName(preset.condoName);
     setLocation(preset.location);
-    setTowers(preset.towers);
-    setFloors(preset.floors);
-    setEstimatedArea(preset.area);
+    setTowersInput(String(preset.towers));
+    setFloorsInput(String(preset.floors));
+    setAreaInput(String(preset.area));
     setSelectedPathologies(preset.pathologies);
     setUrgency(preset.urgency);
     setNotes(preset.notes);
@@ -214,6 +247,21 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
     setCopySuccess(false);
     setSaveSuccess(false);
 
+    const finalCondoName = condoName.trim() || 'Edifício Residencial / Corporativo';
+    const finalLocation = location.trim() || 'Balneário Camboriú, SC';
+    const finalTowers = Math.max(1, parseInt(towersInput, 10) || 1);
+    const finalFloors = Math.max(1, parseInt(floorsInput, 10) || 12);
+    const finalArea = Math.max(100, parseInt(areaInput, 10) || finalTowers * finalFloors * 130);
+    const finalPathologies =
+      selectedPathologies.length > 0
+        ? selectedPathologies
+        : ['Desplacamento cerâmico / som cavo'];
+
+    // Normalize form inputs so the user sees the resolved values if they left numeric fields blank
+    setTowersInput(String(finalTowers));
+    setFloorsInput(String(finalFloors));
+    setAreaInput(String(finalArea));
+
     const startTime = Date.now();
 
     try {
@@ -226,12 +274,12 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          condoName,
-          location,
-          towers,
-          floors,
-          estimatedArea,
-          pathologies: selectedPathologies,
+          condoName: finalCondoName,
+          location: finalLocation,
+          towers: finalTowers,
+          floors: finalFloors,
+          estimatedArea: finalArea,
+          pathologies: finalPathologies,
           urgency,
           notes,
         }),
@@ -246,17 +294,20 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
           const fullProposal = ensureOfficialTemplateStructure({
             ...json.data,
             id: `prop-${Date.now()}`,
-            condoName,
-            location,
-            towers,
-            floors,
-            estimatedArea,
-            pathologies: selectedPathologies,
+            condoName: finalCondoName,
+            location: finalLocation,
+            towers: finalTowers,
+            floors: finalFloors,
+            estimatedArea: finalArea,
+            pathologies: finalPathologies,
             urgency,
             notes,
             createdAt: new Date().toISOString(),
           });
           setGeneratedProposal(fullProposal);
+          setTimeout(() => {
+            memorialOutputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
           return;
         }
       }
@@ -268,17 +319,20 @@ export const BudgetGeneratorView: React.FC<BudgetGeneratorViewProps> = ({
       }
 
       const simulatedProposal = generateLocalEngineeringBudget({
-        condoName,
-        location,
-        towers,
-        floors,
-        estimatedArea,
-        pathologies: selectedPathologies,
+        condoName: finalCondoName,
+        location: finalLocation,
+        towers: finalTowers,
+        floors: finalFloors,
+        estimatedArea: finalArea,
+        pathologies: finalPathologies,
         urgency,
         notes,
       });
 
       setGeneratedProposal(simulatedProposal);
+      setTimeout(() => {
+        memorialOutputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     } finally {
       setIsLoading(false);
     }
@@ -460,22 +514,23 @@ ${(activeProposal.weeklySchedule || [])
   )
   .join('\n')}
 
-7. TERMO DE GARANTIA CONTRATUAL DE 05 ANOS E CONDIÇÕES COMERCIAIS:
-Garantias Contratuais (Art. 618 CC / ABNT NBR 15575):
+7. TERMO DE GARANTIA CONTRATUAL DE 05 ANOS (ART. 618 CC / ABNT NBR 15575):
 ${(activeProposal.warrantyClauses || [])
   .map((w) => `• ${w.category}: ${w.period} (${w.normReference}) — ${w.coverageDescription}`)
   .join('\n')}
 
-Condições Comerciais e Pagamento:
+8. CONDIÇÕES COMERCIAIS, FORMAS DE PAGAMENTO, ENTRADA E PARCELAMENTO:
 Razão Social: RENOVAR SC SOLUÇÕES PREDIAIS LTDA | CNPJ: ${RENOVAR_COMPANY_CNPJ}
 Prazo de Execução: ${activeProposal.timelineWeeks} semanas | Garantia: 0${activeProposal.warrantyYears} anos
 Condição Padrão: ${activeProposal.paymentConditions}
 ${(activeProposal.commercialTermsList || []).map((c) => `• ${c}`).join('\n')}
+
+9. HOMOLOGAÇÃO TÉCNICA E ASSINATURA DO CONTRATANTE:
 Responsabilidade Técnica: ${activeProposal.technicalResponsible}
 ${
   activeProposal.contractAcceptance?.signed
-    ? `\nCONTRATO HOMOLOGADO DIGITALMENTE PELO CONTRATANTE: ${activeProposal.contractAcceptance.clientName} (Hash: ${activeProposal.contractAcceptance.protocolHash})`
-    : ''
+    ? `Status: CONTRATO HOMOLOGADO DIGITALMENTE PELO CONTRATANTE: ${activeProposal.contractAcceptance.clientName} (Hash: ${activeProposal.contractAcceptance.protocolHash})`
+    : 'Status: Aguardando assinatura digital do Contratante / Cliente.'
 }
     `.trim();
 
@@ -590,6 +645,14 @@ ${
                 <div
                   key={prop.id}
                   onClick={() => {
+                    setCondoName(prop.condoName);
+                    setLocation(prop.location);
+                    setTowersInput(String(prop.towers));
+                    setFloorsInput(String(prop.floors));
+                    setAreaInput(String(prop.estimatedArea));
+                    setSelectedPathologies(prop.pathologies);
+                    setUrgency(prop.urgency);
+                    setNotes(prop.notes || '');
                     setGeneratedProposal(prop);
                     setActiveSubTab('create');
                   }}
@@ -638,53 +701,110 @@ ${
         </div>
       ) : (
         <div className="space-y-6">
-          {/* BLOCO 1: MODELOS RÁPIDOS DE UM CLIQUE (LIMPOS NO TOPO) */}
-          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-amber-400" />
-                Modelos Rápidos de Proposta (Seleção em 1 Clique)
-              </span>
-              <span className="text-[11px] text-slate-400">
-                Preenchimento automático do modelo de referência
-              </span>
+          {/* BLOCO 1: SELETOR DE MODO (MODELOS PRÉ-DEFINIDOS vs. + NOVO EDIFÍCIO / PERSONALIZADO) */}
+          <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
+              <div>
+                <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-amber-400" />
+                  Modo de Preenchimento da Proposta
+                </span>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Escolha um modelo pré-definido de referência ou cadastre um edifício totalmente novo do zero
+                </p>
+              </div>
+
+              {/* Seletor de Modo: [Modelos Pré-definidos] vs [+ Novo Edifício / Personalizado] */}
+              <div className="flex items-center bg-[#0a192f] p-1 rounded-xl border border-slate-800 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={handleSwitchToPresetsMode}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    inputMode === 'presets'
+                      ? 'bg-amber-400 text-slate-950 font-bold'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>Modelos Pré-definidos</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSwitchToCustomBuildingMode}
+                  className={`px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    inputMode === 'custom'
+                      ? 'bg-amber-400 text-slate-950 font-bold'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>+ Novo Edifício / Personalizado</span>
+                </button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {QUICK_PRESETS.map((preset) => {
-                const isSelected = activePresetKey === preset.key;
-                return (
-                  <button
-                    key={preset.key}
-                    type="button"
-                    onClick={() => handleApplyPreset(preset)}
-                    className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between gap-1.5 ${
-                      isSelected
-                        ? 'bg-[#0a192f] border-amber-400 text-white'
-                        : 'bg-[#0a192f]/70 border-slate-800 hover:border-slate-700 text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-white truncate">
-                        {preset.label}
-                      </span>
-                      {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                      <span className="truncate">{preset.location}</span>
-                      <span className="text-amber-400 font-semibold flex-shrink-0">
-                        {preset.towers}T • {preset.floors}P • {preset.area}m²
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+            {inputMode === 'presets' ? (
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <span>Clique em um modelo abaixo para carregar os dados instantaneamente (todos os campos permanecem editáveis):</span>
+                  <span className="font-mono text-amber-400 hidden sm:inline">Seleção em 1 clique</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {QUICK_PRESETS.map((preset) => {
+                    const isSelected = activePresetKey === preset.key;
+                    return (
+                      <button
+                        key={preset.key}
+                        type="button"
+                        onClick={() => handleApplyPreset(preset)}
+                        className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between gap-1.5 ${
+                          isSelected
+                            ? 'bg-[#0a192f] border-amber-400 text-white'
+                            : 'bg-[#0a192f]/70 border-slate-800 hover:border-slate-700 text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-bold text-white truncate">
+                            {preset.label}
+                          </span>
+                          {isSelected && (
+                            <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" />
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                          <span className="truncate">{preset.location}</span>
+                          <span className="text-amber-400 font-semibold flex-shrink-0">
+                            {preset.towers}T • {preset.floors}P • {preset.area}m²
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#0a192f] border border-amber-400/40 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#0f2744] border border-slate-800 flex items-center justify-center text-amber-400 flex-shrink-0">
+                    <Plus className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-white block">
+                      Modo Novo Edifício / Personalizado Ativo
+                    </span>
+                    <span className="text-[11px] text-slate-400">
+                      Todos os campos abaixo estão abertos para você digitar os dados reais do novo Contratante / Edificação.
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono text-amber-400 bg-[#0f2744] border border-slate-800 px-2.5 py-1 rounded self-start sm:self-center">
+                  Preenchimento Livre
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* BLOCO 2: FORMULÁRIO LIMPO E DIRETO DE ENTRADA DE DADOS */}
+          {/* BLOCO 2: FORMULÁRIO DINÂMICO E 100% EDITÁVEL DE ENTRADA DE DADOS */}
           <form
             onSubmit={handleGenerate}
             className="bg-[#0f2744] border border-slate-800 rounded-xl p-5 sm:p-6 space-y-5"
@@ -692,18 +812,18 @@ ${
             <div className="border-b border-slate-800 pb-3 flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                  Dados da Edificação e Seleção de Patologias
+                  Dados do Contratante / Edificação, Quantitativos e Patologias
                 </h3>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Informe os parâmetros do Contratante / Edificação para estruturar o Memorial Descritivo Oficial
+                  Todos os campos são editáveis e recalculam automaticamente a planilha de serviços, equipe, cronograma e BDI
                 </p>
               </div>
               <span className="text-[10px] font-mono text-slate-300 bg-[#0a192f] border border-slate-800 px-2.5 py-1 rounded">
-                Padrão Engenharia Civil ABNT
+                9 Seções Oficiais ABNT
               </span>
             </div>
 
-            {/* Linha 1: Campos Diretos (Contratante/Edificação, Município, Torres/Pavimentos, Área da Fachada m²) */}
+            {/* Linha 1: Campos Diretos (Contratante/Edificação, Município, Torres/Blocos, Pavimentos, Área Total m²) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
               {/* Nome do Contratante / Edificação */}
               <div className="lg:col-span-4">
@@ -711,14 +831,12 @@ ${
                   Nome do Contratante / Edificação
                 </label>
                 <input
+                  ref={condoNameInputRef}
                   type="text"
                   value={condoName}
-                  onChange={(e) => {
-                    setCondoName(e.target.value);
-                    setActivePresetKey('custom');
-                  }}
+                  onChange={(e) => setCondoName(e.target.value)}
                   required
-                  placeholder="Ex: Residencial Giovana"
+                  placeholder="Digite o nome do Condomínio / Edifício..."
                   className="w-full px-3.5 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -731,34 +849,36 @@ ${
                 <input
                   type="text"
                   value={location}
-                  onChange={(e) => {
-                    setLocation(e.target.value);
-                    setActivePresetKey('custom');
-                  }}
+                  onChange={(e) => setLocation(e.target.value)}
                   required
                   placeholder="Ex: Balneário Camboriú, SC"
                   className="w-full px-3.5 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
                 />
               </div>
 
-              {/* Torres / Pavimentos */}
+              {/* Torres / Blocos e Pavimentos */}
               <div className="lg:col-span-3 grid grid-cols-2 gap-2.5">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Torres
+                    Torres / Blocos
                   </label>
                   <input
                     type="number"
                     min="1"
-                    max="20"
-                    value={towers}
+                    max="30"
+                    value={towersInput}
+                    placeholder="Ex: 1"
                     onChange={(e) => {
-                      const val = parseInt(e.target.value, 10) || 1;
-                      setTowers(val);
-                      setEstimatedArea(val * floors * 130);
-                      setActivePresetKey('custom');
+                      const raw = e.target.value;
+                      setTowersInput(raw);
+                      const parsedT = parseInt(raw, 10);
+                      const parsedF = parseInt(floorsInput, 10);
+                      if (parsedT > 0 && parsedF > 0) {
+                        setAreaInput(String(parsedT * parsedF * 130));
+                      }
                     }}
-                    className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                    required
+                    className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 text-center font-bold focus:outline-none focus:border-amber-400"
                   />
                 </div>
                 <div>
@@ -768,47 +888,67 @@ ${
                   <input
                     type="number"
                     min="1"
-                    max="80"
-                    value={floors}
+                    max="90"
+                    value={floorsInput}
+                    placeholder="Ex: 12"
                     onChange={(e) => {
-                      const val = parseInt(e.target.value, 10) || 1;
-                      setFloors(val);
-                      setEstimatedArea(towers * val * 130);
-                      setActivePresetKey('custom');
+                      const raw = e.target.value;
+                      setFloorsInput(raw);
+                      const parsedF = parseInt(raw, 10);
+                      const parsedT = parseInt(towersInput, 10);
+                      if (parsedT > 0 && parsedF > 0) {
+                        setAreaInput(String(parsedT * parsedF * 130));
+                      }
                     }}
-                    className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white text-center font-bold focus:outline-none focus:border-amber-400"
+                    required
+                    className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 text-center font-bold focus:outline-none focus:border-amber-400"
                   />
                 </div>
               </div>
 
-              {/* Área da Fachada (m²) */}
+              {/* Área Total em m² */}
               <div className="lg:col-span-2">
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Área da Fachada (m²)
+                  Área Total (m²)
                 </label>
                 <input
                   type="number"
-                  step="50"
-                  min="100"
-                  value={estimatedArea}
-                  onChange={(e) => {
-                    setEstimatedArea(parseInt(e.target.value, 10) || 0);
-                    setActivePresetKey('custom');
-                  }}
-                  className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-amber-400 text-center font-bold font-mono focus:outline-none focus:border-amber-400"
+                  step="10"
+                  min="50"
+                  value={areaInput}
+                  placeholder="Ex: 2800"
+                  onChange={(e) => setAreaInput(e.target.value)}
+                  required
+                  className="w-full px-3 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-sm text-amber-400 placeholder-slate-500 text-center font-bold font-mono focus:outline-none focus:border-amber-400"
                 />
               </div>
             </div>
 
-            {/* Linha 2: Seleção Objetiva de Patologias */}
+            {/* Linha 2: Seleção de Patologias */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <label className="text-xs font-semibold text-slate-300">
-                  Patologias Identificadas na Vistoria Técnica
+                  Seleção de Patologias Identificadas na Edificação
                 </label>
-                <span className="text-[11px] text-amber-400 font-semibold">
-                  {selectedPathologies.length} patologia(s) selecionada(s)
-                </span>
+                <div className="flex items-center gap-3 text-[11px]">
+                  <span className="text-amber-400 font-semibold">
+                    {selectedPathologies.length} selecionada(s)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPathologies([...pathologyOptions])}
+                    className="text-slate-400 hover:text-white underline cursor-pointer"
+                  >
+                    Marcar todas
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPathologies([])}
+                    className="text-slate-400 hover:text-white underline cursor-pointer"
+                  >
+                    Limpar
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
@@ -841,10 +981,48 @@ ${
               </div>
             </div>
 
-            {/* Linha 3: Botão de Geração Limpo e Direto */}
-            <div className="pt-2 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Linha 3: Observações de Vistoria e Grau de Prioridade */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-1">
+              <div className="lg:col-span-8">
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Observações de Vistoria e Particularidades da Obra
+                </label>
+                <input
+                  type="text"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Digite observações específicas da vistoria (Ex: Risco sobre área de pedestres, fachada norte...)"
+                  className="w-full px-3.5 py-2.5 bg-[#0a192f] border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div className="lg:col-span-4">
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Grau de Risco / Urgência Técnica
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {['Normal', 'Média', 'Alta / Risco de Queda'].map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      onClick={() => setUrgency(level)}
+                      className={`py-2 px-2 rounded-xl text-[11px] font-semibold border transition text-center truncate cursor-pointer ${
+                        urgency === level
+                          ? 'bg-[#0a192f] border-amber-400 text-amber-400 font-bold'
+                          : 'bg-[#0a192f]/60 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {level === 'Alta / Risco de Queda' ? 'Alta / Crítica' : level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Linha 4: Botão de Geração do Memorial Oficial */}
+            <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <p className="text-[11px] text-slate-400">
-                A IA estrutura automaticamente o diagnóstico pericial, fases executivas, insumos, equipe, cronograma e garantia de 05 anos.
+                Injeta os dados informados nas 9 seções do Memorial Descritivo Oficial da Renovar SC e calcula automaticamente quantitativos, insumos, equipe, cronograma e BDI.
               </p>
 
               <button
@@ -867,9 +1045,12 @@ ${
             </div>
           </form>
 
-          {/* BLOCO 3: DOCUMENTO OFICIAL GERADO — MEMORIAL DESCRITIVO & ORÇAMENTO COMPLETO */}
+          {/* BLOCO 3: DOCUMENTO OFICIAL GERADO — MEMORIAL DESCRITIVO & ORÇAMENTO COMPLETO (9 SEÇÕES) */}
           {activeProposal && (
-            <div className="bg-[#0f2744] border border-slate-800 rounded-xl p-5 sm:p-7 space-y-6">
+            <div
+              ref={memorialOutputRef}
+              className="bg-[#0f2744] border border-slate-800 rounded-xl p-5 sm:p-7 space-y-6"
+            >
               {/* CABEÇALHO CORPORATIVO COM LOGOTIPO E CNPJ 57.293.244/0001-27 */}
               <div className="bg-[#0a192f] border border-slate-800 rounded-xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -1383,121 +1564,121 @@ ${
                 </div>
               )}
 
-              {/* SEÇÃO 7: TERMO DE GARANTIA CONTRATUAL DE 05 ANOS E CONDIÇÕES COMERCIAIS */}
-              <div className="bg-[#0a192f] p-4 sm:p-5 rounded-xl border border-slate-800 space-y-4">
+              {/* SEÇÃO 7: TERMO DE GARANTIA CONTRATUAL DE 05 ANOS */}
+              <div className="bg-[#0a192f] p-4 sm:p-5 rounded-xl border border-slate-800 space-y-3.5">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
                   <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                     <Award className="w-4 h-4" />
-                    7. Termo de Garantia Contratual de 05 Anos e Condições Comerciais
+                    7. Termo de Garantia Contratual de 05 (Cinco) Anos
                   </span>
                   <span className="text-[10px] font-semibold bg-[#0f2744] text-amber-400 border border-slate-800 px-2.5 py-0.5 rounded">
                     Art. 618 Código Civil • ABNT NBR 15575
                   </span>
                 </div>
 
-                {/* 7.1 Garantias de 05 Anos */}
                 {activeProposal.warrantyClauses && (
-                  <div className="space-y-2">
-                    <span className="text-[11px] font-bold text-white uppercase tracking-wide block">
-                      7.1 Cobertura da Garantia Contratual de 05 (Cinco) Anos
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {activeProposal.warrantyClauses.map((wc, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 rounded-xl bg-[#0f2744]/70 border border-slate-800 space-y-1.5 text-xs"
+                      >
+                        <span className="font-bold text-white block">{wc.category}</span>
+                        <span className="inline-block text-[10px] font-semibold text-amber-400 bg-[#0a192f] border border-slate-800 px-2 py-0.5 rounded">
+                          {wc.period} • {wc.normReference}
+                        </span>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          {wc.coverageDescription}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* SEÇÃO 8: CONDIÇÕES COMERCIAIS (FORMAS DE PAGAMENTO, ENTRADA, PARCELAMENTO E FATURAMENTO) */}
+              <div className="bg-[#0a192f] p-4 sm:p-5 rounded-xl border border-slate-800 space-y-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    8. Condições Comerciais, Formas de Pagamento, Entrada e Parcelamento
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    Faturamento Direto CNPJ {RENOVAR_COMPANY_CNPJ}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div className="bg-[#0f2744] p-3.5 rounded-lg border border-slate-800">
+                    <span className="text-[10px] text-slate-400 uppercase block">
+                      Entrada / Mobilização (20%)
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {activeProposal.warrantyClauses.map((wc, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-xl bg-[#0f2744]/70 border border-slate-800 space-y-1.5 text-xs"
-                        >
-                          <span className="font-bold text-white block">{wc.category}</span>
-                          <span className="inline-block text-[10px] font-semibold text-amber-400 bg-[#0a192f] border border-slate-800 px-2 py-0.5 rounded">
-                            {wc.period} • {wc.normReference}
-                          </span>
-                          <p className="text-[11px] text-slate-300 leading-relaxed">
-                            {wc.coverageDescription}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+                    <span className="font-bold text-amber-400 font-mono text-sm mt-0.5 block">
+                      {formatCurrency(activeProposal.totalPrice * 0.2)}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Na assinatura p/ ART, balancins e insumos
+                    </span>
+                  </div>
+
+                  <div className="bg-[#0f2744] p-3.5 rounded-lg border border-slate-800">
+                    <span className="text-[10px] text-slate-400 uppercase block">
+                      Saldo Parcelado (80% em Medições)
+                    </span>
+                    <span className="font-bold text-white font-mono text-sm mt-0.5 block">
+                      {formatCurrency(activeProposal.totalPrice * 0.8)}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Em até 06x ou conforme cronograma semanal
+                    </span>
+                  </div>
+
+                  <div className="bg-[#0f2744] p-3.5 rounded-lg border border-slate-800">
+                    <span className="text-[10px] text-slate-400 uppercase block">
+                      Opção À Vista (5% de Desconto)
+                    </span>
+                    <span className="font-bold text-amber-400 font-mono text-sm mt-0.5 block">
+                      {formatCurrency(activeProposal.totalPrice * 0.95)}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                      Economia direta de {formatCurrency(activeProposal.totalPrice * 0.05)}
+                    </span>
+                  </div>
+                </div>
+
+                {activeProposal.commercialTermsList && (
+                  <div className="space-y-1.5 text-[11px] text-slate-300">
+                    {activeProposal.commercialTermsList.map((item, idx) => (
+                      <p
+                        key={idx}
+                        className="leading-relaxed bg-[#0f2744]/50 px-3.5 py-2 rounded-lg border border-slate-800"
+                      >
+                        <span className="text-amber-400 font-bold">• </span>
+                        {item}
+                      </p>
+                    ))}
                   </div>
                 )}
 
-                {/* 7.2 Condições Comerciais (Formas de Pagamento, Entrada e Parcelamento) */}
-                <div className="space-y-2.5 pt-2 border-t border-slate-800">
-                  <span className="text-[11px] font-bold text-white uppercase tracking-wide block">
-                    7.2 Condições Comerciais, Entrada, Parcelamento e Faturamento Direto
-                  </span>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                    <div className="bg-[#0f2744] p-3 rounded-lg border border-slate-800">
-                      <span className="text-[10px] text-slate-400 uppercase block">
-                        Entrada / Mobilização (20%)
-                      </span>
-                      <span className="font-bold text-amber-400 font-mono text-sm mt-0.5 block">
-                        {formatCurrency(activeProposal.totalPrice * 0.2)}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        Na assinatura p/ ART, balancins e insumos
-                      </span>
-                    </div>
-
-                    <div className="bg-[#0f2744] p-3 rounded-lg border border-slate-800">
-                      <span className="text-[10px] text-slate-400 uppercase block">
-                        Saldo Parcelado (80% em Medições)
-                      </span>
-                      <span className="font-bold text-white font-mono text-sm mt-0.5 block">
-                        {formatCurrency(activeProposal.totalPrice * 0.8)}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        Em até 06x ou conforme cronograma semanal
-                      </span>
-                    </div>
-
-                    <div className="bg-[#0f2744] p-3 rounded-lg border border-slate-800">
-                      <span className="text-[10px] text-slate-400 uppercase block">
-                        Opção À Vista (5% de Desconto)
-                      </span>
-                      <span className="font-bold text-amber-400 font-mono text-sm mt-0.5 block">
-                        {formatCurrency(activeProposal.totalPrice * 0.95)}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        Economia direta de {formatCurrency(activeProposal.totalPrice * 0.05)}
-                      </span>
-                    </div>
+                {activeProposal.contractualTerms && (
+                  <div className="space-y-1 text-[11px] text-slate-300 pt-1">
+                    {activeProposal.contractualTerms.map((term, idx) => (
+                      <p key={idx} className="leading-relaxed">
+                        <span className="text-amber-400 font-bold">✓ </span>
+                        {term}
+                      </p>
+                    ))}
                   </div>
-
-                  {activeProposal.commercialTermsList && (
-                    <div className="space-y-1.5 text-[11px] text-slate-300">
-                      {activeProposal.commercialTermsList.map((item, idx) => (
-                        <p
-                          key={idx}
-                          className="leading-relaxed bg-[#0f2744]/50 px-3.5 py-2 rounded-lg border border-slate-800"
-                        >
-                          <span className="text-amber-400 font-bold">• </span>
-                          {item}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeProposal.contractualTerms && (
-                    <div className="space-y-1 text-[11px] text-slate-300 pt-1">
-                      {activeProposal.contractualTerms.map((term, idx) => (
-                        <p key={idx} className="leading-relaxed">
-                          <span className="text-amber-400 font-bold">✓ </span>
-                          {term}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
 
-              {/* SEÇÃO 8: APROVAÇÃO & ASSINATURA DIGITAL DO CONTRATANTE / CLIENTE */}
+              {/* SEÇÃO 9: APROVAÇÃO & ASSINATURA DIGITAL DO CONTRATANTE / CLIENTE */}
               <div className="bg-[#0a192f] border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
                   <div className="flex items-center gap-2">
                     <PenTool className="w-4 h-4 text-amber-400" />
                     <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                      8. Aprovação da Proposta & Assinatura Digital do Contratante / Cliente
+                      9. Aprovação da Proposta & Assinatura Digital do Contratante / Cliente
                     </h4>
                   </div>
                   <span className="text-[10px] bg-[#0f2744] text-slate-300 border border-slate-800 px-2.5 py-0.5 rounded font-semibold">
